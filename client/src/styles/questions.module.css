@@ -1,0 +1,67 @@
+.container {
+  background-color: #121212;
+  color: #ffffff;
+  padding: 16px;
+  border-radius: 8px;
+  width: 400px;
+  margin: auto;
+}
+
+.questionContainer {
+  margin-bottom: 24px;
+}
+
+.label {
+  font-size: 1.2em;
+  margin-bottom: 12px;
+}
+
+.input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ffffff;
+  background-color: #333333;
+  color: #ffffff;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  margin: 8px 0;
+}
+
+.option input[type="radio"],
+.option input[type="checkbox"] {
+  width: 24px;
+  height: 24px;
+  background-color: #333333;
+  border: 1px solid #ffffff;
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.p {
+  margin: 0;
+  padding: 0;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.nextButton {
+  padding: 12px 24px;
+  background-color: #333333;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.finished {
+  text-align: center;
+  font-size: 1.4em;
+  margin-bottom: 40px;
+}

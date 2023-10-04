@@ -1,11 +1,18 @@
 import "./App.css";
-import Home from "./pages/Home";
+import Router from "./Router";
+import Header from "./components/layout/Header";
+import { AppContextProvider } from "./context/AppContext";
+// import Home from "./pages/Home";
 
 function App() {
   return (
     <div className="body">
-      <Home />
-      
+      <AppContextProvider>
+        <Header />
+        <div>
+          <Router />
+        </div>
+      </AppContextProvider>
     </div>
   );
 }

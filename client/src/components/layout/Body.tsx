@@ -15,7 +15,8 @@ const Body = () => {
           </h1>
           <p className={styles.text}>
             Your home workout companion with personalized plans and expert
-            guidance.
+            guidance. This platform will help you manage how you will workout
+            for a week and provide you with meal plans.
           </p>
           <div className={styles.button}>
             <button className={styles.start}>Begin Workout</button>
@@ -26,7 +27,7 @@ const Body = () => {
         </div>
       </div>
       <div className={styles.programs}>
-        <div className={styles.programsText}>Our Training Program</div>
+        <div className={styles.programsText}>Our Training Programs</div>
         <div className={styles.cards}>
           <ProgramCards
             icon={BiRun}

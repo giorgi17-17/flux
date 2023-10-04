@@ -1,0 +1,91 @@
+/* :root {
+    --primary-color: #2a9d8f;
+    --secondary-color: #e76f51;
+  }
+   */
+  .container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    /* flex-direction: column; */
+    padding: 1em;
+  }
+
+  .cardsContainer {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  
+  .workoutCard {
+    background-color: var(--cardBg-color);
+    color: var(--white);
+    border: 1px solid var(--secondaryCard-color);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px var(--shadow-color);
+    padding: 1em;
+    margin: 1em;
+    width: calc(33.333% - 2em);
+    transition: all 0.3s ease-in-out;
+    line-height: 1.6; /* Improved line height for readability */
+  }
+  
+  .workoutCard:hover {
+    /* transform: scale(1.05); */
+    background: linear-gradient( #1a1a1a,#1f3d3a81);
+    box-shadow: 0 6px 8px var(--shadow-color);
+    cursor: pointer;
+  }
+  
+  .workoutCard > h3 {
+    font-size: 2rem; /* Increased font size */
+    color: var(--primaryCard-color);
+    margin-bottom: 0.5em;
+    text-shadow: 1px 1px 2px black; /* Text shadow for emphasis */
+  }
+  
+  .workoutCard > p {
+    font-size: 1.2rem; /* Increased font size */
+    margin-bottom: 0.5em;
+    text-shadow: 1px 1px 1px black; /* Text shadow for better readability */
+  }
+  
+  .workoutCard > p > strong {
+    color: var(--secondaryCard-color);
+    font-weight: bold; /* Bold for better readability */
+  }
+
+  
+  .buttons {
+    display: flex;
+    gap: 50px;
+    flex-wrap: wrap;
+  }
+  .button {
+    padding: 15px 30px;
+    margin-bottom: 100px;
+    background-color: var(--red);
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .button:hover {
+    background-color: var(--redHover);
+  }
+  
+  /* Responsive */
+  @media (max-width: 1200px) {
+    .workoutCard {
+      width: calc(50% - 2em);
+    }
+  }
+  
+  @media (max-width: 800px) {
+    .workoutCard {
+      width: calc(100% - 2em);
+    }
+  }
+  
