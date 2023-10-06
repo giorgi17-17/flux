@@ -57,6 +57,7 @@
   font-size: 20px;
   background-color: var(--red);
   color: var(--white);
+  cursor: pointer;
 }
 .programs {
   width: 100%;
@@ -77,6 +78,13 @@
   justify-content: center;
 
 }
+
+.link {
+  color: white;
+  text-decoration: none;
+}
+
+
 /* Image */
 
 /* Responsive styles (optional) */

@@ -5,7 +5,15 @@ import ProgramCards from "../common/ProgramCards";
 import { IoMdFitness } from "react-icons/io";
 import { FaBowlFood } from "react-icons/fa6";
 import { BiRun } from "react-icons/bi";
+import { Link } from "react-router-dom";
+import { useAuth } from "../../context/useAuth";
+
+
 const Body = () => {
+  const { currentUser } = useAuth();
+
+  console.log(currentUser)
+
   return (
     <div className={styles.container}>
       <div className={styles.hero}>
@@ -19,7 +27,9 @@ const Body = () => {
             for a week and provide you with meal plans.
           </p>
           <div className={styles.button}>
-            <button className={styles.start}>Begin Workout</button>
+            <Link to={"/plan"} className={styles.link}>
+              <button className={styles.start}>Create Plan</button>
+            </Link>
           </div>
         </div>
         <div className={styles.image}>

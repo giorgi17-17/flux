@@ -1,5 +1,11 @@
 import React, { useState } from "react";
 import styles from "../styles/questions.module.css";
+// type FormDataItem = {
+//   question: string;
+//   answer: string | string[];
+// };
+
+// type FormDataArray = FormDataItem[];
 
 type Question = {
   question: string;
@@ -18,14 +24,24 @@ const questions: Question[] = [
     type: "number",
   },
   {
-    question: "What is your preferred workout?",
+    question: "Choose your goal",
+    type: "radio",
+    options: ["Loose Weight", "Gain musscle", "Get Shredded"],
+  },
+  {
+    question: "What is Your fitness level",
+    type: "radio",
+    options: ["Beginer", "Intermediate", "Advanced"],
+  },
+  {
+    question: "What is your preferred workouts?",
     type: "checkbox",
     options: ["Cardio", "Strength", "Yoga"],
   },
   {
-    question: "How often do you workout",
+    question: "How many days should the workout plan cove",
     type: "radio",
-    options: ["4 times a week", "few times in a month", "rarly"],
+    options: ["1", "2", "3", "4", "5", "6", "7"],
   },
 ];
 
@@ -82,8 +98,29 @@ const Questions = () => {
     }
   };
 
+  // const userData = {
+  //   name: 'John',
+  //   age: 32,
+  //   fitnessLevel: 'Intermediate',
+  //   preferredWorkouts: ['Strength', 'Cardio'],
+  //   days: 3,
+  // };
+
+  const saveUserPlan = async (formData: Record<string, FormDataValue>) => {
+    console.log("func activated");
+    const response = await fetch("http://localhost:5000/api/addUsers", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+    return response.json();
+  };
+
   const handleSubmit = () => {
     console.log("Form data submitted:", formData);
+    saveUserPlan(formData);
   };
 
   const currentQuestion = questions[currentQuestionIndex];

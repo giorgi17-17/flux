@@ -23,7 +23,7 @@ const Header = () => {
           </li>
           <li className={styles.navItem}>
             <Link className={styles.navlink} to={"/questions"}>
-            questions
+              questions
             </Link>
           </li>
           <li className={styles.navItem}>
@@ -34,8 +34,12 @@ const Header = () => {
           {/* Add more navigation links as needed */}
         </ul>
         <div className={styles.buttons}>
-          <button className={styles.signIn}>Sign In</button>
-          <button className={styles.register}>Register</button>
+          <Link className={styles.navlink} to={"/signIn"}>
+            <button className={styles.signIn}>Sign In</button>
+          </Link>
+          <Link className={styles.navlink} to={"/register"}>
+            <button className={styles.register}>Register</button>
+          </Link>
         </div>
       </div>
     </header>
