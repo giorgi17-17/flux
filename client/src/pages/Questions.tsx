@@ -1,11 +1,5 @@
 import React, { useState } from "react";
 import styles from "../styles/questions.module.css";
-// type FormDataItem = {
-//   question: string;
-//   answer: string | string[];
-// };
-
-// type FormDataArray = FormDataItem[];
 
 type Question = {
   question: string;
@@ -49,6 +43,7 @@ const Questions = () => {
   const [formData, setFormData] = useState<Record<string, FormDataValue>>({});
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     question: string
@@ -98,14 +93,6 @@ const Questions = () => {
     }
   };
 
-  // const userData = {
-  //   name: 'John',
-  //   age: 32,
-  //   fitnessLevel: 'Intermediate',
-  //   preferredWorkouts: ['Strength', 'Cardio'],
-  //   days: 3,
-  // };
-
   const saveUserPlan = async (formData: Record<string, FormDataValue>) => {
     console.log("func activated");
     const response = await fetch("http://localhost:5000/api/addUsers", {
@@ -118,9 +105,11 @@ const Questions = () => {
     return response.json();
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     console.log("Form data submitted:", formData);
-    saveUserPlan(formData);
+    const response = await saveUserPlan(formData);
+    const idFromServer = response.id;
+    localStorage.setItem("myCustomId", idFromServer);
   };
 
   const currentQuestion = questions[currentQuestionIndex];
