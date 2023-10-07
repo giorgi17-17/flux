@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
 import styles from "../../styles/header.module.css"; // Make sure you import the correct CSS file
+import { useAuth } from "../../context/useAuth";
 
 const Header = () => {
+  const { currentUser,logOut } = useAuth();
+console.log(currentUser)
   return (
     <header className={styles.header}>
       <div className={styles.container}>
@@ -33,14 +36,22 @@ const Header = () => {
           </li>
           {/* Add more navigation links as needed */}
         </ul>
-        <div className={styles.buttons}>
-          <Link className={styles.navlink} to={"/signIn"}>
-            <button className={styles.signIn}>Sign In</button>
-          </Link>
-          <Link className={styles.navlink} to={"/register"}>
-            <button className={styles.register}>Register</button>
-          </Link>
-        </div>
+        {currentUser ? (
+          <div>
+            <button onClick={logOut} className={styles.signIn}>Log Out</button>
+          </div>
+        ) : (
+          <div>
+            <div className={styles.buttons}>
+              <Link className={styles.navlink} to={"/signIn"}>
+                <button className={styles.signIn}>Sign In</button>
+              </Link>
+              <Link className={styles.navlink} to={"/register"}>
+                <button className={styles.register}>Register</button>
+              </Link>
+            </div>
+          </div>
+        )}
       </div>
     </header>
   );
