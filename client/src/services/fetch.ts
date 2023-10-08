@@ -1,6 +1,5 @@
 import axios from "axios";
 
-
 async function getAllExercises(
   limit: number,
   page: number,
@@ -28,4 +27,26 @@ async function getAllExercises(
   }
 }
 
-export { getAllExercises };
+async function getUserById(id: string) {
+  const options = {
+    method: "GET",
+    url: `http://localhost:5000/api/users/${id}`,
+    params: { id },
+    headers: {
+      accept: "application/json",
+    },
+  };
+
+  try {
+    const response = await axios.request(options);
+    // console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    console.log("eeee");
+
+    throw error;
+  }
+}
+
+export { getAllExercises, getUserById };

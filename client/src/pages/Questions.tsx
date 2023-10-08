@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import styles from "../styles/questions.module.css";
+import { useAuth } from "../context/useAuth";
+import { Link } from "react-router-dom";
 
 type Question = {
   question: string;
@@ -18,11 +20,6 @@ const questions: Question[] = [
     type: "number",
   },
   {
-    question: "Choose your goal",
-    type: "radio",
-    options: ["Loose Weight", "Gain musscle", "Get Shredded"],
-  },
-  {
     question: "What is Your fitness level",
     type: "radio",
     options: ["Beginer", "Intermediate", "Advanced"],
@@ -33,16 +30,24 @@ const questions: Question[] = [
     options: ["Cardio", "Strength", "Yoga"],
   },
   {
-    question: "How many days should the workout plan cove",
+    question: "Choose your goal",
+    type: "radio",
+    options: ["Loose Weight", "Gain musscle", "Get Shredded"],
+  },
+  {
+    question: "How many days should the workout plan cover",
     type: "radio",
     options: ["1", "2", "3", "4", "5", "6", "7"],
   },
 ];
 
 const Questions = () => {
+  const { currentUser } = useAuth();
   const [formData, setFormData] = useState<Record<string, FormDataValue>>({});
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [isFinished, setIsFinished] = useState(false);
+  const storedUserId = localStorage.getItem("myCustomId");
+  const email = localStorage.getItem("email") || "";
+  const answers = localStorage.getItem("answers") || "";
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -83,7 +88,6 @@ const Questions = () => {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
       handleSubmit();
-      setIsFinished(true);
     }
   };
 
@@ -93,30 +97,36 @@ const Questions = () => {
     }
   };
 
-  const saveUserPlan = async (formData: Record<string, FormDataValue>) => {
+  const saveUserPlan = async (
+    formData: Record<string, FormDataValue>,
+    _id: string | null,
+    email: string
+  ) => {
     console.log("func activated");
-    const response = await fetch("http://localhost:5000/api/addUsers", {
+    localStorage.setItem("answers", JSON.stringify(true));
+
+    const payload = { formData, _id, email };
+    const response = await fetch("http://localhost:5000/api/registerOrUpdate", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(formData),
+      body: JSON.stringify(payload),
     });
     return response.json();
   };
 
   const handleSubmit = async () => {
     console.log("Form data submitted:", formData);
-    const response = await saveUserPlan(formData);
-    const idFromServer = response.id;
-    localStorage.setItem("myCustomId", idFromServer);
+    localStorage.setItem("formData", JSON.stringify(formData));
+    await saveUserPlan(formData, storedUserId, email);
   };
 
   const currentQuestion = questions[currentQuestionIndex];
 
   return (
     <div className={styles.container}>
-      {currentQuestionIndex < questions.length && !isFinished ? (
+      {currentQuestionIndex < questions.length && !answers ? (
         <div className={styles.questionContainer}>
           <label className={styles.label}>{currentQuestion.question}</label>
           {currentQuestion.type !== "checkbox" &&
@@ -166,24 +176,43 @@ const Questions = () => {
             : null}
         </div>
       ) : (
-        <div className={styles.finished}>You have completed all questions!</div>
+        <div className={styles.finished}>
+          <div>You have completed all questions!</div>
+          {!currentUser && (
+            <div>
+              <div>
+                <h1>You need to sign in or register to see a workout plan</h1>
+              </div>
+              <div className={styles.buttons}>
+                <Link to={"/register"}>
+                  <button className={styles.register}>Register</button>
+                </Link>
+                <Link to={"/signIn"}>
+                  <button className={styles.signIn}>Sign In</button>
+                </Link>
+              </div>
+            </div>
+          )}
+        </div>
       )}
-      <div className={styles.buttons}>
-        <button
-          type="button"
-          onClick={handleBack}
-          className={styles.nextButton}
-        >
-          Back
-        </button>
-        <button
-          type="button"
-          onClick={handleNext}
-          className={styles.nextButton}
-        >
-          Next
-        </button>
-      </div>
+      {!answers && (
+        <div className={styles.buttons}>
+          <button
+            type="button"
+            onClick={handleBack}
+            className={styles.nextButton}
+          >
+            Back
+          </button>
+          <button
+            type="button"
+            onClick={handleNext}
+            className={styles.nextButton}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 };

@@ -7,7 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../firebase/firebase";
-
+// import { getUserById } from "../services/fetch";
 
 const Register = () => {
   const { createUser } = useAuth();
@@ -15,25 +15,81 @@ const Register = () => {
   //
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [val, setVal] = useState("");
+  // const [val, setVal] = useState("");
+  const id = localStorage.getItem("myCustomId");
+  console.log(id);
+  console.log(email);
+  const signInWithGoogle = async () => {
+    try {
+      const data = await signInWithPopup(auth, provider);
+      const googleEmail = data.user.email || "";
+      console.log(googleEmail);
+      localStorage.setItem("email", googleEmail);
 
-  const signInWithGoogle = () => {
-    signInWithPopup(auth, provider)
-      .then((data) => {
-        setVal(data.user.email || "");
-        navigate("/");
-        console.log(val);
-      })
-      .catch((error) => {
-        console.error("An error occurred: ", error);
-      });
+      if (id) {
+        try {
+          const response = await fetch(
+            "http://localhost:5000/api/registerOrUpdate",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ _id: id, email: googleEmail }), // use googleEmail here
+            }
+          );
+
+          if (!response.ok) {
+            const data = await response.json();
+            console.error(data.message);
+          }
+          navigate("/");
+        } catch (error) {
+          console.error("An error occurred:", error);
+        }
+      } else if (id === "noId") {
+        console.error("ID not found in local storage");
+      }
+    } catch (error) {
+      console.error("An error occurred: ", error);
+    }
   };
-  
+
   const handleRegister = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    localStorage.setItem("email", email);
+    if (id) {
+      try {
+        const response = await fetch(
+          "http://localhost:5000/api/registerOrUpdate",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ _id: id, email }),
+          }
+        );
+        console.log(response);
+
+        if (response.ok) {
+          console.log("ok");
+          // Navigate or do something
+          await createUser({ email, password });
+          navigate("/");
+        } else {
+          const data = await response.json();
+          console.error(data.message);
+        }
+      } catch (error) {
+        console.error("An error occurred:", error);
+      }
+    } else {
+      console.error("ID not found in local storage");
+    }
+
     try {
-      await createUser({ email, password });
-      navigate("/");
+      // getUserById(id);
     } catch (error) {
       const errorMessage = (error as Error).message;
       console.log(errorMessage);

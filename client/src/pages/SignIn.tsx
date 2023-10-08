@@ -13,21 +13,46 @@ const SignIn = () => {
   const { userValue, signIn } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [val, setVal] = useState("");
+  // const [val, setVal] = useState("");
+  const id = localStorage.getItem("myCustomId");
 
   const navigate = useNavigate();
 
-  const signInWithGoogle = () => {
-    signInWithPopup(auth, provider)
-      .then((data) => {
-        setVal(data.user.email || "");
-        navigate("/"); // Navigates to the root
-        console.log(val);
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        console.error("An error occurred: ", error);
-      });
+  const signInWithGoogle = async () => {
+    try {
+      const data = await signInWithPopup(auth, provider);
+      const googleEmail = data.user.email || "";
+      console.log(googleEmail);
+      localStorage.setItem("email", googleEmail);
+
+      if (id) {
+        try {
+          const response = await fetch(
+            "http://localhost:5000/api/registerOrUpdate",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ _id: id, email: googleEmail }), // use googleEmail here
+            }
+          );
+
+          if (!response.ok) {
+            const data = await response.json();
+            console.error(data.message);
+          }
+          navigate("/");
+          console.log('try')
+        } catch (error) {
+          console.error("An error occurred:", error);
+        }
+      } else if (id === "noId") {
+        console.error("ID not found in local storage");
+      }
+    } catch (error) {
+      console.error("An error occurred: ", error);
+    }
   };
 
   const handleSignInClick = async (e: React.MouseEvent<HTMLButtonElement>) => {

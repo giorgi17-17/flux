@@ -3,8 +3,12 @@ import dotenv from "dotenv";
 import cors from "cors";
 import mongoose from "mongoose";
 import { getAllExercises } from "./src/controllers/exerciseController.js";
-import { createUser, getAllUsers } from "./src/controllers/usersController.js";
-
+import {
+  // createUser,
+  getAllUsers,
+  getUserById,
+  registerOrUpdate,
+} from "./src/controllers/usersController.js";
 const app = express();
 const port = 5000;
 
@@ -22,10 +26,12 @@ app.get("/", (req, res) => {
   res.status(200).send("Root");
 });
 
-
 app.use("/api/exercises", getAllExercises);
 app.use("/api/users", getAllUsers);
-app.use("/api/addUsers", createUser);
+// app.use("/api/addUsers", createUser);
+app.use("/api/registerOrUpdate", registerOrUpdate);
+
+app.get("/api/users/:id", getUserById);
 
 // MongoDB connection
 mongoose

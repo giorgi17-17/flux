@@ -65,3 +65,25 @@
   font-size: 1.4em;
   margin-bottom: 40px;
 }
+
+.buttons {
+  display: flex;
+  gap: 20px;
+}
+
+.register,
+.signIn {
+  padding: 13px 28px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.signIn {
+  background-color: aliceblue;
+}
+
+.register {
+  background-color: var(--red);
+  color: var(--white);
+}

@@ -3,8 +3,8 @@ import styles from "../../styles/header.module.css"; // Make sure you import the
 import { useAuth } from "../../context/useAuth";
 
 const Header = () => {
-  const { currentUser,logOut } = useAuth();
-console.log(currentUser)
+  const { currentUser, logOut } = useAuth();
+    
   return (
     <header className={styles.header}>
       <div className={styles.container}>
@@ -38,7 +38,9 @@ console.log(currentUser)
         </ul>
         {currentUser ? (
           <div>
-            <button onClick={logOut} className={styles.signIn}>Log Out</button>
+            <button onClick={logOut} className={styles.signIn}>
+              Log Out
+            </button>
           </div>
         ) : (
           <div>
