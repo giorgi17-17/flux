@@ -1,4 +1,5 @@
 import axios from "axios";
+import { PlanDay } from "../pages/Plan";
 // Define this at the top of your file, or in a types.ts file
 type FormDataValue = string | number | boolean | string[];
 
@@ -36,10 +37,10 @@ async function getAllExercises(
 }
 
 async function getUserById(id: string) {
+  // console.log("fetch", id);
   const options = {
     method: "GET",
-    url: `http://localhost:5000/api/users/${id}`,
-    params: { id },
+    url: `http://localhost:5000/api/user/${id}`,
     headers: {
       accept: "application/json",
     },
@@ -56,10 +57,54 @@ async function getUserById(id: string) {
     throw error;
   }
 }
+const workoutPlan = async (userData: object) => {
+  try {
+    const response = await axios.post(
+      "http://localhost:5000/api/workoutPlan",
+      userData
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("AxiosError", error);
+    throw error;
+  }
+};
+
+
+
+
+
+const savePlanToDatabase = async (id: string, plan: PlanDay[]) => {
+  // const userId = user?._id;
+  // Assuming you have the user object already
+  console.log('save fetch')
+  console.log(" plan in fetch", plan )
+  console.log("iddd",id)
+  try {
+    const response = await fetch(`http://localhost:5000/api/user/${id}/savePlan`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ workoutPlan: plan }),
+    });
+  
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+  
+    const data = await response.json();
+    console.log(data.message); // Log the response message
+  } catch (error) {
+    console.error("An error occurred:", error);
+  }
+  
+};
 
 // api.js
 const registerUser = async (payload: PayloadType) => {
-  console.log("reg")
+  console.log("reg");
   const response = await fetch("http://localhost:5000/api/register", {
     method: "POST",
     headers: {
@@ -71,7 +116,7 @@ const registerUser = async (payload: PayloadType) => {
 };
 
 const updateUser = async (payload: PayloadType) => {
-  console.log("update")
+  console.log("update");
   const response = await fetch("http://localhost:5000/api/update", {
     method: "POST",
     headers: {
@@ -82,4 +127,11 @@ const updateUser = async (payload: PayloadType) => {
   return response.json();
 };
 
-export { getAllExercises, getUserById, updateUser, registerUser };
+export {
+  getAllExercises,
+  getUserById,
+  updateUser,
+  registerUser,
+  workoutPlan,
+  savePlanToDatabase,
+};

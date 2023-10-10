@@ -9,6 +9,7 @@ import {
   registerController,
   updateController,
 } from "./src/controllers/usersController.js";
+import { generateWorkoutPlan, saveWorkoutPlan } from "./src/controllers/workoutPlanController.js";
 const app = express();
 const port = 5000;
 
@@ -26,13 +27,24 @@ app.get("/", (req, res) => {
   res.status(200).send("Root");
 });
 
-app.use("/api/exercises", getAllExercises);
-app.use("/api/users", getAllUsers);
+app.get("/api/exercises", getAllExercises);
+app.get("/api/users", getAllUsers);
 
 app.post("/api/register", registerController);
 app.post("/api/update", updateController);
 
-app.get("/api/users/:id", getUserById);
+app.get("/api/user/:id", getUserById);
+app.post("/api/workoutPlan", generateWorkoutPlan);
+app.post('/api/user/:id/savePlan', saveWorkoutPlan);
+
+
+// app.post('/api/workoutPlan', (req, res) => {
+//   const userData = req.body;
+//   // Your logic here
+//   // console.log(userData)
+//   generateWorkoutPlan(userData)
+//   res.json({message: "Workout plan generated"});
+// });
 
 // MongoDB connection
 mongoose

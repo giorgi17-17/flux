@@ -36,10 +36,26 @@ const questions: Question[] = [
     options: ["Loose Weight", "Gain musscle", "Get Shredded"],
   },
   {
+    question: "How much time can you commit to working out each day?",
+    type: "radio",
+    options: ["< 30 mins", "30-60 mins", "1-2 hours", "> 2 hours"],
+  },
+  {
+    question: "What gym equipment do you have access to?",
+    type: "checkbox",
+    options: ["Dumbbells", "Treadmill", "Cycle", "Barbell", "None"],
+  },
+  {
     question: "How many days should the workout plan cover",
     type: "radio",
     options: ["1", "2", "3", "4", "5", "6", "7"],
   },
+  {
+    question: "Do you have any dietary restrictions?",
+    type: "checkbox",
+    options: ["Vegetarian", "Vegan", "Gluten-free", "None"]
+  }
+  
 ];
 
 const Questions = () => {
@@ -68,11 +84,9 @@ const Questions = () => {
 
   if (localEmail === "false") {
     parsedEmail = JSON.parse(localEmail);
-  }else {
-    parsedEmail = localEmail
+  } else {
+    parsedEmail = localEmail;
   }
-
-
 
   useEffect(() => {
     if (!localStorage.getItem("answers")) {
@@ -129,8 +143,6 @@ const Questions = () => {
     }
   };
 
-
-
   if (localEmail && localAnswers) {
     console.log("update front test ");
   } else if (localAnswers && !localEmail) {
@@ -153,7 +165,6 @@ const Questions = () => {
       formData,
     };
 
-
     if (parsedEmail && updatedLocalAnswers) {
       console.log("update front");
       updateUser(payload);
@@ -161,8 +172,6 @@ const Questions = () => {
       console.log("register front");
       registerUser(payload);
     }
-
-   
   };
   const currentQuestion = questions[currentQuestionIndex];
 

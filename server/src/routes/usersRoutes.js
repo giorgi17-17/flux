@@ -3,9 +3,7 @@ import { createUser, getAllUsers, registerOrUpdate } from "../controllers/usersC
 
 const router = express.Router();
 
-router.post("/", createUser);
 router.get("/", getAllUsers);
-router.post("/", registerOrUpdate);
 
 
 export default router;
