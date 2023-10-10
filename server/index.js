@@ -4,10 +4,10 @@ import cors from "cors";
 import mongoose from "mongoose";
 import { getAllExercises } from "./src/controllers/exerciseController.js";
 import {
-  // createUser,
   getAllUsers,
   getUserById,
-  registerOrUpdate,
+  registerController,
+  updateController,
 } from "./src/controllers/usersController.js";
 const app = express();
 const port = 5000;
@@ -28,15 +28,16 @@ app.get("/", (req, res) => {
 
 app.use("/api/exercises", getAllExercises);
 app.use("/api/users", getAllUsers);
-// app.use("/api/addUsers", createUser);
-app.use("/api/registerOrUpdate", registerOrUpdate);
+
+app.post("/api/register", registerController);
+app.post("/api/update", updateController);
 
 app.get("/api/users/:id", getUserById);
 
 // MongoDB connection
 mongoose
   .connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => {
+  .then(() => { 
     console.log("Connected successfully to MongoDB");
   })
   .catch((err) => {

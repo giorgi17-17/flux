@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "../styles/questions.module.css";
 import { useAuth } from "../context/useAuth";
 import { Link } from "react-router-dom";
+import { PayloadType, registerUser, updateUser } from "../services/fetch";
 
 type Question = {
   question: string;
@@ -46,8 +47,38 @@ const Questions = () => {
   const [formData, setFormData] = useState<Record<string, FormDataValue>>({});
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const storedUserId = localStorage.getItem("myCustomId");
-  const email = localStorage.getItem("email") || "";
-  const answers = localStorage.getItem("answers") || "";
+  const [answers, setAnswers] = useState(
+    JSON.parse(localStorage.getItem("answers") || "false")
+  );
+  const localAnswers = JSON.parse(localStorage.getItem("answers") || "false");
+  // const answers = localStorage.getItem("answers");
+  // const email = localStorage.getItem("email") || "false";
+
+  // const localEmail = localStorage.getItem("email") || "false";
+  // console.log(localStorage.getItem("email"));
+
+  const localEmail = localStorage.getItem("email") || "false";
+  // const parsedEmail = JSON.parse(localEmail)
+  // console.log("parsed email",parsedEmail)
+
+  localStorage.setItem("email", localEmail || "false");
+  console.log("localEmail", localEmail);
+
+  let parsedEmail: boolean | string;
+
+  if (localEmail === "false") {
+    parsedEmail = JSON.parse(localEmail);
+  }else {
+    parsedEmail = localEmail
+  }
+
+
+
+  useEffect(() => {
+    if (!localStorage.getItem("answers")) {
+      localStorage.setItem("answers", JSON.stringify(false));
+    }
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -88,6 +119,7 @@ const Questions = () => {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
       handleSubmit();
+      console.log("last");
     }
   };
 
@@ -97,31 +129,41 @@ const Questions = () => {
     }
   };
 
-  const saveUserPlan = async (
-    formData: Record<string, FormDataValue>,
-    _id: string | null,
-    email: string
-  ) => {
-    console.log("func activated");
-    localStorage.setItem("answers", JSON.stringify(true));
 
-    const payload = { formData, _id, email };
-    const response = await fetch("http://localhost:5000/api/registerOrUpdate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
-    return response.json();
-  };
+
+  if (localEmail && localAnswers) {
+    console.log("update front test ");
+  } else if (localAnswers && !localEmail) {
+    console.log("register front test");
+  }
+  console.log("out ", localAnswers);
 
   const handleSubmit = async () => {
-    console.log("Form data submitted:", formData);
-    localStorage.setItem("formData", JSON.stringify(formData));
-    await saveUserPlan(formData, storedUserId, email);
-  };
+    localStorage.setItem("formData", JSON.stringify(formData || false));
+    localStorage.setItem("answers", JSON.stringify(true));
+    setAnswers(true);
 
+    const updatedLocalAnswers = JSON.parse(
+      localStorage.getItem("answers") || "false"
+    );
+
+    const payload: PayloadType = {
+      _id: storedUserId,
+      email: localEmail,
+      formData,
+    };
+
+
+    if (parsedEmail && updatedLocalAnswers) {
+      console.log("update front");
+      updateUser(payload);
+    } else if (updatedLocalAnswers && !parsedEmail) {
+      console.log("register front");
+      registerUser(payload);
+    }
+
+   
+  };
   const currentQuestion = questions[currentQuestionIndex];
 
   return (

@@ -13,48 +13,61 @@ const SignIn = () => {
   const { userValue, signIn } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const [val, setVal] = useState("");
   const id = localStorage.getItem("myCustomId");
 
   const navigate = useNavigate();
-
   const signInWithGoogle = async () => {
-    try {
-      const data = await signInWithPopup(auth, provider);
-      const googleEmail = data.user.email || "";
-      console.log(googleEmail);
-      localStorage.setItem("email", googleEmail);
+  const formData = JSON.parse(localStorage.getItem("formData") || "false");
+    
+    if (formData) {
+      try {
 
-      if (id) {
-        try {
-          const response = await fetch(
-            "http://localhost:5000/api/registerOrUpdate",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ _id: id, email: googleEmail }), // use googleEmail here
-            }
-          );
+        const data = await signInWithPopup(auth, provider);
+        const googleEmail = data.user.email || "";
+        console.log(googleEmail);
+        localStorage.setItem("email", googleEmail);
 
-          if (!response.ok) {
-            const data = await response.json();
-            console.error(data.message);
-          }
-          navigate("/");
-          console.log('try')
-        } catch (error) {
-          console.error("An error occurred:", error);
-        }
-      } else if (id === "noId") {
-        console.error("ID not found in local storage");
+
+        const response = await fetch("http://localhost:5000/api/update", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ _id: id, formData, email:googleEmail }),
+        });
+        console.log(response);
+        navigate("/");
+
+        console.log("user updated");
+      } catch (error) {
+        console.error("An error occurred:", error);
       }
-    } catch (error) {
-      console.error("An error occurred: ", error);
-    }
-  };
+    } else {
+      try {
 
+        const data = await signInWithPopup(auth, provider);
+        const googleEmail = data.user.email || "";
+        console.log(googleEmail);
+        localStorage.setItem("email", googleEmail);
+
+        const response = await fetch("http://localhost:5000/api/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ _id: id, email:googleEmail }),
+        });
+        console.log(response);
+        navigate("/");
+        console.log("ok");
+        console.log("user created");
+      } catch (error) {
+        console.error("An error occurred:", error);
+      }
+      console.error(id, "id rom register");
+    }
+
+  }
   const handleSignInClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {

@@ -19,7 +19,7 @@ export const createUser = async (req, res) => {
   };
 
   console.log(mappedBody);
-  const newUser = new User(mappedBody);
+  const newUser = new Users(mappedBody);
   try {
     const savedUser = await newUser.save();
     res.json({ savedUser });
@@ -31,7 +31,7 @@ export const createUser = async (req, res) => {
 
 export const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find();
+    const users = await Users.find();
     res.json(users);
   } catch (err) {
     res.json({ message: err });
@@ -42,73 +42,61 @@ export const getUserById = async (req, res) => {
   const userId = req.params.id; // Or whatever you name the parameter in your route
 
   try {
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    const Users = await Users.findById(userId);
+    if (!Users) {
+      return res.status(404).json({ message: "Users not found" });
     }
-    res.json(user);
+    res.json(Users);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 };
 
-export const registerOrUpdate = async (req, res) => {
+
+export const registerController = async (req, res) => {
   const { _id, email, formData } = req.body;
-
-  // Map req.body to the shape that Mongoose expects
-  const mappedBody = {
-    _id: _id,
-    email: email || "",
-    name: formData ? formData["What is your name?"] : undefined,
-    age: formData ? Number(formData["How old are you?"]) : undefined,
-    fitnessLevel: formData ? formData["What is Your fitness level"] : undefined,
-    goal: formData ? formData["Choose your goal"] : undefined,
-    preferredWorkouts: formData ? formData["What is your preferred workouts?"] : undefined,
-    days: formData ? Number(formData["How many days should the workout plan cover"]) : undefined,
-  };
-
-  try {
-    let existingUser = await Users.findById(_id);
-
-    if (existingUser) {
-      // Update only if email is present
-      if (email) {
-        existingUser.email = email;
-      }
-
-      // Update the other fields regardless of whether email is present
-      for (let key in mappedBody) {
-        if (mappedBody[key] !== undefined && mappedBody[key] !== null) {
-          existingUser[key] = mappedBody[key];
-        }
-      }
-
-      await existingUser.save();
-      console.log("doc updated");
-    } else {
-      // Create a new document if it doesn't exist
-      console.log("created");
-      const newUser = new Users(mappedBody);
-      await newUser.save();
-    }
-
-    res.status(200).json({ message: "User updated or created successfully." });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "An error occurred.", error: err });
+  console.log('register back')
+  // Check if Users exists
+  const existingUser = await Users.findById(_id);
+  if (existingUser) {
+    return res.status(409).json({ message: "Users already exists" });
   }
+
+  // Create a new Users
+  const newUser = new Users({
+    _id,
+    email,
+    formData,
+  });
+
+  await newUser.save();
+
+  return res.status(201).json(newUser);
 };
 
-// if (existingUser) {
-//   // Update the document if it exists
-//   existingUser.email = email;
-//   await existingUser.save();
-//   console.log("doc updated");
-// } else {
-//   // Create a new document if it doesn't exist
-//   console.log("created");
+export const updateController = async (req, res) => {
+  const { _id, formData ,email } = req.body;
+  console.log('update back');
+  console.log(`Updating user with _id: ${_id}`);
+  console.log(email)
+  try {
+    // Find Users and update
+    const updatedUser = await Users.findByIdAndUpdate(
+      _id,
+      { $set: { formData: formData, email: email } }, // Explicitly use $set operator
+      { new: true }
+    );
 
-//   const newUser = new User({ _id: id, email });
-//   await newUser.save();
-// }
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // console.log(`User updated: ${JSON.stringify(updatedUser)}`);
+    return res.status(200).json(updatedUser);
+
+  } catch (err) {
+    console.error(`An error occurred while updating: ${err}`);
+    return res.status(500).json({ message: "An error occurred during update", error: err });
+  }
+};

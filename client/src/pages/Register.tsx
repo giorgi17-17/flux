@@ -7,7 +7,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../firebase/firebase";
-// import { getUserById } from "../services/fetch";
 
 const Register = () => {
   const { createUser } = useAuth();
@@ -15,77 +14,97 @@ const Register = () => {
   //
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const [val, setVal] = useState("");
   const id = localStorage.getItem("myCustomId");
-  console.log(id);
-  console.log(email);
+  const formData = JSON.parse(localStorage.getItem("formData") || "false");
+
   const signInWithGoogle = async () => {
-    try {
-      const data = await signInWithPopup(auth, provider);
-      const googleEmail = data.user.email || "";
-      console.log(googleEmail);
-      localStorage.setItem("email", googleEmail);
+    if (formData) {
+      try {
+        const data = await signInWithPopup(auth, provider);
+        const googleEmail = data.user.email || "";
+        console.log(googleEmail);
+        localStorage.setItem("email", googleEmail);
 
-      if (id) {
-        try {
-          const response = await fetch(
-            "http://localhost:5000/api/registerOrUpdate",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ _id: id, email: googleEmail }), // use googleEmail here
-            }
-          );
+        const response = await fetch("http://localhost:5000/api/update", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ _id: id, formData, email: googleEmail }),
+        });
+        console.log(response);
+        navigate("/");
 
-          if (!response.ok) {
-            const data = await response.json();
-            console.error(data.message);
-          }
-          navigate("/");
-        } catch (error) {
-          console.error("An error occurred:", error);
-        }
-      } else if (id === "noId") {
-        console.error("ID not found in local storage");
+        console.log("user updated");
+      } catch (error) {
+        console.error("An error occurred:", error);
       }
-    } catch (error) {
-      console.error("An error occurred: ", error);
+    } else {
+      try {
+        const data = await signInWithPopup(auth, provider);
+        const googleEmail = data.user.email || "";
+        console.log(googleEmail);
+        localStorage.setItem("email", googleEmail);
+
+        const response = await fetch("http://localhost:5000/api/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ _id: id, email: googleEmail }),
+        });
+        console.log(response);
+        navigate("/");
+        console.log("ok");
+        console.log("user created");
+      } catch (error) {
+        console.error("An error occurred:", error);
+      }
+      console.error(id, "id rom register");
     }
   };
 
   const handleRegister = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     localStorage.setItem("email", email);
-    if (id) {
-      try {
-        const response = await fetch(
-          "http://localhost:5000/api/registerOrUpdate",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ _id: id, email }),
-          }
-        );
-        console.log(response);
+    const localEmail = localStorage.getItem("email") || "rrr";
 
-        if (response.ok) {
-          console.log("ok");
-          // Navigate or do something
-          await createUser({ email, password });
-          navigate("/");
-        } else {
-          const data = await response.json();
-          console.error(data.message);
-        }
+    console.log(localEmail);
+    if (formData) {
+      try {
+        const response = await fetch("http://localhost:5000/api/update", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ _id: id, formData, email }),
+        });
+        console.log(response);
+        navigate("/");
+        await createUser({ email, password });
+
+        console.log("user updated");
       } catch (error) {
         console.error("An error occurred:", error);
       }
     } else {
-      console.error("ID not found in local storage");
+      try {
+        await createUser({ email, password });
+        const response = await fetch("http://localhost:5000/api/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ _id: id, email }),
+        });
+        console.log(response);
+        navigate("/");
+        console.log("ok");
+        console.log("user created");
+      } catch (error) {
+        console.error("An error occurred:", error);
+      }
+      console.error(id, "id rom register");
     }
 
     try {

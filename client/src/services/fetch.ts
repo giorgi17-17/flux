@@ -1,4 +1,12 @@
 import axios from "axios";
+// Define this at the top of your file, or in a types.ts file
+type FormDataValue = string | number | boolean | string[];
+
+export type PayloadType = {
+  _id?: string | null;
+  email: string;
+  formData?: Record<string, FormDataValue>;
+};
 
 async function getAllExercises(
   limit: number,
@@ -49,4 +57,29 @@ async function getUserById(id: string) {
   }
 }
 
-export { getAllExercises, getUserById };
+// api.js
+const registerUser = async (payload: PayloadType) => {
+  console.log("reg")
+  const response = await fetch("http://localhost:5000/api/register", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+  return response.json();
+};
+
+const updateUser = async (payload: PayloadType) => {
+  console.log("update")
+  const response = await fetch("http://localhost:5000/api/update", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+  return response.json();
+};
+
+export { getAllExercises, getUserById, updateUser, registerUser };

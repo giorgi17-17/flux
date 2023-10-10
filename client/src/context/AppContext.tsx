@@ -14,10 +14,11 @@ const AppContext = createContext<AppContextType | null>(null);
 export function AppContextProvider({ children }: { children: ReactNode }) {
   const [dataNotFound, setDataNotFound] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
-
+  localStorage.setItem("formData", JSON.stringify(false));
+  // localStorage.setItem("email", JSON.stringify(false));
   const generateUniqueId = () => {
     let userId = localStorage.getItem("myCustomId");
-
+   
     if (!userId) {
       userId = "_" + Math.random().toString(36).substring(2, 11);
       localStorage.setItem("myCustomId", userId);
@@ -25,8 +26,6 @@ export function AppContextProvider({ children }: { children: ReactNode }) {
 
     return userId;
   };
-
-  
 
   localStorage.setItem("myCustomId", generateUniqueId());
   // console.log(generateUniqueId());
