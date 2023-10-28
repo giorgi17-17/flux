@@ -6,6 +6,7 @@ import Questions from "./pages/Questions";
 import Plan from "./pages/Plan";
 import SignIn from "./pages/SignIn";
 import Register from "./pages/Register";
+import AdminDashboard from "./pages/AdminDashboard";
 
 const Router = () => {
   return (
@@ -17,6 +18,7 @@ const Router = () => {
       <Route path="/plan" element={<Plan />} />
       <Route path="/signIn" element={<SignIn />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/adminDashboard" element={<AdminDashboard />} />
     </Routes>
   );
 };

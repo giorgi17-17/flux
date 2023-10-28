@@ -6,13 +6,13 @@ import { IoMdFitness } from "react-icons/io";
 import { FaBowlFood } from "react-icons/fa6";
 import { BiRun } from "react-icons/bi";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../context/useAuth";
+// import { useAuth } from "../../context/useAuth";
 
 
 const Body = () => {
-  const { currentUser } = useAuth();
+  // const { currentUser } = useAuth();
 
-  console.log(currentUser)
+  // console.log(currentUser)
 
   return (
     <div className={styles.container}>

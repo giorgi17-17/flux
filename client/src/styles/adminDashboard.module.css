@@ -1,0 +1,61 @@
+/* AdminDashboard.module.css */
+.container {
+  margin: 20px auto;
+  max-width: 800px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.container > h1 {
+  margin-bottom: 20px;
+  color: red;
+}
+
+.form > select {
+  /* display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column; */
+  margin: 10px;
+  font-size: 20px;
+  /* width: 100%; */
+  background: white;
+}
+
+.form > select > option {
+  padding: 10px;
+}
+
+.form > input,
+.form > textarea {
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form > button {
+  padding: 10px 20px;
+  margin-top: 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.form > button:hover {
+  background-color: #0056b3;
+}
+
+
+.instructions, .tips,.tags {
+  display: flex;
+  flex-direction: column;
+  color: white;
+  gap: 10px;
+  max-width: 200px;
+}

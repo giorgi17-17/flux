@@ -10,6 +10,7 @@ import {
   updateController,
 } from "./src/controllers/usersController.js";
 import { generateWorkoutPlan, saveWorkoutPlan } from "./src/controllers/workoutPlanController.js";
+import { addWorkout } from "./src/controllers/workoutController.js";
 const app = express();
 const port = 5000;
 
@@ -28,6 +29,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/exercises", getAllExercises);
+app.post("/api/workouts", addWorkout);
 app.get("/api/users", getAllUsers);
 
 app.post("/api/register", registerController);

@@ -50,7 +50,7 @@ const Plan = () => {
   }, [id]);
 
   const data = user?.formData;
-  // console.log(data)
+  console.log(data)
   // const generatePlan = async () => {
   //   if (data) {
   //     await workoutPlan(data).then((receivedPlan) => {
