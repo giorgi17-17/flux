@@ -1,21 +1,21 @@
-import Workout from "../models/exerciseModel.js";
+import Workout from "../models/workoutModel.js";
 export const addWorkout = async (req, res) => {
   try {
-
+    // const data = req.body
     const workoutData = new Workout({
       ...req.body,
     });
-    console.log(req.body);
-
-    console.log("Exercise before save: ", workoutData);
+    // const spread = {...dataToSubmit}
+    // console.log("spread", spread)
+    // console.log({...req.body});
+    // console.log("work", workoutData);
+    // console.log("Exercise before save: ", workoutData);
 
     await workoutData.save();
 
-    console.log("Exercise after save: ", workoutData);
-
     res.status(201).json(workoutData);
   } catch (error) {
-    console.error(error); 
+    console.error(error);
     res.status(400).json({ message: error.message });
   }
 };

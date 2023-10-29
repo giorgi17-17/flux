@@ -226,7 +226,7 @@ const AdminDashboard: React.FC = () => {
           />
           <button onClick={handleAddTags}>ADD</button>
         </div>
-        <div className={styles.tags}>
+        <div className={styles.secondaryMuscle}>
           <label htmlFor="">Secondary Muscles</label>
 
           <input
@@ -234,7 +234,7 @@ const AdminDashboard: React.FC = () => {
               setCurrentSecondaryMuscle(e.target.value);
             }}
             type="text"
-            name="tags"
+            name="secondaryMuscles"
             value={currentSecondaryMuscle}
           />
           <button onClick={handleAddSecondaryMuscles}>ADD</button>

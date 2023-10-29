@@ -51,11 +51,21 @@
   background-color: #0056b3;
 }
 
-
-.instructions, .tips,.tags {
+.instructions,
+.tips,
+.tags,
+.secondaryMuscle {
   display: flex;
   flex-direction: column;
   color: white;
   gap: 10px;
-  max-width: 200px;
+  max-width: 300px;
+  /* width: 100%; */
+}
+
+.instructions > input,
+.tips > input,
+.tags > input,
+.secondaryMuscle > input {
+  padding: 10px;
 }
