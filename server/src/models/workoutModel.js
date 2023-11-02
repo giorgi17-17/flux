@@ -11,6 +11,7 @@ const workoutSchema = new mongoose.Schema(
     secondaryMuscles: [String],
     difficultyLevel: String,
     duration: String,
+    reps: String,
     caloriesBurnt: String,
     instructions: [String],
     tips: [String],

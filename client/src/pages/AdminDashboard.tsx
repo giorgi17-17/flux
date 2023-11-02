@@ -14,6 +14,7 @@ type IFormData = {
   secondaryMuscles: string[];
   difficultyLevel: string;
   duration: string;
+  reps: string
   caloriesBurnt: string;
   instructions: string[];
   tips: string[];
@@ -31,6 +32,7 @@ const AdminDashboard: React.FC = () => {
     secondaryMuscles: [],
     difficultyLevel: "",
     duration: "",
+    reps: "",
     caloriesBurnt: "",
     instructions: [],
     tips: [],
@@ -125,8 +127,9 @@ const AdminDashboard: React.FC = () => {
           value={formData.name}
         />
         <select name="target" onChange={handleSelectChange}>
-          <option value="">---</option>
+          <option value="">target</option>
           <option value="abs">Abs</option>
+          <option value="core">Core</option>
           <option value="chest">Chest</option>
           <option value="legs">Legs</option>
           <option value="calves">Calves</option>
@@ -134,10 +137,14 @@ const AdminDashboard: React.FC = () => {
           <option value="upper back">Upper Back</option>
         </select>
         <select name="bodyPart" onChange={handleSelectChange}>
-          <option value="">---</option>
+          <option value="">bodyPart</option>
 
+          <option value="abs">Abs</option>
           <option value="waist">Waist</option>
+          <option value="full body">Full body</option>
+          <option value="upper body">Upper body</option>
           <option value="chest">Chest</option>
+          <option value="abdomen ">Abdomen </option>
           <option value="back">Back</option>
           <option value="upper legs">Upper Legs</option>
           <option value="lower legs">Lower Legs</option>
@@ -146,16 +153,16 @@ const AdminDashboard: React.FC = () => {
           <option value="shoulders">Shoulders</option>
         </select>
         <select name="equipment" onChange={handleSelectChange}>
-          <option value="">---</option>
+          <option value="">equipment</option>
 
           <option value="bodyWeight">Body weight</option>
           <option value="dumbbell">Dumbbell</option>
           <option value="none">None</option>
         </select>
         <select name="difficultyLevel" onChange={handleSelectChange}>
-          <option value="">---</option>
+          <option value="">difficultyLevel</option>
 
-          <option value="beginer">Beginner</option>
+          <option value="beginner">Beginner</option>
           <option value="intermediate">Intermediate</option>
           <option value="advanced">Advanced</option>
         </select>
@@ -178,6 +185,12 @@ const AdminDashboard: React.FC = () => {
           type="text"
           name="duration"
           placeholder="Duration"
+          onChange={handleChange}
+        />
+         <input
+          type="text"
+          name="reps"
+          placeholder="Reps"
           onChange={handleChange}
         />
         <input

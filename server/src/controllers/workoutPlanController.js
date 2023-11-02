@@ -15,42 +15,86 @@ export async function generateWorkoutPlan(req, res) {
   const time = userData["How many days should the workout plan cover"];
 
   //   console.log("Preferred workouts are: ", workouts);
-  const prompt = `
-  Given the following user profile, generate a detailed 7-day home workout plan that should be formatted as an array of JSON objects. The array should cover each day from Monday to Sunday. The number of workout days should be ${time}, and the remaining days should be designated as rest days.
+//   const prompt = `
+//   Given the following user profile, generate a detailed 7-day home workout plan that should be formatted as an array of JSON objects. The array should cover each day from Monday to Sunday. The number of workout days should be ${time}, and the remaining days should be designated as rest days.
 
-  Each JSON object in the array should represent a single day and should follow one of the following structures:
+//   Each JSON object in the array should represent a single day and should follow one of the following structures:
 
-  For a rest day:
-  {
-    "day": "Name of the Day (e.g., Monday)",
-    "rest_day": true
-  }
+//   For a rest day:
+//   {
+//     "day": "Name of the Day (e.g., Monday)",
+//     "rest_day": true
+//   }
 
-  For a workout day:
-  {
-    "day": "Name of the Day (e.g., Tuesday)",
-    "rest_day": false,
-    "targeted_body_part": "Name of the targeted body part (e.g., abs, chest, arms)",
-    "exercises": [
-      {
-        "name": "Name of the Exercise (e.g., Push-Up)",
-        "sets": "Number of Sets",
-        "reps": "Number of Reps or Time Duration (e.g., 30 seconds)"
-      },
-      // More exercises can be added here
-    ]
-  }
+//   For a workout day:
+//   {
+//     "day": "Name of the Day (e.g., Tuesday)",
+//     "rest_day": false,
+//     "targeted_body_part": "Name of the targeted body part (e.g., abs, chest, arms)",
+//     "exercises": [
+//       {
+//         "name": "Name of the Exercise (e.g., Push-Up)",
+//         "sets": "Number of Sets",
+//         "reps": "Number of Reps or Time Duration (e.g., 30 seconds)"
+//       },
+//       // More exercises can be added here
+//     ]
+//   }
 
-  Your task is to fill in the above structures based on the user's profile:
+//   Your task is to fill in the above structures based on the user's profile:
 
-  Name: ${name},
-  Age: ${age},
-  Fitness Level: ${fitnessLevel},
-  Goal: ${goal},
-  Preferred Workouts: ${workouts.join(", ")}
+//   Name: ${name},
+//   Age: ${age},
+//   Fitness Level: ${fitnessLevel},
+//   Goal: ${goal},
+//   Preferred Workouts: ${workouts.join(", ")}
 
-  Note: Please ensure the workout plan is suited for someone at ${fitnessLevel} fitness level and aims to achieve the goal of ${goal}.
+//   Note: Please ensure the workout plan is suited for someone at ${fitnessLevel} fitness level and aims to achieve the goal of ${goal}.
+// `;
+
+
+const prompt = `
+Generate a detailed 7-day home workout plan formatted as an array of JSON objects, each representing a single day from Monday to Sunday. The plan should include ${time} workout days with the remaining days as rest days. Use the user's profile provided below to tailor the workout plan.
+
+User Profile:
+- Name: ${name}
+- Age: ${age}
+- Fitness Level: ${fitnessLevel}
+- Workout Goal: ${goal}
+- Preferred Workouts: [${workouts.join(", ")}]
+
+Guidelines for the Workout Plan:
+- Workouts should be suitable for someone with a ${fitnessLevel} fitness level.
+- The plan should focus on helping the user achieve their goal of ${goal}.
+- Each workout day should target a specific body part, with exercises appropriate for home workouts and the user's fitness level.
+- Include exercises with clear instructions for sets and reps or duration.
+
+Structure for JSON Objects:
+
+Rest Day:
+{
+  "day": "Day Name (e.g., Monday)",
+  "rest_day": true
+}
+
+Workout Day:
+{
+  "day": "Day Name (e.g., Tuesday)",
+  "rest_day": false,
+  "targeted_body_part": "Targeted Body Part (e.g., abs)",
+  "exercises": [
+    {
+      "name": "Exercise Name (e.g., Push-Up)",
+      "sets": "Number of Sets",
+      "reps": "Number of Reps or Duration (e.g., 30 seconds)"
+    },
+    // Additional exercises
+  ]
+}
+
+Please ensure the workout plan is diverse, balanced, and keeps the user engaged throughout the week.
 `;
+
 
 
   const openai = new OpenAI({
