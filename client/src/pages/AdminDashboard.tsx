@@ -131,25 +131,28 @@ const AdminDashboard: React.FC = () => {
           <option value="abs">Abs</option>
           <option value="core">Core</option>
           <option value="chest">Chest</option>
-          <option value="legs">Legs</option>
+          <option value="full body">Full body</option>
           <option value="calves">Calves</option>
+          <option value="upper legs">Upper Legs</option>
+          <option value="lower legs">Lower Legs</option>
+          <option value="upper arms">Upper Arms</option>
+          <option value="lower arms">Lower Arms</option>
           <option value="forearms">forearms</option>
           <option value="upper back">Upper Back</option>
         </select>
         <select name="bodyPart" onChange={handleSelectChange}>
           <option value="">bodyPart</option>
+          <option value="legs">Legs</option>
 
           <option value="abs">Abs</option>
           <option value="waist">Waist</option>
+          <option value="arms">Arms</option>
           <option value="full body">Full body</option>
           <option value="upper body">Upper body</option>
           <option value="chest">Chest</option>
           <option value="abdomen ">Abdomen </option>
           <option value="back">Back</option>
-          <option value="upper legs">Upper Legs</option>
-          <option value="lower legs">Lower Legs</option>
-          <option value="upper arms">Upper Arms</option>
-          <option value="lower arms">Lower Arms</option>
+          
           <option value="shoulders">Shoulders</option>
         </select>
         <select name="equipment" onChange={handleSelectChange}>

@@ -20,35 +20,36 @@ export const addWorkout = async (req, res) => {
   }
 };
 
-// export const getAllWorkouts = async (req, res) => {
-//   try {
-//     let limit = parseInt(req.query.limit) || 1;
-//     let page = parseInt(req.query.page) || 1;
+export const getAllWorkouts = async (req, res) => {
+  try {
+    let limit = parseInt(req.query.limit) || 100;
+    let page = parseInt(req.query.page) || 1;
 
-//     let query = {};
+    let query = {};
 
-//     if (req.query.bodyPart && req.query.bodyPart !== "all") {
-//       query.bodyPart = req.query.bodyPart;
-//     }
-//     if (req.query.target) {
-//       query.target = req.query.target;
-//     }
+    if (req.query.bodyPart && req.query.bodyPart !== "all") {
+      query.bodyPart = req.query.bodyPart;
+    }
+    if (req.query.target) {
+      query.target = req.query.target;
+    }
 
-//     // Perform the MongoDB query
-//     console.log(query);
-//     let exercise = await Workout.find(query)
-//       .limit(limit)
-//       .skip((page - 1) * limit);
+    // Perform the MongoDB query
+    console.log(query);
+    let exercise = await Workout.find(query)
+      .limit(limit)
+      .skip((page - 1) * limit);
 
-//     if (exercise.length > 0) {
-//       console.log(`Found`);
-//       res.status(200).json(exercise);
-//     } else {
-//       console.log("No exercise found ");
-//       res.status(404).json({ message: "Exercise not found" });
-//     }
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: error.message });
-//   }
-// };
+    if (exercise.length > 0) {
+      console.log(`Found`);
+      // console.log(exercise)
+      res.status(200).json(exercise);
+    } else {
+      console.log("No exercise found ");
+      res.status(404).json({ message: "Exercise not found" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: error.message });
+  }
+};

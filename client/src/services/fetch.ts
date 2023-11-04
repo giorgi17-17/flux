@@ -72,6 +72,19 @@ const workoutPlan = async (userData: object) => {
 };
 
 
+const getWorkout = async () => {
+  try {
+    const response = await axios.post(
+      "http://localhost:5000/api/getWorkouts",
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("AxiosError", error);
+    throw error;
+  }
+};
+
 
 
 
@@ -134,4 +147,5 @@ export {
   registerUser,
   workoutPlan,
   savePlanToDatabase,
+  getWorkout
 };
