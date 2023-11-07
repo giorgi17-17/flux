@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getAllExercises } from "../services/fetch";
 import WorkoutCards from "../components/common/WorkoutCards";
-import styles from "../styles/workout.module.css";
+import styles from "../styles/workouts.module.css";
 import Categories from "../components/common/Categories";
 
 export type Exercise = {

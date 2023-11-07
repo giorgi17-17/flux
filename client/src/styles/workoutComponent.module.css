@@ -1,0 +1,68 @@
+/* workoutComponent.module.css */
+.exerciseContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #dad9d9;
+    /* margin: auto; */
+    width: 600px;
+    max-width: 800px;
+  }
+
+  /* .exerciseContainer {
+    margin: auto;
+    max-width: 500px;
+  } */
+
+.exerciseInfo {
+  margin-bottom: 1rem;
+}
+
+.exerciseInfo span {
+  display: block;
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.exerciseActions {
+  display: flex;
+  /* justify-content: center; */
+}
+
+.exerciseActions > button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.exerciseActions > button:hover {
+  background-color: #0056b3;
+}
+
+.exerciseActions > button:disabled {
+  background-color: #cccccc;
+  cursor: default;
+}
+
+/* You can add responsive breakpoints if needed */
+@media (max-width: 600px) {
+  .exerciseInfo span {
+    font-size: 0.9rem;
+  }
+
+  .exerciseActions button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
+}

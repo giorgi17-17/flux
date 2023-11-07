@@ -7,6 +7,7 @@ import Plan from "./pages/Plan";
 import SignIn from "./pages/SignIn";
 import Register from "./pages/Register";
 import AdminDashboard from "./pages/AdminDashboard";
+import Workout from "./pages/Workout";
 
 const Router = () => {
   return (
@@ -19,6 +20,7 @@ const Router = () => {
       <Route path="/signIn" element={<SignIn />} />
       <Route path="/register" element={<Register />} />
       <Route path="/adminDashboard" element={<AdminDashboard />} />
+      <Route path="/workout" element={<Workout />} />
     </Routes>
   );
 };

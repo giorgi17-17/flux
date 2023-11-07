@@ -71,12 +71,9 @@ const workoutPlan = async (userData: object) => {
   }
 };
 
-
 const getWorkout = async () => {
   try {
-    const response = await axios.post(
-      "http://localhost:5000/api/getWorkouts",
-    );
+    const response = await axios.post("http://localhost:5000/api/getWorkouts");
 
     return response.data;
   } catch (error) {
@@ -85,34 +82,74 @@ const getWorkout = async () => {
   }
 };
 
-
-
-
-const savePlanToDatabase = async (id: string, plan: PlanDay[]) => {
-  // const userId = user?._id;
-  // Assuming you have the user object already
-  console.log('save fetch')
-  console.log(" plan in fetch", plan )
-  console.log("iddd",id)
+async function saveWorkoutProgress(
+  userId: string,
+  day: string,
+  // exercisesCompleted: number
+) {
   try {
-    const response = await fetch(`http://localhost:5000/api/user/${id}/savePlan`, {
+    const response = await fetch("/api/workout/progress", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ workoutPlan: plan }),
+      body: JSON.stringify({
+        userId,
+        day,
+        // You can add additional workout information here if needed
+      }),
+
     });
-  
+console.log(day)
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-  
+
+    const data = await response.json();
+    console.log("Workout progress saved:", data);
+    return data; // or you can return true to indicate success
+  } catch (error) {
+    console.error("Error saving workout progress:", error);
+    return false; // or you can throw the error
+  }
+}
+
+const savePlanToDatabase = async (
+  id: string,
+  plan: PlanDay[],
+  planStartDate: Date | null
+) => {
+  // const userId = user?._id;
+  // Assuming you have the user object already
+  // console.log(planStartDate)
+  console.log("save fetch");
+  console.log(" plan in fetch", plan);
+  console.log(" date in fetch", planStartDate);
+  console.log("iddd", id);
+  try {
+    const response = await fetch(
+      `http://localhost:5000/api/user/${id}/savePlan`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          workoutPlan: plan,
+          planStartDate: planStartDate,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
     const data = await response.json();
     console.log(data.message); // Log the response message
   } catch (error) {
     console.error("An error occurred:", error);
   }
-  
 };
 
 // api.js
@@ -147,5 +184,6 @@ export {
   registerUser,
   workoutPlan,
   savePlanToDatabase,
-  getWorkout
+  getWorkout,
+  saveWorkoutProgress,
 };

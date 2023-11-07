@@ -1,8 +1,6 @@
 import React, { useState, FormEvent } from "react";
 import axios from "axios";
 import styles from "../styles/adminDashboard.module.css";
-import uniqid from "uniqid";
-console.log(uniqid());
 
 type IFormData = {
   name: string;
