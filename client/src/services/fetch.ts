@@ -84,29 +84,65 @@ const getWorkout = async () => {
 
 async function saveWorkoutProgress(
   userId: string,
-  day: string,
+  dateOfWorkout: Date
   // exercisesCompleted: number
 ) {
   try {
-    const response = await fetch("/api/workout/progress", {
+    const response = await fetch("http://localhost:5000/api/workout/progress", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         userId,
-        day,
+        dateOfWorkout,
         // You can add additional workout information here if needed
       }),
-
     });
-console.log(day)
+    console.log(userId, dateOfWorkout);
+
     if (!response.ok) {
+      console.log("save func ok");
+
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     const data = await response.json();
-    console.log("Workout progress saved:", data);
+    // console.log("Workout progress saved:", data);
+    return data; // or you can return true to indicate success
+  } catch (error) {
+    console.error("Error saving workout progress:", error);
+    return false; // or you can throw the error
+  }
+}
+
+async function getWorkoutProgress(
+  userId: string
+  // exercisesCompleted: number
+) {
+  try {
+    const response = await fetch(
+      `http://localhost:5000/api/getWorkoutProgress/${userId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // body: JSON.stringify({
+        //   userId,
+        // }),
+      }
+    );
+
+    if (!response.ok) {
+      console.log("get func error");
+
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    // console.log(data)
+    // console.log("Workout progress saved:", data);
     return data; // or you can return true to indicate success
   } catch (error) {
     console.error("Error saving workout progress:", error);
@@ -186,4 +222,5 @@ export {
   savePlanToDatabase,
   getWorkout,
   saveWorkoutProgress,
+  getWorkoutProgress,
 };

@@ -1,19 +1,14 @@
 import { useEffect, useState } from "react";
 import {
   getUserById,
+  getWorkoutProgress,
   savePlanToDatabase,
   workoutPlan,
 } from "../services/fetch";
-// import { WorkoutComponent } from "../components/common/WorkoutComponent";
 import styles from "../styles/plan.module.css";
-// import Calendar from "react-calendar";
 
 import "react-calendar/dist/Calendar.css";
 import { Link } from "react-router-dom";
-// type CalendarTileProperties = {
-//   date: Date;
-//   view: "month" | "year" | "decade" | "century";
-// };
 
 type Exercise = {
   name: string;
@@ -25,8 +20,8 @@ type Exercise = {
 type DayPlan = {
   day: string;
   rest_day: boolean;
-  targeted_body_part?: string; // Optional, only include if it's not a rest day
-  exercises?: Exercise[]; // Optional, only include if it's not a rest day
+  targeted_body_part?: string;
+  exercises?: Exercise[];
 };
 
 type WeekPlan = {
@@ -57,56 +52,97 @@ type WorkoutDay = {
   exercises: Exercise[];
 };
 
-// type ValuePiece = Date | null;
+type CurrentWeekDay = {
+  weekIndex: number;
+  dayIndex: number;
+};
 
-// type Value = ValuePiece | [ValuePiece, ValuePiece];
+type workoutProgress = {
+  message: string;
+  user: {
+    dateOfWorkouts: string[];
+  };
+};
 
 export type PlanDay = RestDay | WorkoutDay;
-
-// type DayOfWeek =
-//   | "Sunday"
-//   | "Monday"
-//   | "Tuesday"
-//   | "Wednesday"
-//   | "Thursday"
-//   | "Friday"
-//   | "Saturday";
 
 type Plan = WeekPlan[];
 
 const Plan = () => {
+  const initialWorkoutProgress: workoutProgress = {
+    message: "",
+    user: {
+      dateOfWorkouts: [],
+    },
+  };
   const id = localStorage.getItem("myCustomId") || "";
   const [user, setUser] = useState<User | null>(null);
   const [plan, setPlan] = useState<WeekPlan[]>([]);
-  const [generatedWorkoutPlan, setGeneratedWorkoutPlan] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [expandedWeek, setExpandedWeek] = useState<number | null>(null);
-  // const [value, onChange] = useState<Value>(new Date());
   const [planStartDate, setPlanStartDate] = useState<Date | null>(null);
-
-  console.log(generatedWorkoutPlan);
+  const [hasWorkedOutToday, setHasWorkedOutToday] = useState<boolean>(false);
+  const [currentWorkoutDay, setCurrentWorkoutDay] = useState(0);
+  const [currentWeekIndex, setCurrentWeekIndex] = useState<number | null>(null);
+  const [workoutProgress, setWorkoutProgress] = useState<workoutProgress>(
+    initialWorkoutProgress
+  );
+  const [currentWeekDay, setCurrentWeekDay] = useState<CurrentWeekDay | null>(
+    null
+  );
   const date = new Date();
+  const currentDay = date.toLocaleDateString("en-US", { weekday: "long" });
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
+        const workout = await getWorkoutProgress(id);
+        setWorkoutProgress(workout);
+
         const userData = await getUserById(id);
         setUser(userData);
-        // console.log(userData.workoutPlan[0].plan)
 
-        setPlanStartDate(userData.planStartDate);
         setPlan(userData.workoutPlan.plan);
-        console.log(userData);
+        setPlanStartDate(userData.planStartDate);
+        updateCurrentWeekDay(userData.planStartDate, userData.workoutPlan.plan);
+        if (userData && userData.workoutPlan && userData.planStartDate) {
+          calculateCurrentWorkoutDay(
+            userData.workoutPlan.plan,
+            new Date(userData.planStartDate)
+          );
+        }
       } catch (error) {
         console.error("An error occurred:", error);
       }
+      setIsLoading(false);
     };
 
     fetchUser();
   }, [id]);
-  //  const  o = [{}]
 
-  // console.log(o)
+  const isDateMatch = (dateString: string) => {
+    const workoutDate = new Date(dateString);
+    const currentDate = new Date();
 
-  // const parse = JSON.parse(``)
+    console.log(
+      workoutDate.getDate() === currentDate.getDate() &&
+        workoutDate.getMonth() === currentDate.getMonth()
+    );
+
+    return (
+      workoutDate.getDate() === currentDate.getDate() &&
+      workoutDate.getMonth() === currentDate.getMonth()
+    );
+  };
+
+  useEffect(() => {
+    if (workoutProgress.user.dateOfWorkouts) {
+      setHasWorkedOutToday(
+        workoutProgress.user.dateOfWorkouts.some(isDateMatch)
+      );
+      console.log("Has worked out today:", hasWorkedOutToday);
+    }
+  }, [workoutProgress.user.dateOfWorkouts, hasWorkedOutToday]);
 
   const data = user?.formData;
 
@@ -118,11 +154,9 @@ const Plan = () => {
     if (data) {
       await workoutPlan(data)
         .then((receivedPlan) => {
-          setGeneratedWorkoutPlan(receivedPlan);
           setPlan(receivedPlan.plan);
 
-          savePlanToDatabase(id, receivedPlan, planStartDate); // Save the plan to the database
-          console.log("receivedPlan", receivedPlan);
+          savePlanToDatabase(id, receivedPlan, planStartDate);
           return receivedPlan.plan; // Return the received plan for the next promise
         })
         .catch((error) => {
@@ -130,90 +164,45 @@ const Plan = () => {
         });
     }
   };
+  const calculateCurrentWorkoutDay = (plan: WeekPlan[], startDate: Date) => {
+    let workoutDayCount = 0;
+    let totalDays = 0;
+    const currentDate = new Date();
 
+    for (const week of plan) {
+      for (const day of week.days) {
+        totalDays++;
+        const dayDiff = Math.ceil(
+          (currentDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+        );
+        if (dayDiff < totalDays) {
+          setCurrentWorkoutDay(workoutDayCount);
+          return;
+        }
+        if (!day.rest_day) {
+          workoutDayCount++;
+        }
+      }
+    }
+    setCurrentWorkoutDay(workoutDayCount);
+  };
 
+  const updateCurrentWeekDay = (startDate: Date, plan: WeekPlan[]) => {
+    const today = new Date();
+    const diffTime = Math.abs(today.getTime() - new Date(startDate).getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const weekIndex = Math.floor(diffDays / 7);
+    const dayIndex = diffDays % 7;
 
-  // function tileContent({
-  //   date,
-  //   view,
-  // }: CalendarTileProperties): JSX.Element | null {
-  //   if (view === "month" && planStartDate) {
-  //     // Get the workout dates for the 4 weeks starting from the planStartDate
-  //     const workoutDates: Date[] = getWorkoutDates(plan, newdate);
+    if (weekIndex < plan.length) {
+      setCurrentWeekDay({ weekIndex, dayIndex });
+      setCurrentWeekIndex(weekIndex);
+    } else {
+      setCurrentWeekDay(null); // Plan is completed or invalid date range
+      setCurrentWeekIndex(null);
+    }
+  };
 
-  //     if (
-  //       workoutDates.some(
-  //         (workoutDate) =>
-  //           workoutDate.getDate() === date.getDate() &&
-  //           workoutDate.getMonth() === date.getMonth() &&
-  //           workoutDate.getFullYear() === date.getFullYear()
-  //       )
-  //     ) {
-  //       return <div className={styles.mySpecialDayMarker}>Workout</div>;
-  //     }
-  //   }
-
-  //   return null;
-  // }
-
-  // const getWorkoutDates = (plans: Plan, startDate: Date): Date[] => {
-  //   let dates: Date[] = [];
-  //   console.log("start",startDate)
-  //   // Calculate 4 weeks from the start date
-  //   const endDate = new Date(startDate.getTime());
-  //   endDate.setDate(startDate.getDate() + 7 * 4); // 4 weeks
-
-  //   plans.forEach((plan) => {
-  //     plan.days.forEach((day) => {
-  //       if (!day.rest_day) {
-  //         // Cast the string to a DayOfWeek type, assuming day.day is a valid DayOfWeek string
-  //         const dayOfWeek = day.day as DayOfWeek;
-  //         const date = getDateFromDayName(dayOfWeek, startDate, endDate);
-  //         if (date) dates.push(...date);
-  //       }
-  //     });
-  //   });
-
-  //   // Filter out dates that are outside the 4-week range
-  //   dates = dates.filter((date) => date >= startDate && date <= endDate);
-
-  //   return dates;
-  // };
-
-  // const getDateFromDayName = (
-  //   dayName: DayOfWeek,
-  //   startDate: Date,
-  //   endDate: Date
-  // ): Date[] => {
-  //   const days: DayOfWeek[] = [
-  //     "Sunday",
-  //     "Monday",
-  //     "Tuesday",
-  //     "Wednesday",
-  //     "Thursday",
-  //     "Friday",
-  //     "Saturday",
-  //   ];
-  //   const dayIndex: number = days.indexOf(dayName);
-
-  //   if (dayIndex === -1) return [];
-
-  //   const date = new Date(startDate.getTime());
-  //   const dates: Date[] = [];
-
-  //   // Move to the first occurrence of the day
-  //   while (date.getDay() !== dayIndex) {
-  //     date.setDate(date.getDate() + 1);
-  //   }
-
-  //   // Add all the dates that are the given day of the week within the 4 weeks range
-  //   while (date <= endDate) {
-  //     dates.push(new Date(date));
-  //     date.setDate(date.getDate() + 7);
-  //   }
-
-  //   return dates;
-  // };
   const getCurrentDayPlan = (
     plans: WeekPlan[],
     currentDate: Date
@@ -224,7 +213,6 @@ const Plan = () => {
     for (const week of plans) {
       for (const day of week.days) {
         if (day.day === currentDayName && !day.rest_day) {
-          console.log(day);
           return day; // Found the plan for the current day
         }
       }
@@ -233,76 +221,103 @@ const Plan = () => {
   };
   getCurrentDayPlan(plan, date);
 
-
-
-  
-
   return (
-    <div className={styles.container}>
-      {/* <WorkoutComponent
-        exercise={currentPlan.exercises[currentExerciseIndex]}
-        onComplete={handleExerciseComplete}
-      /> */}
-
-      {/* <Calendar onChange={onChange} value={value} tileContent={tileContent} /> */}
-      {plan.length > 0 ? (
-        <div className={styles.planContainer}>
-          <button className={styles.startWorkout}>
-            <Link className={styles.link} to={"/workout"}>
-              Start Workout
-            </Link>
-          </button>
-          <h2>Your Custom Plan</h2>
-          {plan.map((week, index) => (
-            <div
-              key={index}
-              className={`${styles.weekContainer} ${
-                expandedWeek === index ? styles.color : styles.white
-              }`}
-            >
-              <h3
-                onClick={() => toggleWeek(index)}
-                className={`${styles.weekTitle} ${
-                  expandedWeek === index ? styles.fullWidth : styles.centered
-                }`}
-              >
-                {week.week}
-              </h3>
-              {expandedWeek === index &&
-                week.days.map((day, dayIndex) => (
-                  <div
-                    key={dayIndex}
-                    // className={styles.dayContainer}
-                    className={`${styles.dayContainer} ${
-                      expandedWeek === index
-                        ? styles.expanded
-                        : styles.collapsed
-                    }`}
-                  >
-                    <strong>{day.day}:</strong>{" "}
-                    {day.rest_day ? "Rest Day" : day.targeted_body_part}
-                    {day.exercises && (
-                      <ul className={styles.ul}>
-                        {day.exercises.map((exercise, exerciseIndex) => (
-                          <li className={styles.li} key={exerciseIndex}>
-                            {exercise.name} - {exercise.sets} sets of {""}
-                            {exercise.reps} reps
-                          </li>
-                        ))}
-                      </ul>
+    <div className={styles.loadingContainer}>
+      {!isLoading ? (
+        <div className={styles.container}>
+          {plan.length > 0 ? (
+            <div className={styles.planContainer}>
+              <div className={styles.dayInfo}>
+                {currentWeekDay && plan[currentWeekDay.weekIndex] ? (
+                  <div>
+                    {plan[currentWeekDay.weekIndex].days[
+                      currentWeekDay.dayIndex
+                    ].rest_day ? (
+                      <p>Today is a rest day.</p>
+                    ) : (
+                      <p>Today is a workout day!</p>
                     )}
                   </div>
-                ))}
+                ) : (
+                  <p>Workout plan is not active for today or is completed.</p>
+                )}
+                <div>
+                  {currentWeekIndex !== null && currentWorkoutDay > 0 ? (
+                    <p>
+                      Tt is your DAY {currentWorkoutDay} of week{" "}
+                      {currentWeekIndex + 1}
+                    </p>
+                  ) : (
+                    <div></div>
+                  )}
+                </div>
+              </div>
+              <Link className={styles.link} to={"/workout"}>
+                <button
+                  className={styles.startWorkout}
+                  disabled={hasWorkedOutToday}
+                >
+                  Start Workout
+                </button>
+              </Link>
+              <h2>Your Custom Plan</h2>
+              {plan.map((week, index) => (
+                <div
+                  key={index}
+                  className={`${styles.weekContainer} ${
+                    expandedWeek === index ? styles.color : styles.white
+                  }`}
+                >
+                  <h3
+                    onClick={() => toggleWeek(index)}
+                    className={`${styles.weekTitle} ${
+                      expandedWeek === index
+                        ? styles.fullWidth
+                        : styles.centered
+                    }`}
+                  >
+                    {week.week}
+                  </h3>
+                  {expandedWeek === index &&
+                    week.days.map((day, dayIndex) => (
+                      <div
+                        key={dayIndex}
+                        className={`${styles.dayContainer} ${
+                          day.day === currentDay ? styles.currentDay : "" // Apply the special style for the current day
+                        } ${
+                          expandedWeek === index
+                            ? styles.expanded
+                            : styles.collapsed
+                        }`}
+                      >
+                        <strong>{day.day}:</strong>{" "}
+                        {day.rest_day ? "Rest Day" : day.targeted_body_part}
+                        {day.exercises && (
+                          <ul className={styles.ul}>
+                            {day.exercises.map((exercise, exerciseIndex) => (
+                              <li className={styles.li} key={exerciseIndex}>
+                                {exercise.name} - {exercise.sets} sets of {""}
+                                {exercise.reps} reps
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    ))}
+                </div>
+              ))}
             </div>
-          ))}
+          ) : (
+            <div>
+              <div className={styles.title}>Workout Plan</div>
+              <button className={styles.generateButton} onClick={generatePlan}>
+                Generate Plan
+              </button>
+            </div>
+          )}
         </div>
       ) : (
-        <div>
-          <div className={styles.title}>Workout Plan</div>
-          <button className={styles.generateButton} onClick={generatePlan}>
-            Generate Plan
-          </button>
-        </div>
+        <div className={styles.loading}>LOADING...</div>
       )}
     </div>
   );

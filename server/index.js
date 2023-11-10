@@ -9,8 +9,15 @@ import {
   registerController,
   updateController,
 } from "./src/controllers/usersController.js";
-import { generateWorkoutPlan, saveWorkoutPlan } from "./src/controllers/workoutPlanController.js";
-import { addWorkout, getAllWorkouts } from "./src/controllers/workoutController.js";
+import {
+  generateWorkoutPlan,
+  saveWorkoutPlan,
+} from "./src/controllers/workoutPlanController.js";
+import {
+  addWorkout,
+  getAllWorkouts,
+} from "./src/controllers/workoutController.js";
+import { saveWorkoutProgress,getWorkoutProgress } from "./src/controllers/workoutProgress.js";
 const app = express();
 const port = 5000;
 
@@ -38,8 +45,9 @@ app.post("/api/update", updateController);
 
 app.get("/api/user/:id", getUserById);
 app.post("/api/workoutPlan", generateWorkoutPlan);
-app.post('/api/user/:id/savePlan', saveWorkoutPlan);
-
+app.post("/api/user/:id/savePlan", saveWorkoutPlan);
+app.post("/api/workout/progress", saveWorkoutProgress);
+app.get("/api/getWorkoutProgress/:userId", getWorkoutProgress);
 
 // app.post('/api/workoutPlan', (req, res) => {
 //   const userData = req.body;
@@ -52,7 +60,7 @@ app.post('/api/user/:id/savePlan', saveWorkoutPlan);
 // MongoDB connection
 mongoose
   .connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => { 
+  .then(() => {
     console.log("Connected successfully to MongoDB");
   })
   .catch((err) => {

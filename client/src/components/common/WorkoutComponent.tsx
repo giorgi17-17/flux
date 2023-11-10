@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import styles from "../../styles/workoutComponent.module.css";
 
 // Assuming you have Exercise type defined as you did previously
 import { DayPlan, Exercise } from "../../pages/Workout";
+import {  saveWorkoutProgress } from "../../services/fetch";
 
 type ExerciseComponentProps = {
   plan: DayPlan;
@@ -20,7 +21,8 @@ export const WorkoutComponent: React.FC<ExerciseComponentProps> = ({
   const shouldExecuteTimer = useRef(true);
   const exercise: Exercise = plan.exercises[currentExerciseIndex];
   const setsToNumber = Number(exercise.sets);
-
+const date  = new Date()
+const id = localStorage.getItem("myCustomId") || "";
 
   const handleCompleteSet = () => {
     setSetsCompleted((prev) => {
@@ -42,6 +44,8 @@ export const WorkoutComponent: React.FC<ExerciseComponentProps> = ({
       setCurrentExerciseIndex(nextIndex);
       setSetsCompleted(0);
     } else {
+      saveWorkoutProgress(id, date)
+      console.log("save func")
         // All exercises completed, you may want to handle the end of the workout here
         setIsWorkoutComplete(true); // Set workout to completed when all exercises are done
     }
@@ -85,10 +89,6 @@ export const WorkoutComponent: React.FC<ExerciseComponentProps> = ({
     setTimerId(null); // Clear the stored timer ID
   };
 
-  useEffect(() => {
-    console.log(timerId);
-    // return () => clearRestTimer();
-  }, [timerId]);
 
   return (
     <div className={styles.exerciseContainer}>

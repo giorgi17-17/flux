@@ -5,7 +5,8 @@ const UsersSchema = mongoose.Schema({
   email: String,
   formData: Object,
   workoutPlan: Object,
-  planStartDate: Date
+  planStartDate: Date,
+  userProgress: Object
 });
 
 const Users = mongoose.model("Users", UsersSchema, "users");
