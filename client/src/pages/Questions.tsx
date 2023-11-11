@@ -3,6 +3,7 @@ import styles from "../styles/questions.module.css";
 import { useAuth } from "../context/useAuth";
 import { Link } from "react-router-dom";
 import { PayloadType, registerUser, updateUser } from "../services/fetch";
+import QuestionCard from "../components/common/QuestionsCard";
 
 type Question = {
   question: string;
@@ -23,7 +24,7 @@ const questions: Question[] = [
   {
     question: "What is Your fitness level",
     type: "radio",
-    options: ["Beginer", "Intermediate", "Advanced"],
+    options: ["Beginner", "Intermediate", "Advanced"],
   },
   {
     question: "What is your preferred workouts?",
@@ -32,7 +33,7 @@ const questions: Question[] = [
   },
   {
     question: "Choose your goal",
-    type: "radio",
+    type: "checkbox",
     options: ["Loose Weight", "Gain musscle", "Get Shredded"],
   },
   {
@@ -53,30 +54,21 @@ const questions: Question[] = [
   {
     question: "Do you have any dietary restrictions?",
     type: "checkbox",
-    options: ["Vegetarian", "Vegan", "Gluten-free", "None"]
-  }
-  
+    options: ["Vegetarian", "Vegan", "Gluten-free", "None"],
+  },
 ];
 
 const Questions = () => {
   const { currentUser } = useAuth();
   const [formData, setFormData] = useState<Record<string, FormDataValue>>({});
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const storedUserId = localStorage.getItem("myCustomId");
   const [answers, setAnswers] = useState(
     JSON.parse(localStorage.getItem("answers") || "false")
   );
   const localAnswers = JSON.parse(localStorage.getItem("answers") || "false");
-  // const answers = localStorage.getItem("answers");
-  // const email = localStorage.getItem("email") || "false";
-
-  // const localEmail = localStorage.getItem("email") || "false";
-  // console.log(localStorage.getItem("email"));
 
   const localEmail = localStorage.getItem("email") || "false";
-  // const parsedEmail = JSON.parse(localEmail)
-  // console.log("parsed email",parsedEmail)
-
   localStorage.setItem("email", localEmail || "false");
   console.log("localEmail", localEmail);
 
@@ -104,19 +96,6 @@ const Questions = () => {
     });
   };
 
-  const handleCheckboxChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    question: string
-  ) => {
-    const value = e.target.checked;
-    const prevValues = (formData[question] as string[]) || [];
-    setFormData({
-      ...formData,
-      [question]: value
-        ? [...prevValues, e.target.value]
-        : prevValues.filter((item: string) => item !== e.target.value),
-    });
-  };
 
   const isInputValid = () => {
     const currentQuestion = questions[currentQuestionIndex];
@@ -175,56 +154,43 @@ const Questions = () => {
   };
   const currentQuestion = questions[currentQuestionIndex];
 
+  const handleRadioChange = (question: string, option: string) => {
+    setFormData({
+      ...formData,
+      [question]: option,
+    });
+  };
+
+  const handleDivCheckboxChange = (question: string, option: string) => {
+    const currentValues = formData[question] as string[] || [];
+    if (currentValues.includes(option)) {
+      // Remove the option if it's already selected
+      setFormData({
+        ...formData,
+        [question]: currentValues.filter((item) => item !== option),
+      });
+    } else {
+      // Add the option if it's not selected
+      setFormData({
+        ...formData,
+        [question]: [...currentValues, option],
+      });
+    }
+  };
+  
+
   return (
     <div className={styles.container}>
       {currentQuestionIndex < questions.length && !answers ? (
         <div className={styles.questionContainer}>
-          <label className={styles.label}>{currentQuestion.question}</label>
-          {currentQuestion.type !== "checkbox" &&
-          currentQuestion.type !== "radio" ? (
-            <input
-              type={currentQuestion.type}
-              onChange={(e) => handleChange(e, currentQuestion.question)}
-              className={styles.input}
-              required
-            />
-          ) : null}
-
-          {currentQuestion.type === "checkbox"
-            ? currentQuestion.options?.map((option, i) => (
-                <div key={i} className={styles.option}>
-                  <input
-                    type="checkbox"
-                    value={option}
-                    checked={
-                      (
-                        formData[currentQuestion.question] as string[]
-                      )?.includes(option) || false
-                    }
-                    onChange={(e) =>
-                      handleCheckboxChange(e, currentQuestion.question)
-                    }
-                    className={styles.input}
-                  />
-                  <label className={styles.p}>{option}</label>
-                </div>
-              ))
-            : null}
-
-          {currentQuestion.type === "radio"
-            ? currentQuestion.options?.map((option, i) => (
-                <div key={i} className={styles.option}>
-                  <input
-                    type="radio"
-                    name={currentQuestion.question}
-                    value={option}
-                    onChange={(e) => handleChange(e, currentQuestion.question)}
-                    className={styles.input}
-                  />
-                  <label className={styles.p}>{option}</label>
-                </div>
-              ))
-            : null}
+          <QuestionCard
+            key={currentQuestionIndex}
+            question={currentQuestion}
+            handleChange={handleChange}
+            handleRadioChange={handleRadioChange}
+            handleDivCheckboxChange={handleDivCheckboxChange}
+            formData={formData}
+          />
         </div>
       ) : (
         <div className={styles.finished}>

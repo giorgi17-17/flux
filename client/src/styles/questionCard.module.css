@@ -1,0 +1,77 @@
+.container {
+  background-color: #121212;
+  color: #ffffff;
+  padding: 16px;
+  border-radius: 8px;
+  width: 400px;
+  margin: auto;
+}
+
+.questionContainer {
+  margin-bottom: 24px;
+}
+
+.labelCont {
+  margin-bottom: 20px;
+}
+.label {
+  font-size: 1.2em;
+}
+
+.multiple {
+  color: greenyellow;
+}
+.input {
+  width: 100%;
+  border-radius: 4px;
+  background: transparent;
+  color: #ffffff;
+  padding: 12px;
+  border: 1px solid #ccc;
+}
+
+.radio {
+  text-align: center;
+  margin-bottom: 10px;
+}
+.checkbox {
+  margin-bottom: 10px;
+}
+.radioOption {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 4px;
+  cursor: pointer;
+}
+
+.radioSelected {
+  background-color: var(--red);
+  color: white;
+  border-color: var(--red);
+}
+
+.checkboxOption {
+  text-align: center;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 4px;
+  cursor: pointer;
+}
+
+.checkboxSelected {
+  background-color: var(--red);
+  color: white;
+  border-color: var(--red);
+}
+
+.nextButton {
+  padding: 12px 24px;
+  background-color: #333333;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+

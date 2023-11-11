@@ -60,7 +60,7 @@ type CurrentWeekDay = {
 type workoutProgress = {
   message: string;
   user: {
-    dateOfWorkouts: string[];
+    dateOfWorkouts?: string[] | undefined;
   };
 };
 
@@ -98,24 +98,29 @@ const Plan = () => {
       try {
         const workout = await getWorkoutProgress(id);
         setWorkoutProgress(workout);
-
+    
         const userData = await getUserById(id);
         setUser(userData);
-
-        setPlan(userData.workoutPlan.plan);
-        setPlanStartDate(userData.planStartDate);
-        updateCurrentWeekDay(userData.planStartDate, userData.workoutPlan.plan);
-        if (userData && userData.workoutPlan && userData.planStartDate) {
-          calculateCurrentWorkoutDay(
-            userData.workoutPlan.plan,
-            new Date(userData.planStartDate)
-          );
+    
+        // Check if userData and userData.workoutPlan are defined
+        if (userData && userData.workoutPlan) {
+          setPlan(userData.workoutPlan.plan);
+          setPlanStartDate(userData.planStartDate);
+          updateCurrentWeekDay(userData.planStartDate, userData.workoutPlan.plan);
+    
+          if (userData.planStartDate) {
+            calculateCurrentWorkoutDay(
+              userData.workoutPlan.plan,
+              new Date(userData.planStartDate)
+            );
+          }
         }
       } catch (error) {
         console.error("An error occurred:", error);
       }
       setIsLoading(false);
     };
+    
 
     fetchUser();
   }, [id]);
@@ -136,13 +141,13 @@ const Plan = () => {
   };
 
   useEffect(() => {
-    if (workoutProgress.user.dateOfWorkouts) {
+    if (workoutProgress.user?.dateOfWorkouts) {
       setHasWorkedOutToday(
         workoutProgress.user.dateOfWorkouts.some(isDateMatch)
       );
       console.log("Has worked out today:", hasWorkedOutToday);
     }
-  }, [workoutProgress.user.dateOfWorkouts, hasWorkedOutToday]);
+  }, [workoutProgress.user?.dateOfWorkouts, hasWorkedOutToday]);
 
   const data = user?.formData;
 

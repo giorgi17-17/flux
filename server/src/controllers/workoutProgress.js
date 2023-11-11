@@ -60,13 +60,13 @@ export const saveWorkoutProgress = async (req, res) => {
 
 export const getWorkoutProgress = async (req, res) => {
   const userId = req.params.userId;
-  console.log(req.params)
-  console.log(userId)
+  // console.log(req.params)
+  // console.log(userId)
   try {
 
 
     const user = await Users.findById(userId);
-    console.log(user)
+    // console.log(user)
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
