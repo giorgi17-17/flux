@@ -8,7 +8,7 @@ export type PayloadType = {
   email: string;
   formData?: Record<string, FormDataValue>;
 };
-
+import { BACKEND_URL } from "./helper";
 async function getAllExercises(
   limit: number,
   page: number,
@@ -17,7 +17,7 @@ async function getAllExercises(
 ) {
   const options = {
     method: "GET",
-    url: `http://localhost:5000/api/exercises/`,
+    url: `${BACKEND_URL}/api/exercises/`,
     params: { limit, page, bodyPart, target },
     headers: {
       accept: "application/json",
@@ -40,7 +40,7 @@ async function getUserById(id: string) {
   // console.log("fetch", id);
   const options = {
     method: "GET",
-    url: `http://localhost:5000/api/user/${id}`,
+    url: `${BACKEND_URL}/api/user/${id}`,
     headers: {
       accept: "application/json",
     },
@@ -60,7 +60,7 @@ async function getUserById(id: string) {
 const workoutPlan = async (userData: object) => {
   try {
     const response = await axios.post(
-      "http://localhost:5000/api/workoutPlan",
+      `${BACKEND_URL}/api/workoutPlan`,
       userData
     );
 
@@ -73,7 +73,7 @@ const workoutPlan = async (userData: object) => {
 
 const getWorkout = async () => {
   try {
-    const response = await axios.post("http://localhost:5000/api/getWorkouts");
+    const response = await axios.post(`${BACKEND_URL}/api/getWorkouts`);
 
     return response.data;
   } catch (error) {
@@ -88,7 +88,7 @@ async function saveWorkoutProgress(
   // exercisesCompleted: number
 ) {
   try {
-    const response = await fetch("http://localhost:5000/api/workout/progress", {
+    const response = await fetch(`${BACKEND_URL}/api/workout/progress`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -122,7 +122,7 @@ async function getWorkoutProgress(
 ) {
   try {
     const response = await fetch(
-      `http://localhost:5000/api/getWorkoutProgress/${userId}`,
+      `${BACKEND_URL}/api/getWorkoutProgress/${userId}`,
       {
         method: "GET",
         headers: {
@@ -164,7 +164,7 @@ const savePlanToDatabase = async (
   console.log("iddd", id);
   try {
     const response = await fetch(
-      `http://localhost:5000/api/user/${id}/savePlan`,
+      `${BACKEND_URL}/api/user/${id}/savePlan`,
       {
         method: "POST",
         headers: {
@@ -191,7 +191,7 @@ const savePlanToDatabase = async (
 // api.js
 const registerUser = async (payload: PayloadType) => {
   console.log("reg");
-  const response = await fetch("http://localhost:5000/api/register", {
+  const response = await fetch(`${BACKEND_URL}/api/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -203,7 +203,7 @@ const registerUser = async (payload: PayloadType) => {
 
 const updateUser = async (payload: PayloadType) => {
   console.log("update");
-  const response = await fetch("http://localhost:5000/api/update", {
+  const response = await fetch(`${BACKEND_URL}/api/update`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

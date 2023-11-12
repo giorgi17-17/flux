@@ -1,0 +1,1 @@
+export const BACKEND_URL = 'https://flux-4y2i.onrender.com'

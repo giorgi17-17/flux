@@ -18,43 +18,6 @@ export async function generateWorkoutPlan(req, res) {
   const time =
     userData["How much time can you commit to working out each day?"];
 
-  //   console.log("Preferred workouts are: ", workouts);
-  //   const prompt = `
-  //   Given the following user profile, generate a detailed 7-day home workout plan that should be formatted as an array of JSON objects. The array should cover each day from Monday to Sunday. The number of workout days should be ${time}, and the remaining days should be designated as rest days.
-
-  //   Each JSON object in the array should represent a single day and should follow one of the following structures:
-
-  //   For a rest day:
-  //   {
-  //     "day": "Name of the Day (e.g., Monday)",
-  //     "rest_day": true
-  //   }
-
-  //   For a workout day:
-  //   {
-  //     "day": "Name of the Day (e.g., Tuesday)",
-  //     "rest_day": false,
-  //     "targeted_body_part": "Name of the targeted body part (e.g., abs, chest, arms)",
-  //     "exercises": [
-  //       {
-  //         "name": "Name of the Exercise (e.g., Push-Up)",
-  //         "sets": "Number of Sets",
-  //         "reps": "Number of Reps or Time Duration (e.g., 30 seconds)"
-  //       },
-  //       // More exercises can be added here
-  //     ]
-  //   }
-
-  //   Your task is to fill in the above structures based on the user's profile:
-
-  //   Name: ${name},
-  //   Age: ${age},
-  //   Fitness Level: ${fitnessLevel},
-  //   Goal: ${goal},
-  //   Preferred Workouts: ${workouts.join(", ")}
-
-  //   Note: Please ensure the workout plan is suited for someone at ${fitnessLevel} fitness level and aims to achieve the goal of ${goal}.
-  // `;
 
   const prompt = `
 Generate a comprehensive ${numberOfWeeks}-week home workout plan formatted as an array of JSON objects. Each object represents one week, which contains an array of daily workout or rest day plans from Monday to Sunday. The plan should incorporate ${days} workout days per week, with the remaining days as rest days, according to the user's profile provided below:
@@ -101,7 +64,7 @@ Guidelines for the Workout Plan:
 - Vary the workouts to target different body parts throughout the week and include appropriate rest between sets.
 - Provide a balanced plan that progressively challenges the user over the 
 ${numberOfWeeks} weeks to prevent plateaus and encourage consistent improvement.
-- Make number of exercises minimum 6 and maximum 20
+- Make number of exercises for each day minimum 6 and maximum 20
 - Include both warm-up before workouts and cool-down routines after workouts.
 
 You must return array of ${numberOfWeeks} weeks
@@ -138,63 +101,7 @@ Workout Plan Structure:
 
 Ensure each weekly plan increases in intensity or complexity to match the user's progression, and includes both warm-up before workouts and cool-down routines after workouts.
 `;
-  // const schema = {
-  //   type: "object",
-  //   properties: {
-  //     plan: {
-  //       type: "array",
-  //       items: {
-  //         type: "object",
-  //         properties: {
-  //           week: {
-  //             type: "string"
-  //           },
-  //           days: {
-  //             type: "array",
-  //             items: {
-  //               type: "object",
-  //               properties: {
-  //                 day: {
-  //                   type: "string"
-  //                 },
-  //                 rest_day: {
-  //                   type: "boolean"
-  //                 },
-  //                 targeted_body_part: {
-  //                   type: "string"
-  //                 },
-  //                 exercises: {
-  //                   type: "array",
-  //                   items: { // Describing each 'Exercise' object
-  //                     type: "object",
-  //                     properties: {
-  //                       name: {
-  //                         type: "string"
-  //                       },
-  //                       sets: {
-  //                         type: "integer"
-  //                       },
-  //                       reps: {
-  //                         type: "integer"
-  //                       },
-  //                       rest: {
-  //                         type: "integer"
-  //                       }
-  //                     },
-  //                     required: ["name", "sets", "reps", "rest"]
-  //                   }
-  //                 }
-  //               },
-  //               required: ["day", "rest_day"]
-  //             }
-  //           }
-  //         },
-  //         required: ["week", "days"]
-  //       }
-  //     }
-  //   },
-  //   required: ["plan"]
-  // };
+// (model="gpt-4-1106-preview", response_format={ "type": "json_object" })
 
   const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
@@ -203,6 +110,7 @@ Ensure each weekly plan increases in intensity or complexity to match the user's
   try {
     const chatCompletion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
+      // "response_format": {"type": "json_object"},
       messages: [
         { role: "system", content: "You are a helpful fitness assistant." },
         { role: "user", content: prompt },
