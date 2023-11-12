@@ -7,6 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../firebase/firebase";
+import {BACKEND_URL} from "../services/helper"
 
 const Register = () => {
   const { createUser } = useAuth();
@@ -25,7 +26,7 @@ const Register = () => {
         console.log(googleEmail);
         localStorage.setItem("email", googleEmail);
 
-        const response = await fetch("http://localhost:5000/api/update", {
+        const response = await fetch(`${BACKEND_URL}/api/update`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -46,7 +47,7 @@ const Register = () => {
         console.log(googleEmail);
         localStorage.setItem("email", googleEmail);
 
-        const response = await fetch("http://localhost:5000/api/register", {
+        const response = await fetch(`${BACKEND_URL}/api/register`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -72,7 +73,7 @@ const Register = () => {
     console.log(localEmail);
     if (formData) {
       try {
-        const response = await fetch("http://localhost:5000/api/update", {
+        const response = await fetch(`${BACKEND_URL}/api/update`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -90,7 +91,7 @@ const Register = () => {
     } else {
       try {
         await createUser({ email, password });
-        const response = await fetch("http://localhost:5000/api/register", {
+        const response = await fetch(`${BACKEND_URL}/api/register`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
