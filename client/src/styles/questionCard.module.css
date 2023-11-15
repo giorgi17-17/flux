@@ -19,7 +19,7 @@
 }
 
 .multiple {
-  color: greenyellow;
+  color: var(--greenYellow);
 }
 .input {
   width: 100%;

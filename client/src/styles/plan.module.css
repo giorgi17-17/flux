@@ -169,6 +169,17 @@
 .startWorkout:disabled {
   background-color: gray;
 }
+
+.signInOrRegister {
+  max-width: 400px;
+  /* background-color: #007bff; */  
+}
+
+.signInOrRegister > h2 {
+  color: var(--greenYellow);
+  font-size: 28px;
+}
+
 @media (max-width: 768px) {
   .container {
     width: 100%;

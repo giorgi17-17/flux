@@ -8,6 +8,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../firebase/firebase";
+import { BACKEND_URL } from "../services/helper";
 
 const SignIn = () => {
   const { userValue, signIn } = useAuth();
@@ -28,7 +29,7 @@ const SignIn = () => {
         localStorage.setItem("email", googleEmail);
 
 
-        const response = await fetch("http://localhost:5000/api/update", {
+        const response = await fetch(`${BACKEND_URL}/api/update`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -36,7 +37,7 @@ const SignIn = () => {
           body: JSON.stringify({ _id: id, formData, email:googleEmail }),
         });
         console.log(response);
-        navigate("/");
+        navigate("/plan");
 
         console.log("user updated");
       } catch (error) {
@@ -50,7 +51,7 @@ const SignIn = () => {
         console.log(googleEmail);
         localStorage.setItem("email", googleEmail);
 
-        const response = await fetch("http://localhost:5000/api/register", {
+        const response = await fetch(`${BACKEND_URL}/api/register`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -58,7 +59,7 @@ const SignIn = () => {
           body: JSON.stringify({ _id: id, email:googleEmail }),
         });
         console.log(response);
-        navigate("/");
+        navigate("/plan");
         console.log("ok");
         console.log("user created");
       } catch (error) {

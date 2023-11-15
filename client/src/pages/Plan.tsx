@@ -6,6 +6,7 @@ import {
   workoutPlan,
 } from "../services/fetch";
 import styles from "../styles/plan.module.css";
+import { useAuth } from "../context/useAuth";
 
 import "react-calendar/dist/Calendar.css";
 import { Link } from "react-router-dom";
@@ -92,22 +93,26 @@ const Plan = () => {
   );
   const date = new Date();
   const currentDay = date.toLocaleDateString("en-US", { weekday: "long" });
+  const { currentUser } = useAuth();
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const workout = await getWorkoutProgress(id);
         setWorkoutProgress(workout);
-    
+
         const userData = await getUserById(id);
         setUser(userData);
-    
+
         // Check if userData and userData.workoutPlan are defined
         if (userData && userData.workoutPlan) {
           setPlan(userData.workoutPlan.plan);
           setPlanStartDate(userData.planStartDate);
-          updateCurrentWeekDay(userData.planStartDate, userData.workoutPlan.plan);
-    
+          updateCurrentWeekDay(
+            userData.planStartDate,
+            userData.workoutPlan.plan
+          );
+
           if (userData.planStartDate) {
             calculateCurrentWorkoutDay(
               userData.workoutPlan.plan,
@@ -115,24 +120,28 @@ const Plan = () => {
             );
           }
         }
+        setIsLoading(false);
       } catch (error) {
         console.error("An error occurred:", error);
       }
       setIsLoading(false);
     };
-    
 
-    fetchUser();
-  }, [id]);
+    if (currentUser) {
+      fetchUser();
+    } else {
+      setIsLoading(false);
+    }
+  }, [id, currentUser]);
 
   const isDateMatch = (dateString: string) => {
     const workoutDate = new Date(dateString);
     const currentDate = new Date();
 
-    console.log(
-      workoutDate.getDate() === currentDate.getDate() &&
-        workoutDate.getMonth() === currentDate.getMonth()
-    );
+    // console.log(
+    //   workoutDate.getDate() === currentDate.getDate() &&
+    //     workoutDate.getMonth() === currentDate.getMonth()
+    // );
 
     return (
       workoutDate.getDate() === currentDate.getDate() &&
@@ -225,7 +234,7 @@ const Plan = () => {
     return null; // No workout plan for today
   };
   getCurrentDayPlan(plan, date);
-
+  // console.log(plan)
   return (
     <div className={styles.loadingContainer}>
       {!isLoading ? (
@@ -314,10 +323,22 @@ const Plan = () => {
             </div>
           ) : (
             <div>
-              <div className={styles.title}>Workout Plan</div>
-              <button className={styles.generateButton} onClick={generatePlan}>
-                Generate Plan
-              </button>
+              {currentUser ? (
+                <div>
+                  <div className={styles.title}>Workout Plan</div>
+                  <button
+                    className={styles.generateButton}
+                    onClick={generatePlan}
+                  >
+                    Generate Plan
+                  </button>
+                </div>
+              ) : (
+                <div className={styles.signInOrRegister}>
+                  <h2>You need to Sign In or Register to generate a plan</h2>
+
+                </div>
+              )}
             </div>
           )}
         </div>

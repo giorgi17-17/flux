@@ -1,1 +1,2 @@
-export const BACKEND_URL = 'https://flux-4y2i.onrender.com'
+
+export const BACKEND_URL = import.meta.env.VITE_BACKEND_URL

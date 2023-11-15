@@ -14,9 +14,12 @@ body {
   --white: #fff;
   --red: #c70039;
   --redHover: #c7003891;
+  --greenYellow: #adff2f;
+
   --cardBg-color: #1a1a1a;
   --primaryCard-color: #2a9d8f;
   --secondaryCard-color: #e76f51;
 }
 
 /* C70039  red */
+/* color: greenyellow; */
