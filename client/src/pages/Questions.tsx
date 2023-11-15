@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import styles from "../styles/questions.module.css";
 import { useAuth } from "../context/useAuth";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { PayloadType, registerUser, updateUser } from "../services/fetch";
 import QuestionCard from "../components/common/QuestionsCard";
+import SignInOrRegister from "../components/common/SignInOrRegister";
 
 type Question = {
   question: string;
@@ -196,19 +197,7 @@ const Questions = () => {
         <div className={styles.finished}>
           <div>You have completed all questions!</div>
           {!currentUser && (
-            <div>
-              <div>
-                <h1>You need to sign in or register to see a workout plan</h1>
-              </div>
-              <div className={styles.buttons}>
-                <Link to={"/register"}>
-                  <button className={styles.register}>Register</button>
-                </Link>
-                <Link to={"/signIn"}>
-                  <button className={styles.signIn}>Sign In</button>
-                </Link>
-              </div>
-            </div>
+           <SignInOrRegister />
           )}
         </div>
       )}

@@ -1,0 +1,60 @@
+/* signInOrRegister.module.css */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: var(--black);
+  color: var(--white);
+}
+
+.title {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.buttons {
+  display: flex;
+  gap: 20px;
+}
+
+.buttons > button {
+  padding: 10px 20px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+  border-radius: 5px;
+}
+
+.register {
+  background-color: var(--primary);
+  color: var(--black);
+
+  &:hover {
+    background-color: var(--primaryCard-color);
+  }
+}
+
+
+.registerLink,.signInLink {
+    text-decoration: none;
+
+}
+
+.signInLink {
+    color: var(--white);
+}
+.registerLink {
+    color: var(--black);
+}
+.signIn {
+  background-color: var(--red);
+  color: var(--white);
+
+ 
+}

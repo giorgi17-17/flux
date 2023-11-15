@@ -1,0 +1,84 @@
+.container {
+  background: transparent;
+  color: aliceblue;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.link {
+  color: var(--red);
+  text-decoration: none;
+  font-size: 3rem;
+}
+.hamburger {
+    z-index: 200;
+    /* background-color: rebeccapurple; */
+
+}
+.hamburgerSideBar {
+    z-index: 200;
+    /* background-color: chocolate; */
+    text-align: right;
+
+}
+.sideBar {
+    flex-direction: column;
+    padding: 15px;
+    display: block;
+    /* width: 200px; */
+    width: 100%;
+    height: 100vh;
+    background-color: var(--black);
+    /* background-color: aliceblue; */
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 10;
+    /* margin: 0 -10px; */
+    width: 100%;
+
+  }
+
+
+  
+.navbarNav {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 20px;
+    list-style: none;
+    /* padding: 10px; */
+    width: 100%;
+
+    flex-wrap: wrap;
+  }
+ 
+
+  .navItem {
+    width: 100%;
+    text-decoration: none;
+    color: rgb(250, 250, 250);
+    /* list-style: none; */
+    font-size: 23px;
+    background-color: var(--cardBg-color);
+    border-radius: 5px;
+    padding: 10px;
+    list-style: none;
+    text-align: end;
+
+  }
+  .navlink {
+    text-decoration: none;
+    width: 100%;
+    list-style: none;
+    text-align: right;
+
+    color: rgb(250, 250, 250);
+
+  }
+  .link {
+    text-decoration: none;
+    color: var(--primary);
+    font-size: 40px;
+  } 

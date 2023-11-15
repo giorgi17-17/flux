@@ -1,6 +1,6 @@
 import styles from "../../styles/body.module.css";
 import Footer from "./Footer";
-import image from "../../assets/cagin-kargi-Qzp60FT380E-unsplash.jpg";
+// import image from "../../assets/cagin-kargi-Qzp60FT380E-unsplash.jpg";
 import ProgramCards from "../common/ProgramCards";
 import { IoMdFitness } from "react-icons/io";
 import { FaBowlFood } from "react-icons/fa6";
@@ -8,11 +8,14 @@ import { BiRun } from "react-icons/bi";
 import { Link } from "react-router-dom";
 // import { useAuth } from "../../context/useAuth";
 
-
 const Body = () => {
   // const { currentUser } = useAuth();
 
   // console.log(currentUser)
+
+  const planCreated = localStorage.getItem("planCreated");
+  // const parsed = JSON.parse(planCreated)
+  // console.log(typeof parsed);
 
   return (
     <div className={styles.container}>
@@ -28,13 +31,15 @@ const Body = () => {
           </p>
           <div className={styles.button}>
             <Link to={"/plan"} className={styles.link}>
-              <button className={styles.start}>Create Plan</button>
+              <button className={styles.start}>
+                {planCreated === "false" ? "Create Plan" : "See your plan"}
+              </button>
             </Link>
           </div>
         </div>
-        <div className={styles.image}>
+        {/* <div className={styles.image}>
           <img src={image} alt="fsd" />
-        </div>
+        </div> */}
       </div>
       <div className={styles.programs}>
         <div className={styles.programsText}>Our Training Programs</div>

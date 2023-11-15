@@ -56,8 +56,8 @@
 }
 
 
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .signIn, .register,.navbarNav {
     display: none;
   }
-}
+} */
