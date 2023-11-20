@@ -168,6 +168,7 @@ const Plan = () => {
 
   const generatePlan = async () => {
     setPlanisGenerateing(true);
+    // localStorage.setItem("planCreated", "true");
 
     if (data) {
       await workoutPlan(data)

@@ -4,13 +4,18 @@
   background: transparent;
   padding: 10px 20px;
 }
-
+.beta {
+  text-align: center;
+  color: greenyellow;
+  font-size: 20px;
+}
 .scrolledHeader {
   background: rgb(255, 255, 255);
 }
 
 .container {
   display: flex;
+
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
@@ -38,7 +43,8 @@
   display: flex;
   gap: 20px;
 }
-.signIn, .register {
+.signIn,
+.register {
   padding: 13px 28px;
   border: none;
   border-radius: 5px;
@@ -55,9 +61,11 @@
   color: var(--white);
 }
 
-
-/* @media (max-width: 768px) {
-  .signIn, .register,.navbarNav {
+@media (max-width: 768px) {
+  /* .signIn, .register,.navbarNav {
     display: none;
+  } */
+  .beta {
+    font-size: 14px;
   }
-} */
+}

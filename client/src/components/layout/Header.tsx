@@ -24,6 +24,9 @@ const Header = () => {
 
   return (
     <header className={styles.header}>
+      <div className={styles.beta}>
+        You can use this webiste for free while it is on BETA version
+      </div>
       {windowSize.width > 800 ? (
         <div>
           <div className={styles.container}>

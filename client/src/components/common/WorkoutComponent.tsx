@@ -3,8 +3,8 @@ import styles from "../../styles/workoutComponent.module.css";
 
 // Assuming you have Exercise type defined as you did previously
 import { DayPlan, Exercise } from "../../pages/Workout";
-import {  saveWorkoutProgress } from "../../services/fetch";
-
+import { saveWorkoutProgress } from "../../services/fetch";
+import image from "../../assets/cagin-kargi-Qzp60FT380E-unsplash.jpg";
 type ExerciseComponentProps = {
   plan: DayPlan;
 };
@@ -21,20 +21,32 @@ export const WorkoutComponent: React.FC<ExerciseComponentProps> = ({
   const shouldExecuteTimer = useRef(true);
   const exercise: Exercise = plan.exercises[currentExerciseIndex];
   const setsToNumber = Number(exercise.sets);
-const date  = new Date()
-const id = localStorage.getItem("myCustomId") || "";
+  const date = new Date();
+  const id = localStorage.getItem("myCustomId") || "";
 
   const handleCompleteSet = () => {
     setSetsCompleted((prev) => {
       const newSetsCompleted = prev + 1;
 
       // If this was the last set, start the rest timer
-      if (newSetsCompleted >= setsToNumber) {
+      if (newSetsCompleted) {
         startRestTimer();
       }
       return newSetsCompleted;
     });
   };
+
+  // const handleCompleteSet = () => {
+  //   setSetsCompleted((prev) => {
+  //     const newSetsCompleted = prev + 1;
+
+  //     // If this was the last set, start the rest timer
+  //     if (setsCompleted >= setsToNumber) {
+  //       startRestTimer();
+  //     }
+  //     return newSetsCompleted;
+  //   });
+  // };
 
   const onExerciseComplete = () => {
     clearRestTimer(); // Ensure the timer is cleared when moving to next exercise
@@ -44,10 +56,10 @@ const id = localStorage.getItem("myCustomId") || "";
       setCurrentExerciseIndex(nextIndex);
       setSetsCompleted(0);
     } else {
-      saveWorkoutProgress(id, date)
-      console.log("save func")
-        // All exercises completed, you may want to handle the end of the workout here
-        setIsWorkoutComplete(true); // Set workout to completed when all exercises are done
+      saveWorkoutProgress(id, date);
+      console.log("save func");
+      // All exercises completed, you may want to handle the end of the workout here
+      setIsWorkoutComplete(true); // Set workout to completed when all exercises are done
     }
   };
 
@@ -60,10 +72,10 @@ const id = localStorage.getItem("myCustomId") || "";
       setRemainingTime((prevTime) => {
         const newTime = prevTime - 1;
         if (newTime <= 0) {
-          if (shouldExecuteTimer.current) {
-            onExerciseComplete();
-            console.log('first')
-          }
+          // if (shouldExecuteTimer.current) {
+          //   onExerciseComplete();
+          //   console.log("first");
+          // }
           clearInterval(id);
           setTimerId(null);
           return 0; // Reset to 0 to avoid negative numbers
@@ -85,43 +97,58 @@ const id = localStorage.getItem("myCustomId") || "";
   const skipTime = () => {
     shouldExecuteTimer.current = false; // Set the ref to false when skipping
     clearRestTimer(); // Clear the timeout immediately
-    onExerciseComplete();
+    // onExerciseComplete();
     setTimerId(null); // Clear the stored timer ID
   };
-
-
+  // console.log(timerId);
+  if( setsCompleted === setsToNumber) console.log('first')
   return (
     <div className={styles.exerciseContainer}>
+      <div
+        className={`
+         ${
+          timerId !== null && setsCompleted !== setsToNumber
+            ? styles.restContainerTrue
+            : styles.restContainerfalse
+        }
+        `}
+      >
+        </div>
+        {timerId !== null && (
+          <div className={styles.rest}>
+            <p>Rest {remainingTime} </p>
+            <button className={styles.skip} onClick={skipTime}>Skip Time</button>
+            
+          </div>
+        )}
+
       <div className={styles.exerciseInfo}>
-        <span>{exercise.name}</span>
-        <span>
-          {exercise.sets} sets of {exercise.reps} reps
-        </span>
-        {exercise.rest && <span>Rest: {exercise.rest} seconds</span>}
+        <div className={styles.video}>
+          <img src={image} alt="" />
+        </div>
+        <p className={styles.name}>{exercise.name}</p>
+        <p className={styles.reps}>{exercise.reps} reps</p>
+        {/* {exercise.rest && <span>Rest: {exercise.rest} seconds</span>} */}
       </div>
       <div className={styles.exerciseActions}>
         <button
           onClick={handleCompleteSet}
           disabled={setsCompleted >= setsToNumber}
         >
-          Complete Set
+          DONE
         </button>
       </div>
       <div>
         Sets Completed: {setsCompleted} / {setsToNumber}
       </div>
-        <span>Rest Time Remaining: {remainingTime} seconds</span>
       <div></div>
-      {timerId !== null && (
-        <div>
-          <button onClick={skipTime}>Next Exercise</button>
+
+      {timerId === null && setsCompleted >= setsToNumber && (
+        <div className={styles.nextExercise}>
+          <button onClick={onExerciseComplete}>Next Exercise</button>
         </div>
       )}
-      {isWorkoutComplete && (
-        <div>
-            Finished
-        </div>
-      )}
+      {isWorkoutComplete && <div>Finished</div>}
       {/* {setsCompleted === setsToNumber && (
         <div>
           <button

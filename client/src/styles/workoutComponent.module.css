@@ -6,13 +6,85 @@
     justify-content: center;
     margin-bottom: 1rem;
     padding: 1rem;
-    border: 1px solid #ddd;
+    /* border: 1px solid #ddd; */
     border-radius: 8px;
     background-color: #dad9d9;
     /* margin: auto; */
     width: 600px;
     max-width: 800px;
+    position: relative;
+    overflow: hidden;
+    gap: 10px;
   }
+
+.restContainerTrue {
+  position: absolute;
+  bottom: 0;
+  /* border-radius: 5px; */
+  width: 100%;
+  height: 200px;
+  background-color: var(--beige);
+  display: flex;
+  flex-direction: column;
+}
+
+/* .restContainerfalse {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 200px;
+  background-color: var(--beige);
+  display: flex;
+  flex-direction: column;
+} */
+
+.rest {
+  position: absolute;
+  bottom: 0;
+  border-radius: 5px;
+  width: 100%;
+  height: 200px;
+  background-color: var(--beige);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.nextExercise {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.nextExercise > button {
+  padding: 10px 15px;
+  border: none;
+  /* background-color: #333; */
+  border-radius: 5px;
+}
+/* 
+
+.rest {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+} */
+
+.rest > p {
+  font-size: 1.5rem;
+}
+
+.skip {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+}
 
   /* .exerciseContainer {
     margin: auto;
@@ -21,6 +93,11 @@
 
 .exerciseInfo {
   margin-bottom: 1rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
 
 .exerciseInfo span {
@@ -28,6 +105,26 @@
   font-size: 1rem;
   color: #333;
   margin-bottom: 0.5rem;
+}
+.video {
+  width: 100%;
+  height: 400px;
+}
+.video > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+}
+
+.name {
+  font-size: 2rem;
+  font-weight: bold;
+}
+.reps {
+  font-weight: bold;
+  font-size: 2rem;
+
 }
 
 .exerciseActions {
@@ -37,13 +134,14 @@
 
 .exerciseActions > button {
   padding: 0.5rem 1rem;
-  font-size: 1rem;
+  font-size: 1.4rem;
   color: #fff;
   background-color: #007bff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  font-weight: 700;
 }
 
 .exerciseActions > button:hover {
