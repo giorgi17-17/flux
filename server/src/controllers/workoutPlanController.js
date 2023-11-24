@@ -23,8 +23,6 @@ export async function generateWorkoutPlan(req, res) {
 Generate a comprehensive ${numberOfWeeks}-week home workout plan formatted as an array of JSON objects. Each object represents one week, which contains an array of daily workout or rest day plans from Monday to Sunday. The plan should incorporate ${days} workout days per week, with the remaining days as rest days, according to the user's profile provided below:
 
 User Profile:
-- Name: ${name}
-- Age: ${age}
 - Fitness Level: ${fitnessLevel}
 - Workout Goal: ${goal}
 - Preferred Workouts: [${workouts.join(", ")}]
@@ -58,48 +56,32 @@ Use only the following workout names for the exercises:
 - Reverse Plank
 
 Guidelines for the Workout Plan:
-- Tailor workouts to the user's ${fitnessLevel} fitness level.
-- Focus on the user's goal of ${goal}.
-- Plan home-based workouts that utilize available equipment.
 - Vary the workouts to target different body parts throughout the week and include appropriate rest between sets.
 - Provide a balanced plan that progressively challenges the user over the 
 ${numberOfWeeks} weeks to prevent plateaus and encourage consistent improvement.
-- Make number of exercises for each day minimum 6 and maximum 20
-- Include both warm-up before workouts and cool-down routines after workouts.
-
+-  number of exercises for each day mus be minimum 5 and maximum 15
 You must return array of ${numberOfWeeks} weeks
 return only array do not write any text 
 dont put array into quotes
-
 Workout Plan Structure:
-
- 
-    // Array of 'Week' objects
     {
       "week": "Week 1",
       "days": [
-        // Array of 'Day' objects
         {
           "day": "Monday",
           "rest_day": false,
           "targeted_body_part": "Chest",
           "exercises": [
-            // Array of 'Exercise' objects
             {
               "name": "Push-Up",
               "sets": "3",
               "reps": "10",
               "rest": "60"
             },
-            // More exercises...
           ]
         },
-        // More 'Day' objects...
-      ] 
+      ]
     },
-    // More 'Week' objects...
-
-Ensure each weekly plan increases in intensity or complexity to match the user's progression, and includes both warm-up before workouts and cool-down routines after workouts.
 `;
 // (model="gpt-4-1106-preview", response_format={ "type": "json_object" })
 
@@ -109,7 +91,7 @@ Ensure each weekly plan increases in intensity or complexity to match the user's
 
   try {
     const chatCompletion = await openai.chat.completions.create({
-      model: "gpt-4",
+      model: "gpt-3.5-turbo-1106",
       // "response_format": {"type": "json_object"},
       messages: [
         { role: "system", content: "You are a helpful fitness assistant." },
