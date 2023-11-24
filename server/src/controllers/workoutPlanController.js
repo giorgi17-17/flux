@@ -6,7 +6,7 @@ export async function generateWorkoutPlan(req, res) {
   const userData = req.body;
 
   console.log("Received user data: ", userData);
-  const numberOfWeeks = 2;
+  const numberOfWeeks = 1;
 
   const age = userData["How old are you?"];
   const name = userData["What is your name?"];
@@ -59,10 +59,13 @@ Guidelines for the Workout Plan:
 - Vary the workouts to target different body parts throughout the week and include appropriate rest between sets.
 - Provide a balanced plan that progressively challenges the user over the 
 ${numberOfWeeks} weeks to prevent plateaus and encourage consistent improvement.
--  number of exercises for each day mus be minimum 5 and maximum 15
+-  number of exercises for each day must be minimum 15 and maximum 20
 You must return array of ${numberOfWeeks} weeks
 return only array do not write any text 
 dont put array into quotes
+you must return days array where you include workout days and rest days 
+if it is rest day mark it as true
+
 Workout Plan Structure:
     {
       "week": "Week 1",
@@ -91,10 +94,10 @@ Workout Plan Structure:
 
   try {
     const chatCompletion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo-1106",
+      model: "gpt-4-1106-preview",
       // "response_format": {"type": "json_object"},
       messages: [
-        { role: "system", content: "You are a helpful fitness assistant." },
+        { role: "system", content: "You are a professional fitness assistant." },
         { role: "user", content: prompt },
       ],
       // functions: [{ name: "set_workout", parameters: schema }],
