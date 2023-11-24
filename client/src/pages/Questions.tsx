@@ -5,6 +5,7 @@ import { useAuth } from "../context/useAuth";
 import { PayloadType, registerUser, updateUser } from "../services/fetch";
 import QuestionCard from "../components/common/QuestionsCard";
 import SignInOrRegister from "../components/common/SignInOrRegister";
+import {  useNavigate } from "react-router-dom";
 
 type Question = {
   question: string;
@@ -68,6 +69,7 @@ const Questions = () => {
     JSON.parse(localStorage.getItem("answers") || "false")
   );
   const localAnswers = JSON.parse(localStorage.getItem("answers") || "false");
+  const navigate = useNavigate();
 
   const localEmail = localStorage.getItem("email") || "false";
   localStorage.setItem("email", localEmail || "false");
@@ -131,7 +133,7 @@ const Questions = () => {
   console.log("out ", localAnswers);
 
   const handleSubmit = async () => {
-    localStorage.setItem("formData", JSON.stringify(formData || false));
+    localStorage.setItem("formData", JSON.stringify(formData));
     localStorage.setItem("answers", JSON.stringify(true));
     setAnswers(true);
 
@@ -178,6 +180,10 @@ const Questions = () => {
       });
     }
   };
+
+  if(currentQuestionIndex < questions.length && answers) {
+    navigate("/plan")
+  }
   
 
   return (

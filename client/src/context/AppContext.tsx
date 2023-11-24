@@ -14,7 +14,7 @@ const AppContext = createContext<AppContextType | null>(null);
 export function AppContextProvider({ children }: { children: ReactNode }) {
   const [dataNotFound, setDataNotFound] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
-  localStorage.setItem("formData", JSON.stringify(false));
+  // localStorage.setItem("formData", JSON.stringify(false));
   // localStorage.setItem("email", JSON.stringify(false));
   const generateUniqueId = () => {
     let userId = localStorage.getItem("myCustomId");

@@ -12,6 +12,7 @@ import "react-calendar/dist/Calendar.css";
 import { Link, useNavigate } from "react-router-dom";
 // import SignInOrRegister from "../components/common/SignInOrRegister";
 import Loading from "../components/common/Loading";
+import SignInOrRegister from "../components/common/SignInOrRegister";
 
 type Exercise = {
   name: string;
@@ -98,7 +99,7 @@ const Plan = () => {
   const date = new Date();
   const currentDay = date.toLocaleDateString("en-US", { weekday: "long" });
   const { currentUser } = useAuth();
-
+const answers = localStorage.getItem("answers")
 
   const navigate = useNavigate();
 
@@ -109,6 +110,7 @@ const Plan = () => {
     // }
     const fetchUser = async () => {
       if (currentUser) {
+        console.log(currentUser)
         try {
           const workoutData = await getWorkoutProgress(id);
           setWorkoutProgress(workoutData);
@@ -135,15 +137,14 @@ const Plan = () => {
           console.error("An error occurred:", error);
         }
       }
+      // else {
+      //   console.log(currentUser)
+      //   navigate('/')
+      // }
       setIsLoading(false);
     };
 
-    if (currentUser) {
       fetchUser();
-    } else {
-
-      setIsLoading(false);
-    }
   }, [id, currentUser, navigate,isLoading]);
 
   const isDateMatch = (dateString: string) => {
@@ -177,22 +178,26 @@ const Plan = () => {
   };
 
   const generatePlan = async () => {
-    setPlanisGenerateing(true);
-    localStorage.setItem("planCreated", "true");
-
-    if (data) {
-      await workoutPlan(data)
-        .then((receivedPlan) => {
-          setPlan(receivedPlan.plan);
-          setPlanisGenerateing(false);
-
-          savePlanToDatabase(id, receivedPlan, planStartDate);
-          return receivedPlan.plan; // Return the received plan for the next promise
-        })
-        .catch((error) => {
-          console.error("An error occurred:", error);
-        });
+    if(answers === "true"){
+      setPlanisGenerateing(true);
+      localStorage.setItem("planCreated", "true");
+      if (data) {
+        await workoutPlan(data)
+          .then((receivedPlan) => {
+            setPlan(receivedPlan.plan);
+            setPlanisGenerateing(false);
+  
+            savePlanToDatabase(id, receivedPlan, planStartDate);
+            return receivedPlan.plan; // Return the received plan for the next promise
+          })
+          .catch((error) => {
+            console.error("An error occurred:", error);
+          });
+      }
+    }else {
+      navigate("/questions")
     }
+   
   };
   const calculateCurrentWorkoutDay = (plan: WeekPlan[], startDate: Date) => {
     let workoutDayCount = 0;
@@ -255,7 +260,7 @@ const Plan = () => {
     <div className={styles.loadingContainer}>
       {!isLoading ? (
         <div className={styles.container}>
-          {currentUser && (
+          {currentUser ? (
             <div className={styles.container2}>
               {plan.length > 0 ? (
                 <div className={styles.planContainer}>
@@ -367,7 +372,7 @@ const Plan = () => {
                 </div>
               )}
             </div>
-          )}
+          ): (<div><SignInOrRegister /></div>)}
         </div>
       ) : (
         <div className={styles.loading}>

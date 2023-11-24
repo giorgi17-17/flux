@@ -4,10 +4,13 @@ import { VscClose } from "react-icons/vsc";
 import styles from "../../styles/headerMobileComponent.module.css";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useAuth } from "../../context/useAuth";
+import SignInOrRegister from "../common/SignInOrRegister";
 
 const HeaderMobileComponent = () => {
-    const [open, setOpen] = useState(false);
-    const { pathname } = useLocation();
+  const [open, setOpen] = useState(false);
+  const { pathname } = useLocation();
+  const { currentUser, logOut } = useAuth();
 
   useEffect(() => {
     setOpen(() => false); // close menu if path changes!
@@ -36,11 +39,9 @@ const HeaderMobileComponent = () => {
       </div>
       <div className={styles.hamburger}>{!open && hamburgerIcon}</div>
       {open && (
-          <div className={styles.sideBar}>
-            <div className={styles.hamburgerSideBar}>
-              {open && closeIcon}
-            </div>
-            <div>
+        <div className={styles.sideBar}>
+          <div className={styles.hamburgerSideBar}>{open && closeIcon}</div>
+          <div>
             <ul className={styles.navbarNav}>
               {/* <li className={styles.navItem}>
                 <Link className={styles.navlink} to={"/workouts"}>
@@ -74,8 +75,15 @@ const HeaderMobileComponent = () => {
               </li>
               {/* Add more navigation links as needed */}
             </ul>
-            </div>
           </div>
+          {currentUser ? (
+            <div  className={styles.logOut}>
+              <button onClick={logOut} className={styles.signIn}>
+                Log Out
+              </button>
+            </div>
+          ): (<div><SignInOrRegister /></div>)}
+        </div>
       )}
     </div>
   );

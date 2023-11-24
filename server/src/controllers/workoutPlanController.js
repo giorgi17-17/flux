@@ -95,7 +95,7 @@ Workout Plan Structure:
           ]
         },
         // More 'Day' objects...
-      ]
+      ] 
     },
     // More 'Week' objects...
 
@@ -109,7 +109,7 @@ Ensure each weekly plan increases in intensity or complexity to match the user's
 
   try {
     const chatCompletion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
+      model: "gpt-4",
       // "response_format": {"type": "json_object"},
       messages: [
         { role: "system", content: "You are a helpful fitness assistant." },
