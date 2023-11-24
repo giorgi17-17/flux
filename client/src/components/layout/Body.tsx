@@ -9,12 +9,8 @@ import { Link } from "react-router-dom";
 // import { useAuth } from "../../context/useAuth";
 
 const Body = () => {
-  // const { currentUser } = useAuth();
-
-  // console.log(currentUser)
 
   const planCreated = localStorage.getItem("planCreated");
-
   // const parsed = JSON.parse(planCreated)
   // console.log(typeof parsed);
 
@@ -35,7 +31,7 @@ const Body = () => {
               <button className={styles.start}>
                 {planCreated === "false"
                   ? "Get Started with Your Plan"
-                  : "Get Started with Your Plan"}
+                  : "View Your Plan"}
               </button>
             </Link>
           </div>

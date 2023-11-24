@@ -14,6 +14,11 @@
   align-items: center;
 }
 .loading {
+  width: 100%;
+  height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: #dee2e6;
 }
 .startWorkout {

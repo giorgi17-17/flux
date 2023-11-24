@@ -1,18 +1,37 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import styles from "../../styles/workoutComponent.module.css";
-
-// Assuming you have Exercise type defined as you did previously
 import { DayPlan, Exercise } from "../../pages/Workout";
-import { saveWorkoutProgress } from "../../services/fetch";
+import { getWorkoutByName, saveWorkoutProgress } from "../../services/fetch";
 import image from "../../assets/cagin-kargi-Qzp60FT380E-unsplash.jpg";
 type ExerciseComponentProps = {
   plan: DayPlan;
 };
 
+type Workout = {
+  bodyPart: string;
+  caloriesBurnt: string;
+  difficultyLevel: string;
+  duration: string;
+  equipment: string;
+  imageUrl: string;
+  instructions: string[];
+  name: string;
+  reps: string;
+  secondaryMuscles: string[];
+  tags: string[];
+  target: string;
+  tips: string[];
+  videoUrl: string;
+  __v: number;
+  _id: string;
+};
+
 export const WorkoutComponent: React.FC<ExerciseComponentProps> = ({
   plan,
 }) => {
+  const [currentWorkout, setCurrentWorkout] = useState<Workout | null>(null);
   const [setsCompleted, setSetsCompleted] = useState(0);
+  const [numberOfworkout, setNumberOfworkout] = useState(0);
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [isWorkoutComplete, setIsWorkoutComplete] = useState(false);
 
@@ -23,6 +42,17 @@ export const WorkoutComponent: React.FC<ExerciseComponentProps> = ({
   const setsToNumber = Number(exercise.sets);
   const date = new Date();
   const id = localStorage.getItem("myCustomId") || "";
+
+  useEffect(() => {
+    getWorkoutByName(exercise.name)
+      .then((data) => {
+        // console.log(data);
+        setCurrentWorkout(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [exercise.name]);
 
   const handleCompleteSet = () => {
     setSetsCompleted((prev) => {
@@ -36,20 +66,9 @@ export const WorkoutComponent: React.FC<ExerciseComponentProps> = ({
     });
   };
 
-  // const handleCompleteSet = () => {
-  //   setSetsCompleted((prev) => {
-  //     const newSetsCompleted = prev + 1;
-
-  //     // If this was the last set, start the rest timer
-  //     if (setsCompleted >= setsToNumber) {
-  //       startRestTimer();
-  //     }
-  //     return newSetsCompleted;
-  //   });
-  // };
-
   const onExerciseComplete = () => {
     clearRestTimer(); // Ensure the timer is cleared when moving to next exercise
+    setNumberOfworkout((prev) => prev + 1);
 
     const nextIndex = currentExerciseIndex + 1;
     if (plan.exercises && nextIndex < plan.exercises.length) {
@@ -72,10 +91,6 @@ export const WorkoutComponent: React.FC<ExerciseComponentProps> = ({
       setRemainingTime((prevTime) => {
         const newTime = prevTime - 1;
         if (newTime <= 0) {
-          // if (shouldExecuteTimer.current) {
-          //   onExerciseComplete();
-          //   console.log("first");
-          // }
           clearInterval(id);
           setTimerId(null);
           return 0; // Reset to 0 to avoid negative numbers
@@ -101,32 +116,35 @@ export const WorkoutComponent: React.FC<ExerciseComponentProps> = ({
     setTimerId(null); // Clear the stored timer ID
   };
   // console.log(timerId);
-  if( setsCompleted === setsToNumber) console.log('first')
+  if (setsCompleted === setsToNumber) console.log("first");
   return (
     <div className={styles.exerciseContainer}>
       <div
         className={`
          ${
-          timerId !== null && setsCompleted !== setsToNumber
-            ? styles.restContainerTrue
-            : styles.restContainerfalse
-        }
+           timerId !== null && setsCompleted !== setsToNumber
+             ? styles.restContainerTrue
+             : styles.restContainerfalse
+         }
         `}
-      >
+      ></div>
+      {timerId !== null && (
+        <div className={styles.rest}>
+          <p>Rest {remainingTime} </p>
+          <button className={styles.skip} onClick={skipTime}>
+            Skip Time
+          </button>
         </div>
-        {timerId !== null && (
-          <div className={styles.rest}>
-            <p>Rest {remainingTime} </p>
-            <button className={styles.skip} onClick={skipTime}>Skip Time</button>
-            
-          </div>
-        )}
+      )}
 
       <div className={styles.exerciseInfo}>
+        <p>
+          {numberOfworkout}/{plan.exercises.length}
+        </p>
         <div className={styles.video}>
           <img src={image} alt="" />
         </div>
-        <p className={styles.name}>{exercise.name}</p>
+        <p className={styles.name}>{currentWorkout?.name}</p>
         <p className={styles.reps}>{exercise.reps} reps</p>
         {/* {exercise.rest && <span>Rest: {exercise.rest} seconds</span>} */}
       </div>

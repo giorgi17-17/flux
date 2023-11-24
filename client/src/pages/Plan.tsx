@@ -9,8 +9,9 @@ import styles from "../styles/plan.module.css";
 import { useAuth } from "../context/useAuth";
 
 import "react-calendar/dist/Calendar.css";
-import { Link } from "react-router-dom";
-import SignInOrRegister from "../components/common/SignInOrRegister";
+import { Link, useNavigate } from "react-router-dom";
+// import SignInOrRegister from "../components/common/SignInOrRegister";
+import Loading from "../components/common/Loading";
 
 type Exercise = {
   name: string;
@@ -78,6 +79,7 @@ const Plan = () => {
     },
   };
   const id = localStorage.getItem("myCustomId") || "";
+  // const email = localStorage.getItem('email')
   const [user, setUser] = useState<User | null>(null);
   const [plan, setPlan] = useState<WeekPlan[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -97,7 +99,14 @@ const Plan = () => {
   const currentDay = date.toLocaleDateString("en-US", { weekday: "long" });
   const { currentUser } = useAuth();
 
+
+  const navigate = useNavigate();
+
   useEffect(() => {
+    // if (currentUser === null && isLoading === false){
+    //   navigate("/signIn");
+    //   return; // Exit early if not authenticated and not loading
+    // }
     const fetchUser = async () => {
       if (currentUser) {
         try {
@@ -132,9 +141,10 @@ const Plan = () => {
     if (currentUser) {
       fetchUser();
     } else {
+
       setIsLoading(false);
     }
-  }, [id, currentUser]);
+  }, [id, currentUser, navigate,isLoading]);
 
   const isDateMatch = (dateString: string) => {
     const workoutDate = new Date(dateString);
@@ -168,7 +178,7 @@ const Plan = () => {
 
   const generatePlan = async () => {
     setPlanisGenerateing(true);
-    // localStorage.setItem("planCreated", "true");
+    localStorage.setItem("planCreated", "true");
 
     if (data) {
       await workoutPlan(data)
@@ -245,7 +255,7 @@ const Plan = () => {
     <div className={styles.loadingContainer}>
       {!isLoading ? (
         <div className={styles.container}>
-          {currentUser ? (
+          {currentUser && (
             <div className={styles.container2}>
               {plan.length > 0 ? (
                 <div className={styles.planContainer}>
@@ -357,14 +367,12 @@ const Plan = () => {
                 </div>
               )}
             </div>
-          ) : (
-            <div className={styles.signInOrRegister}>
-              <SignInOrRegister />
-            </div>
           )}
         </div>
       ) : (
-        <div className={styles.loading}>LOADING...</div>
+        <div className={styles.loading}>
+          <Loading />
+        </div>
       )}
     </div>
   );

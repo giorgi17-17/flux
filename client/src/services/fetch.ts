@@ -57,6 +57,19 @@ async function getUserById(id: string) {
     throw error;
   }
 }
+
+async function getWorkoutByName(name: string) {
+  try {
+    const response = await axios.get(`http://localhost:5000/api/workouts/${name}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching workout:", error);
+    throw error;
+  }
+}
+
+
+
 const workoutPlan = async (userData: object) => {
   try {
     const response = await axios.post(
@@ -223,4 +236,5 @@ export {
   getWorkout,
   saveWorkoutProgress,
   getWorkoutProgress,
+  getWorkoutByName
 };

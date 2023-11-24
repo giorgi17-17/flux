@@ -1,15 +1,9 @@
 import Workout from "../models/workoutModel.js";
 export const addWorkout = async (req, res) => {
   try {
-    // const data = req.body
     const workoutData = new Workout({
       ...req.body,
     });
-    // const spread = {...dataToSubmit}
-    // console.log("spread", spread)
-    // console.log({...req.body});
-    // console.log("work", workoutData);
-    // console.log("Exercise before save: ", workoutData);
 
     await workoutData.save();
 
@@ -17,6 +11,23 @@ export const addWorkout = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(400).json({ message: error.message });
+  }
+};
+
+export const getWorkoutByName = async (req, res) => {
+  const workoutName = req.params.name; // Assuming the workout name is passed as a URL parameter
+  // console.log(workoutName)
+  try {
+    const workout = await Workout.findOne({ name: workoutName });
+
+    if (!workout) {
+      return res.status(404).json({ message: "Workout not found" });
+    }
+
+    res.status(200).json(workout);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: error.message });
   }
 };
 

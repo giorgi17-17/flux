@@ -16,8 +16,12 @@ import {
 import {
   addWorkout,
   getAllWorkouts,
+  getWorkoutByName,
 } from "./src/controllers/workoutController.js";
-import { saveWorkoutProgress,getWorkoutProgress } from "./src/controllers/workoutProgress.js";
+import {
+  saveWorkoutProgress,
+  getWorkoutProgress,
+} from "./src/controllers/workoutProgress.js";
 const app = express();
 const port = 5000;
 
@@ -48,6 +52,7 @@ app.post("/api/workoutPlan", generateWorkoutPlan);
 app.post("/api/user/:id/savePlan", saveWorkoutPlan);
 app.post("/api/workout/progress", saveWorkoutProgress);
 app.get("/api/getWorkoutProgress/:userId", getWorkoutProgress);
+app.get("/api/workouts/:name", getWorkoutByName);
 
 // app.post('/api/workoutPlan', (req, res) => {
 //   const userData = req.body;
