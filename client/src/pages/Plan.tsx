@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import {
-  getUserById,
+  getUserByEmail,
+  // getUserById,
   getWorkoutProgress,
   savePlanToDatabase,
   workoutPlan,
+  
 } from "../services/fetch";
 import styles from "../styles/plan.module.css";
 import { useAuth } from "../context/useAuth";
@@ -80,7 +82,7 @@ const Plan = () => {
     },
   };
   const id = localStorage.getItem("myCustomId") || "";
-  // const email = localStorage.getItem('email')
+  const email = localStorage.getItem('email') || ""
   const [user, setUser] = useState<User | null>(null);
   const [plan, setPlan] = useState<WeekPlan[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -115,7 +117,11 @@ const answers = localStorage.getItem("answers")
           const workoutData = await getWorkoutProgress(id);
           setWorkoutProgress(workoutData);
 
-          const userData = await getUserById(id);
+          const userData = await getUserByEmail(email);
+          // const userData = await getUserById(id);
+          // console.log("useeerrrrr", userDataa)
+          console.log("useeerrrrr")
+
           setUser(userData);
 
           if (userData && userData.workoutPlan) {
@@ -145,7 +151,7 @@ const answers = localStorage.getItem("answers")
     };
 
       fetchUser();
-  }, [id, currentUser, navigate,isLoading]);
+  }, [id, currentUser, navigate,isLoading,email]);
 
   const isDateMatch = (dateString: string) => {
     const workoutDate = new Date(dateString);

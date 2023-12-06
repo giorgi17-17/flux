@@ -27,6 +27,24 @@ export const getUserById = async (req, res) => {
   }
 };
 
+export const getUserByEmail = async (req, res) => {
+  const email = req.params.email; // Assuming the email parameter is in the request parameters
+
+  try {
+    const foundUser = await Users.findOne({ email });
+    
+    if (!foundUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json(foundUser);
+  } catch (err) {
+    console.error('Error:', err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
 
 export const registerController = async (req, res) => {
   const { _id, email, formData } = req.body;

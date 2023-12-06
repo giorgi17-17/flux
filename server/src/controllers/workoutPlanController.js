@@ -4,6 +4,24 @@ import Users from "../models/usersModel.js";
 
 export async function generateWorkoutPlan(req, res) {
   const userData = req.body;
+  
+  function getCurrentDayName() {
+    const daysOfWeek = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    const today = new Date();
+    const dayName = daysOfWeek[today.getDay()];
+    return dayName;
+  }
+
+  const currentDayy = getCurrentDayName();
+
 
   console.log("Received user data: ", userData);
   const numberOfWeeks = 1;
@@ -56,6 +74,7 @@ Use only the following workout names for the exercises:
 - Reverse Plank
 
 Guidelines for the Workout Plan:
+
 - Vary the workouts to target different body parts throughout the week and include appropriate rest between sets.
 - Provide a balanced plan that progressively challenges the user over the 
 ${numberOfWeeks} weeks to prevent plateaus and encourage consistent improvement.

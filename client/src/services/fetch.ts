@@ -36,11 +36,34 @@ async function getAllExercises(
   }
 }
 
-async function getUserById(id: string) {
-  // console.log("fetch", id);
+// async function getUserById(id: string) {
+//   // console.log("fetch", id);
+//   const options = {
+//     method: "GET",
+//     url: `${BACKEND_URL}/api/user/${id}`,
+//     headers: {
+//       accept: "application/json",
+//     },
+//   };
+
+//   try {
+//     const response = await axios.request(options);
+//     // console.log(response.data);
+//     return response.data;
+//   } catch (error) {
+//     console.error(error);
+//     console.log("eeee");
+
+//     throw error;
+//   }
+// }
+
+
+async function getUserByEmail(email: string) {
+  // console.log("fetch", email);
   const options = {
     method: "GET",
-    url: `${BACKEND_URL}/api/user/${id}`,
+    url: `${BACKEND_URL}/api/user/${email}`,
     headers: {
       accept: "application/json",
     },
@@ -52,7 +75,7 @@ async function getUserById(id: string) {
     return response.data;
   } catch (error) {
     console.error(error);
-    console.log("eeee");
+    console.log("kkkkkkkkkkkk");
 
     throw error;
   }
@@ -228,7 +251,8 @@ const updateUser = async (payload: PayloadType) => {
 
 export {
   getAllExercises,
-  getUserById,
+  // getUserById,
+  getUserByEmail,
   updateUser,
   registerUser,
   workoutPlan,

@@ -24,7 +24,12 @@ const questions: Question[] = [
     type: "number",
   },
   {
-    question: "What is Your fitness level",
+    question: "What is your gender",
+    type: "radio",
+    options: ["Male", "Female"],
+  },
+  {
+    question: "What is your fitness level",
     type: "radio",
     options: ["Beginner", "Intermediate", "Advanced"],
   },
