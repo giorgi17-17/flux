@@ -1,49 +1,41 @@
 import Users from "../models/usersModel.js";
 
 export const saveWorkoutProgress = async (req, res) => {
-  //   console.log("Received body:", req.body);
-  const { userId, dateOfWorkout } = req.body;
-
-    if (!userId) {
-      return res.status(400).json({ message: "No user ID provided" });
-    }
-
-  //   console.log(`Saving workout progress for user with ID: ${userId}`);
+  const { email, dateOfWorkout } = req.body;
+  console.log(req.body);
 
   try {
-    // Fetch the current user document
+    const user = await Users.findOne({ email });
 
-    const user = await Users.findById(userId);
+    // Check if user exists
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Ensure userProgress exists and has a dateOfWorkouts array
+    if (!user.userProgress) {
+      user.userProgress = { dateOfWorkouts: [] };
+    } else if (!Array.isArray(user.userProgress.dateOfWorkouts)) {
+      user.userProgress.dateOfWorkouts = [];
+    }
+
     const updatedDateOfWorkouts = [
-        dateOfWorkout,
-      ...(user.userProgress.dateOfWorkouts || []),
+      dateOfWorkout,
+      ...user.userProgress.dateOfWorkouts,
     ];
-    // const updatedUser = await user.save();
-    // console.log(user.userProgress.dateOfWorkouts );
-    const updatedUser = await Users.findByIdAndUpdate(
-      userId,
+
+    const updatedUser = await Users.findOneAndUpdate(
+      { email },
       {
         $set: {
           userProgress: {
-            dateOfWorkouts: [ ...updatedDateOfWorkouts],
+            dateOfWorkouts: updatedDateOfWorkouts,
           },
         },
       },
       { new: true }
     );
 
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    // Update the userProgress field
-    //   const updatedUserProgress = [...user.userProgress.completedWorkouts, workoutProgress];
-    //   user.userProgress.completedWorkouts = updatedUserProgress;
-
-    // Save the updated user document
-    //   const updatedUser = await user.save();
-
-    // console.log("Updated user progress:", user);
     return res.status(200).json({
       message: "Workout progress updated successfully",
       user: updatedUser,
@@ -59,13 +51,11 @@ export const saveWorkoutProgress = async (req, res) => {
 
 
 export const getWorkoutProgress = async (req, res) => {
-  const userId = req.params.userId;
+  const email = req.params.email;
   // console.log(req.params)
-  // console.log(userId)
+  console.log("get progress", email);
   try {
-
-
-    const user = await Users.findById(userId);
+    const user = await Users.findOne({ email });
     // console.log(user)
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -74,9 +64,6 @@ export const getWorkoutProgress = async (req, res) => {
       message: "Workout progress ",
       user: user.userProgress,
     });
-
-
-
   } catch (err) {
     console.error("An error occurred:", err);
     return res.status(500).json({
@@ -84,5 +71,4 @@ export const getWorkoutProgress = async (req, res) => {
       error: err,
     });
   }
-
-}
+};

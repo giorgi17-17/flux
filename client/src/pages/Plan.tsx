@@ -114,7 +114,7 @@ const answers = localStorage.getItem("answers")
       if (currentUser) {
         console.log(currentUser)
         try {
-          const workoutData = await getWorkoutProgress(id);
+          const workoutData = await getWorkoutProgress(email);
           setWorkoutProgress(workoutData);
 
           const userData = await getUserByEmail(email);

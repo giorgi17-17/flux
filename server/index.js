@@ -47,7 +47,7 @@ app.get("/api/user/:email", getUserByEmail);
 app.post("/api/workoutPlan", generateWorkoutPlan);
 app.post("/api/user/:id/savePlan", saveWorkoutPlan);
 app.post("/api/workout/progress", saveWorkoutProgress);
-app.get("/api/getWorkoutProgress/:userId", getWorkoutProgress);
+app.get("/api/getWorkoutProgress/:email", getWorkoutProgress);
 app.get("/api/workouts/:name", getWorkoutByName);
 
 

@@ -42,7 +42,7 @@ export const WorkoutComponent: React.FC<ExerciseComponentProps> = ({
   const exercise: Exercise = plan.exercises[currentExerciseIndex];
   const setsToNumber = Number(exercise.sets);
   const date = new Date();
-  const id = localStorage.getItem("myCustomId") || "";
+  const email = localStorage.getItem('email') || ""
 
   useEffect(() => {
     getWorkoutByName(exercise.name)
@@ -77,7 +77,7 @@ export const WorkoutComponent: React.FC<ExerciseComponentProps> = ({
       setCurrentExerciseIndex(nextIndex);
       setSetsCompleted(0);
     } else {
-      saveWorkoutProgress(id, date);
+      saveWorkoutProgress(email, date);
       console.log("save func");
       // All exercises completed, you may want to handle the end of the workout here
       setIsWorkoutComplete(true); // Set workout to completed when all exercises are done

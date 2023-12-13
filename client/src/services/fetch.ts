@@ -119,7 +119,7 @@ const getWorkout = async () => {
 };
 
 async function saveWorkoutProgress(
-  userId: string,
+  email: string,
   dateOfWorkout: Date
   // exercisesCompleted: number
 ) {
@@ -130,12 +130,12 @@ async function saveWorkoutProgress(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userId,
+        email,
         dateOfWorkout,
         // You can add additional workout information here if needed
       }),
     });
-    console.log(userId, dateOfWorkout);
+    console.log(email, dateOfWorkout);
 
     if (!response.ok) {
       console.log("save func ok");
@@ -153,12 +153,12 @@ async function saveWorkoutProgress(
 }
 
 async function getWorkoutProgress(
-  userId: string
+  email: string
   // exercisesCompleted: number
 ) {
   try {
     const response = await fetch(
-      `${BACKEND_URL}/api/getWorkoutProgress/${userId}`,
+      `${BACKEND_URL}/api/getWorkoutProgress/${email}`,
       {
         method: "GET",
         headers: {
