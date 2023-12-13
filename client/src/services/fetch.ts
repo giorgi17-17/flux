@@ -83,7 +83,7 @@ async function getUserByEmail(email: string) {
 
 async function getWorkoutByName(name: string) {
   try {
-    const response = await axios.get(`http://localhost:5000/api/workouts/${name}`);
+    const response = await axios.get(`${BACKEND_URL}/api/workouts/${name}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching workout:", error);

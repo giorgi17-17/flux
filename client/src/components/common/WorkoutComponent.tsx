@@ -29,11 +29,12 @@ type Workout = {
 export const WorkoutComponent: React.FC<ExerciseComponentProps> = ({
   plan,
 }) => {
-  const [currentWorkout, setCurrentWorkout] = useState<Partial<Workout>>({})
+  const [currentWorkout, setCurrentWorkout] = useState<Partial<Workout>>({});
   const [setsCompleted, setSetsCompleted] = useState(0);
   const [numberOfworkout, setNumberOfworkout] = useState(0);
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [isWorkoutComplete, setIsWorkoutComplete] = useState(false);
+  const [loading, setlLoading] = useState(true);
 
   const [timerId, setTimerId] = useState<NodeJS.Timeout | null>(null); // Store the timer ID
   const [remainingTime, setRemainingTime] = useState(0);
@@ -46,8 +47,9 @@ export const WorkoutComponent: React.FC<ExerciseComponentProps> = ({
   useEffect(() => {
     getWorkoutByName(exercise.name)
       .then((data) => {
-        // console.log(data);
+        console.log(data);
         setCurrentWorkout(data);
+        setlLoading(false);
       })
       .catch((error) => {
         console.log(error);
@@ -144,8 +146,18 @@ export const WorkoutComponent: React.FC<ExerciseComponentProps> = ({
         <div className={styles.video}>
           <img src={image} alt="" />
         </div>
-        <p className={styles.name}>{currentWorkout.name}</p>
-        <p className={styles.reps}>{exercise.reps} reps</p>
+        {loading ? (
+          <div>
+            <p>LOADING...</p>
+          </div>
+        ) : (
+          <div>
+            <p className={styles.name}>{currentWorkout.name}</p>
+            <p className={styles.name}>{currentWorkout.caloriesBurnt}</p>
+            <p className={styles.reps}>{exercise.reps} reps</p>
+          </div>
+        )}
+
         {/* {exercise.rest && <span>Rest: {exercise.rest} seconds</span>} */}
       </div>
       <div className={styles.exerciseActions}>
