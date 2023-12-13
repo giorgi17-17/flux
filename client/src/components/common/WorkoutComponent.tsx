@@ -29,7 +29,7 @@ type Workout = {
 export const WorkoutComponent: React.FC<ExerciseComponentProps> = ({
   plan,
 }) => {
-  const [currentWorkout, setCurrentWorkout] = useState<Workout | null>(null);
+  const [currentWorkout, setCurrentWorkout] = useState<Partial<Workout>>({})
   const [setsCompleted, setSetsCompleted] = useState(0);
   const [numberOfworkout, setNumberOfworkout] = useState(0);
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
@@ -144,7 +144,7 @@ export const WorkoutComponent: React.FC<ExerciseComponentProps> = ({
         <div className={styles.video}>
           <img src={image} alt="" />
         </div>
-        <p className={styles.name}>{currentWorkout?.name}</p>
+        <p className={styles.name}>{currentWorkout.name}</p>
         <p className={styles.reps}>{exercise.reps} reps</p>
         {/* {exercise.rest && <span>Rest: {exercise.rest} seconds</span>} */}
       </div>
