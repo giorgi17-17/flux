@@ -4,6 +4,7 @@ import Header from "./components/layout/Header";
 import { AppContextProvider } from "./context/AppContext";
 // import Home from "./pages/Home";
 import { SpeedInsights } from "@vercel/speed-insights/react"
+import { Analytics } from '@vercel/analytics/react';
 function App() {
   return (
     <div className="body">
@@ -12,6 +13,7 @@ function App() {
         <div>
           <Router />
           <SpeedInsights />
+          <Analytics />
         </div>
       </AppContextProvider>
     </div>
