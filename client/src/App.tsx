@@ -3,7 +3,7 @@ import Router from "./Router";
 import Header from "./components/layout/Header";
 import { AppContextProvider } from "./context/AppContext";
 // import Home from "./pages/Home";
-
+import { SpeedInsights } from "@vercel/speed-insights/react"
 function App() {
   return (
     <div className="body">
@@ -11,6 +11,7 @@ function App() {
         <Header />
         <div>
           <Router />
+          <SpeedInsights />
         </div>
       </AppContextProvider>
     </div>
