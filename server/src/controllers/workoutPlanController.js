@@ -60,7 +60,7 @@ Use only the following workout names for the exercises:
 - Leg Raises
 - Lunges
 - Tricep Dips
-- Diamond Push-up
+- Diamond Push-Up
 - Leg Lift
 - Alt. Plank Crunch
 - Leg Hold

@@ -7,7 +7,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../firebase/firebase";
-import {BACKEND_URL} from "../services/helper"
+import { BACKEND_URL } from "../services/helper";
+import Loading from "../components/common/Loading";
 
 const Register = () => {
   const { createUser } = useAuth();
@@ -15,6 +16,8 @@ const Register = () => {
   //
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   const id = localStorage.getItem("myCustomId");
   const formData = JSON.parse(localStorage.getItem("formData") || "false");
 
@@ -67,6 +70,7 @@ const Register = () => {
 
   const handleRegister = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    setIsLoading(true);
     localStorage.setItem("email", email);
     const localEmail = localStorage.getItem("email") || "rrr";
 
@@ -83,7 +87,7 @@ const Register = () => {
         console.log(response);
         navigate("/");
         await createUser({ email, password });
-
+        setIsLoading(false);
         console.log("user updated");
       } catch (error) {
         console.error("An error occurred:", error);
@@ -102,6 +106,9 @@ const Register = () => {
         navigate("/");
         console.log("ok");
         console.log("user created");
+        setIsLoading(false);
+        console.log("loading false")
+
       } catch (error) {
         console.error("An error occurred:", error);
       }
@@ -157,53 +164,64 @@ const Register = () => {
   return (
     <div className={styles.container}>
       <ToastContainer />
-      <div className={styles.formContainer}>
-        <p className={styles.title}>Register</p>
-        <form className={styles.form}>
-          <div className={styles.inputGroup}>
-            <label>Email</label>
-            <input
-              type="text"
-              name="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div className={styles.inputGroup}>
-            <label>Password</label>
-            <input
-              type="password"
-              name="password"
-              onChange={(e) => setPassword(e.target.value)}
-              value={password}
-            />
-            <div className={styles.forgot}>
-              {/* <a rel="noopener noreferrer" href="#">
+      {isLoading ? (
+        <div className={styles.loading}>
+          <Loading />
+        </div>
+      ) : (
+        <div>
+          <div className={styles.formContainer}>
+            <p className={styles.title}>Register</p>
+            <form className={styles.form}>
+              <div className={styles.inputGroup}>
+                <label>Email</label>
+                <input
+                  type="text"
+                  name="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <div className={styles.inputGroup}>
+                <label>Password</label>
+                <input
+                  type="password"
+                  name="password"
+                  onChange={(e) => setPassword(e.target.value)}
+                  value={password}
+                />
+                <div className={styles.forgot}>
+                  {/* <a rel="noopener noreferrer" href="#">
                 Forgot Password ?
               </a> */}
+                </div>
+              </div>
+              <button className={styles.sign} onClick={handleRegister}>
+                Register
+              </button>
+            </form>
+            <div className={styles.socialMessage}>
+              <div className={styles.line}></div>
+              <p className={styles.message}>Register with social accounts</p>
+              <div className={styles.line}></div>
             </div>
+            <div className={styles.socialIcons}>
+              <button aria-label="Log in with Google" className={styles.icon}>
+                <FcGoogle
+                  onClick={signInWithGoogle}
+                  className={styles.google}
+                />
+              </button>
+            </div>
+            <p className={styles.signup}>
+              Have an account?
+              <Link className={styles.signupLink} to={"/SignIn"}>
+                Sign IN
+              </Link>
+            </p>
           </div>
-          <button className={styles.sign} onClick={handleRegister}>
-            Register
-          </button>
-        </form>
-        <div className={styles.socialMessage}>
-          <div className={styles.line}></div>
-          <p className={styles.message}>Register with social accounts</p>
-          <div className={styles.line}></div>
         </div>
-        <div className={styles.socialIcons}>
-          <button aria-label="Log in with Google" className={styles.icon}>
-            <FcGoogle onClick={signInWithGoogle} className={styles.google} />
-          </button>
-        </div>
-        <p className={styles.signup}>
-          Have an account?
-          <Link className={styles.signupLink} to={"/SignIn"}>
-            Sign IN
-          </Link>
-        </p>
-      </div>
+      )}
     </div>
   );
 };
