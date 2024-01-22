@@ -20,51 +20,24 @@ const SignIn = () => {
 
   const navigate = useNavigate();
   const signInWithGoogle = async () => {
-    const formData = JSON.parse(localStorage.getItem("formData") || "false");
 
-    if (formData) {
-      try {
-        const data = await signInWithPopup(auth, provider);
-        const googleEmail = data.user.email || "";
-        console.log(googleEmail);
-        localStorage.setItem("email", googleEmail);
+    try {
+      const data = await signInWithPopup(auth, provider);
+      const googleEmail = data.user.email || "";
+      console.log(googleEmail);
+      localStorage.setItem("email", googleEmail);
 
-        const response = await fetch(`${BACKEND_URL}/api/update`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ _id: id, formData, email: googleEmail }),
-        });
-        console.log(response);
-        navigate("/plan");
-
-        console.log("user updated");
-      } catch (error) {
-        console.error("An error occurred:", error);
-      }
-    } else {
-      try {
-        const data = await signInWithPopup(auth, provider);
-        const googleEmail = data.user.email || "";
-        console.log(googleEmail);
-        localStorage.setItem("email", googleEmail);
-
-        const response = await fetch(`${BACKEND_URL}/api/register`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ _id: id, email: googleEmail }),
-        });
-        console.log(response);
-        navigate("/plan");
-        console.log("ok");
-        console.log("user created");
-      } catch (error) {
-        console.error("An error occurred:", error);
-      }
-      console.error(id, "id rom register");
+      const response = await fetch(`${BACKEND_URL}/api/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ _id: id, email: googleEmail }),
+      });
+      console.log(response);
+      navigate("/plan");
+    } catch (error) {
+      console.error("An error occurred:", error);
     }
   };
   const handleSignInClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
