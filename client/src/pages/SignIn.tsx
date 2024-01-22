@@ -12,10 +12,9 @@ import { BACKEND_URL } from "../services/helper";
 import Loading from "../components/common/Loading";
 
 const SignIn = () => {
-  const { userValue, signIn } = useAuth();
+  const { signIn } = useAuth();
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
   const [password, setPassword] = useState("");
   const id = localStorage.getItem("myCustomId");
 
@@ -75,6 +74,7 @@ const SignIn = () => {
     try {
       await signIn({ email, password });
       setIsLoading(false);
+      localStorage.setItem("email", email);
 
       navigate("/");
     } catch (error) {
@@ -84,7 +84,7 @@ const SignIn = () => {
 
       if (
         errorMessage === "Firebase: Error (auth/invalid-email)." ||
-        errorMessage === "auth/invalid-login-credentials"
+        errorMessage === "Firebase: Error (auth/invalid-login-credentials)."
       ) {
         // Show toast
         toast.error("Invalid email or password", {
@@ -96,6 +96,7 @@ const SignIn = () => {
           draggable: true,
           progress: undefined,
           theme: "dark",
+          onClose: () => setIsLoading(false),
         });
       } else if (errorMessage === "Firebase: Error (auth/user-not-found).") {
         toast.error("User not found", {
@@ -107,13 +108,12 @@ const SignIn = () => {
           draggable: true,
           progress: undefined,
           theme: "dark",
+          onClose: () => setIsLoading(false),
         });
       }
       console.error("Failed to sign in", error);
     }
   };
-
-  console.log(userValue);
 
   return (
     <div className={styles.container}>

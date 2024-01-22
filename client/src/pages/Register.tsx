@@ -21,6 +21,19 @@ const Register = () => {
   const id = localStorage.getItem("myCustomId");
   const formData = JSON.parse(localStorage.getItem("formData") || "false");
 
+  // useEffect(() => {
+  //   toast.error("იმეილი ან პაროლი არასწორია", {
+  //     position: "top-right",
+  //     autoClose: 5000,
+  //     hideProgressBar: false,
+  //     closeOnClick: true,
+  //     pauseOnHover: true,
+  //     draggable: true,
+  //     progress: undefined,
+  //     theme: "dark",
+  //   });
+  // },[])
+
   const signInWithGoogle = async () => {
     if (formData) {
       try {
@@ -107,12 +120,82 @@ const Register = () => {
         console.log("ok");
         console.log("user created");
         setIsLoading(false);
-        console.log("loading false")
-
+        console.log("loading false");
       } catch (error) {
         console.error("An error occurred:", error);
+
+        // Reload the website when the user clicks the close button on the toast
+        // const reloadOnClose = () => {
+        //   window.location.reload();
+        // };
+
+        // Reload the website after a certain time if the close button is not clicked
+        // const reloadAfterTimeout = () => {
+        //   window.location.reload();
+        // };
+
+        const errorMessage = (error as Error).message;
+        console.log(errorMessage);
+        // Firebase: Password should be at least 6 characters (auth/weak-password).
+
+        if (errorMessage === "Firebase: Error (auth/invalid-email).") {
+          toast.error("იმეილი ან პაროლი არასწორია", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+            onClose: () => setIsLoading(false),
+          });
+        } else if (errorMessage === "Firebase: Error (auth/user-not-found).") {
+          toast.error("მომხმარებელი ვერ მოიძებნა", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+            onClose: () => setIsLoading(false),
+          });
+        } else if (
+          errorMessage === "Firebase: Error (auth/email-already-in-use)."
+        ) {
+          toast.error("Email is in use", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+            onClose: () => setIsLoading(false),
+          });
+        } else if (
+          errorMessage ===
+          "Firebase: Password should be at least 6 characters (auth/weak-password)."
+        ) {
+          toast.error("Password should be at least 6 characters", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+            onClose: () => setIsLoading(false),
+          });
+        }
+        // setTimeout(reloadAfterTimeout, 5000); //
       }
-      console.error(id, "id rom register");
+
+      console.error(id, "id from register");
     }
 
     try {
