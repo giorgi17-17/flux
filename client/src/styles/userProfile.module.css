@@ -1,31 +1,61 @@
+/* userProfile.module.css */
+
 .container {
-  width: 100%;
-  color: var(--white);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
 }
 
 .cont {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 600px;
   width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-top: 20px;
+  color: white;
 }
-
 
 .user {
   display: flex;
-  flex-direction: row;
-  color: white;
+  align-items: center;
   justify-content: space-between;
+  width: 100%;
 }
 
 .settingsIcon {
-  color: var(--white);
+  margin-right: 10px;
 }
 
 .logOut {
-  background-color: aliceblue;
-  padding: 13px 28px;
+  background-color: #ff4d4f; /* Danger color for log out button */
+  color: #ffffff;
+  padding: 8px 16px;
   border: none;
-  border-radius: 5px;
-  font-size: 16px;
+  border-radius: 4px;
   cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
 }
 
+.logOut:hover {
+  background-color: #ff7875; /* Darker shade on hover */
+}
 
+.workoutProgress {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.weekProgress {
+  margin-top: 20px;
+}
+
+/* Dark mode styles */

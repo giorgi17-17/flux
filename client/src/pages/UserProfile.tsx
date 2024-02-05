@@ -1,28 +1,44 @@
 import { useEffect, useState } from "react";
 import SignInOrRegister from "../components/common/SignInOrRegister";
 import { useAuth } from "../context/useAuth";
-import styles from "../styles/userProfile.module.css"; // Make sure you import the correct CSS file
+import styles from "../styles/userProfile.module.css";
 import { IoSettingsOutline } from "react-icons/io5";
 import { getWorkoutProgress } from "../services/fetch";
+import WorkoutAnalytics from "../components/common/WorkoutAnalytics";
+
+interface Exercise {
+  name: string;
+  sets: string;
+  reps: string;
+  // Add other properties as needed
+}
+
+interface WorkoutProgress {
+  message: string;
+  user: {
+    completedWorkouts: Array<{
+      date: string;
+      workoutsCompleted: Exercise[];
+    }>;
+  };
+}
+
 const UserProfile = () => {
   const { currentUser, logOut } = useAuth();
-  //   get workout names from workout component
-  // const [user, setUser] = useState<User | null>(null);
   const email = localStorage.getItem("email") || "";
-  const [workoutProgress, setWorkoutProgress] = useState();
-
+  const [workoutProgress, setWorkoutProgress] =
+    useState<WorkoutProgress | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  console.log(workoutProgress);
 
   useEffect(() => {
     const fetchUser = async () => {
       if (currentUser) {
-        console.log(currentUser);
         try {
           const workoutData = await getWorkoutProgress(email);
-          setWorkoutProgress(workoutData);
+          setWorkoutProgress(workoutData || null);
         } catch (error) {
           console.error("An error occurred:", error);
+          setWorkoutProgress(null);
         }
       }
       setIsLoading(false);
@@ -30,7 +46,8 @@ const UserProfile = () => {
 
     fetchUser();
   }, [currentUser, isLoading, email]);
-  console.log(workoutProgress);
+
+  const completedWorkouts = workoutProgress?.user.completedWorkouts || [];
 
   return (
     <div className={styles.container}>
@@ -50,11 +67,16 @@ const UserProfile = () => {
             </div>
           </div>
           <div className={styles.workoutProgress}>
+            <div className={styles.analytics}>
+              <WorkoutAnalytics
+                workoutData={completedWorkouts.flatMap(
+                  (entry) => entry.workoutsCompleted
+                )}
+              />
+            </div>
             <div>Calendar</div>
             <div>weight</div>
-            <div className={styles.weekProgress}>
-              <h2>Calories burned 1200</h2>
-            </div>
+            <div className={styles.weekProgress}>week month</div>
           </div>
         </div>
       ) : (
