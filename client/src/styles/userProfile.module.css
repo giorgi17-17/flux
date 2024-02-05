@@ -1,0 +1,31 @@
+.container {
+  width: 100%;
+  color: var(--white);
+}
+
+.cont {
+  width: 100%;
+}
+
+
+.user {
+  display: flex;
+  flex-direction: row;
+  color: white;
+  justify-content: space-between;
+}
+
+.settingsIcon {
+  color: var(--white);
+}
+
+.logOut {
+  background-color: aliceblue;
+  padding: 13px 28px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+

@@ -3,9 +3,9 @@ import styles from "../../styles/header.module.css"; // Make sure you import the
 import { useAuth } from "../../context/useAuth";
 import { useEffect, useState } from "react";
 import HeaderMobileComponent from "./HeaderMobileComponent";
-
+import { CgProfile } from "react-icons/cg";
 const Header = () => {
-  const { currentUser, logOut } = useAuth();
+  const { currentUser } = useAuth();
   const [windowSize, setWindowSize] = useState({ width: 0 });
 
   useEffect(() => {
@@ -69,10 +69,12 @@ const Header = () => {
               {/* Add more navigation links as needed */}
             </ul>
             {currentUser ? (
-              <div>
-                <button onClick={logOut} className={styles.signIn}>
-                  Log Out
-                </button>
+              <div className={styles.profile}>
+                <div className={styles.icon}>
+                  <Link className={styles.iconLink} to={"profile"}>
+                    <CgProfile size={"2rem"} />
+                  </Link>
+                </div>
               </div>
             ) : (
               <div>

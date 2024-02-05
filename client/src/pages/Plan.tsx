@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import {
   getUserByEmail,
-  // getUserById,
   getWorkoutProgress,
+  // getUserById,
+  // getWorkoutProgress,
   savePlanToDatabase,
   workoutPlan,
 } from "../services/fetch";
@@ -38,7 +39,7 @@ type FormData = {
   [key: string]: string[];
 };
 
-type User = {
+export type User = {
   _id: string;
   email: string;
   formData: FormData;
@@ -62,11 +63,9 @@ type CurrentWeekDay = {
   dayIndex: number;
 };
 
-type workoutProgress = {
-  message: string;
-  user: {
-    dateOfWorkouts?: string[] | undefined;
-  };
+type Workout = {
+  date: string;
+  workoutsCompleted: [];
 };
 
 export type PlanDay = RestDay | WorkoutDay;
@@ -74,12 +73,12 @@ export type PlanDay = RestDay | WorkoutDay;
 type Plan = WeekPlan[];
 
 const Plan = () => {
-  const initialWorkoutProgress: workoutProgress = {
-    message: "",
-    user: {
-      dateOfWorkouts: [],
-    },
-  };
+  // const initialWorkoutProgress: workoutProgress = {
+  //   message: "",
+  //   user: {
+  //     dateOfWorkouts: [],
+  //   },
+  // };
   const id = localStorage.getItem("myCustomId") || "";
   const email = localStorage.getItem("email") || "";
   const [user, setUser] = useState<User | null>(null);
@@ -91,9 +90,7 @@ const Plan = () => {
   const [hasWorkedOutToday, setHasWorkedOutToday] = useState<boolean>(false);
   const [currentWorkoutDay, setCurrentWorkoutDay] = useState(0);
   const [currentWeekIndex, setCurrentWeekIndex] = useState<number | null>(null);
-  const [workoutProgress, setWorkoutProgress] = useState<workoutProgress>(
-    initialWorkoutProgress
-  );
+  const [workoutProgress, setWorkoutProgress] = useState([]);
   const [currentWeekDay, setCurrentWeekDay] = useState<CurrentWeekDay | null>(
     null
   );
@@ -102,27 +99,38 @@ const Plan = () => {
   const { currentUser } = useAuth();
   const answers = localStorage.getItem("answers");
 
+  useEffect(() => {
+    const today = new Date();
+
+    for (const workout of workoutProgress as Workout[]) {
+      const workoutDate = new Date(workout.date);
+
+      // Check if the workout date is the same as today's date
+      if (
+        workoutDate.getDate() === today.getDate() &&
+        workoutDate.getMonth() === today.getMonth() &&
+        workoutDate.getFullYear() === today.getFullYear()
+      ) {
+        setHasWorkedOutToday(true);
+        return;
+      }
+    }
+  }, [workoutProgress]);
+
+  console.log(workoutProgress);
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    // if (currentUser === null && isLoading === false){
-    //   navigate("/signIn");
-    //   return; // Exit early if not authenticated and not loading
-    // }
     const fetchUser = async () => {
       if (currentUser) {
         console.log(currentUser);
         try {
           const workoutData = await getWorkoutProgress(email);
-          setWorkoutProgress(workoutData);
+          setWorkoutProgress(workoutData.user.completedWorkouts);
 
           const userData = await getUserByEmail(email);
-          // const userData = await getUserById(id);
-          // console.log("useeerrrrr", userDataa)
-          console.log("useeerrrrr");
-
           setUser(userData);
-
           if (userData && userData.workoutPlan) {
             setPlan(userData.workoutPlan.plan);
             setPlanStartDate(userData.planStartDate);
@@ -151,30 +159,6 @@ const Plan = () => {
 
     fetchUser();
   }, [id, currentUser, navigate, isLoading, email]);
-
-  const isDateMatch = (dateString: string) => {
-    const workoutDate = new Date(dateString);
-    const currentDate = new Date();
-
-    // console.log(
-    //   workoutDate.getDate() === currentDate.getDate() &&
-    //     workoutDate.getMonth() === currentDate.getMonth()
-    // );
-
-    return (
-      workoutDate.getDate() === currentDate.getDate() &&
-      workoutDate.getMonth() === currentDate.getMonth()
-    );
-  };
-
-  useEffect(() => {
-    if (workoutProgress.user?.dateOfWorkouts) {
-      setHasWorkedOutToday(
-        workoutProgress.user.dateOfWorkouts.some(isDateMatch)
-      );
-      console.log("Has worked out today:", hasWorkedOutToday);
-    }
-  }, [workoutProgress.user?.dateOfWorkouts, hasWorkedOutToday]);
 
   const data = user?.formData;
 
@@ -295,14 +279,24 @@ const Plan = () => {
                       )}
                     </div>
                   </div>
-                  <Link className={styles.link} to={"/workout"}>
-                    <button
-                      className={styles.startWorkout}
-                      disabled={hasWorkedOutToday}
-                    >
-                      Start Workout
-                    </button>
-                  </Link>
+                  {hasWorkedOutToday ? (
+                    <div className={styles.hasWorkedOut}>
+                      <h2>You can rest now</h2>
+                      <p>Check Your progress from profile page</p>
+                    </div>
+                  ) : (
+                    <div>
+                      <Link className={styles.link} to={"/workout"}>
+                        <button
+                          className={styles.startWorkout}
+                          disabled={hasWorkedOutToday}
+                        >
+                          Start Workout
+                        </button>
+                      </Link>
+                    </div>
+                  )}
+
                   <h2>Your Custom Plan</h2>
                   {plan.map((week, index) => (
                     <div
@@ -351,7 +345,9 @@ const Plan = () => {
                                       className={styles.li}
                                       key={exerciseIndex}
                                     >
-                                      <div className={styles.exerciseName}>{exercise.name}</div>
+                                      <div className={styles.exerciseName}>
+                                        {exercise.name}
+                                      </div>
                                       <div>
                                         {exercise.sets} sets of {exercise.reps}{" "}
                                         reps

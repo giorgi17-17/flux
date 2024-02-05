@@ -52,6 +52,13 @@
   cursor: pointer;
 }
 
+.profile {
+  display: flex;
+}
+.iconLink {
+  color: var(--white);
+}
+
 .signIn {
   background-color: aliceblue;
 }

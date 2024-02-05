@@ -120,7 +120,8 @@ const getWorkout = async () => {
 
 async function saveWorkoutProgress(
   email: string,
-  dateOfWorkout: Date
+  dateOfWorkout: Date,
+  workouts: Array<{ name: string; sets: number; reps: string; rest?: number }>
   // exercisesCompleted: number
 ) {
   try {
@@ -132,6 +133,7 @@ async function saveWorkoutProgress(
       body: JSON.stringify({
         email,
         dateOfWorkout,
+        workouts
         // You can add additional workout information here if needed
       }),
     });

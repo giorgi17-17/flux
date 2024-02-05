@@ -1,8 +1,7 @@
 import Users from "../models/usersModel.js";
 
 export const saveWorkoutProgress = async (req, res) => {
-  const { email, dateOfWorkout } = req.body;
-  console.log(req.body);
+  const { email, dateOfWorkout, workouts } = req.body;
 
   try {
     const user = await Users.findOne({ email });
@@ -19,17 +18,43 @@ export const saveWorkoutProgress = async (req, res) => {
       user.userProgress.dateOfWorkouts = [];
     }
 
-    const updatedDateOfWorkouts = [
-      dateOfWorkout,
-      ...user.userProgress.dateOfWorkouts,
-    ];
+    // const updatedDateOfWorkouts = [
+    //   {
+    //     date:dateOfWorkout,
+    //   },
+    //   ...user.userProgress.dateOfWorkouts,
+    // ];
+    console.log(workouts);
+
+    let updatedDateOfWorkouts;
+
+    if (user.userProgress.completedWorkouts) {
+        updatedDateOfWorkouts = [
+            {
+                date: dateOfWorkout,
+                workoutsCompleted: workouts,
+            },
+            ...user.userProgress.completedWorkouts.map((oldEntry) => ({
+                date: oldEntry.date,
+                workoutsCompleted: oldEntry.workoutsCompleted,
+            })),
+        ];
+    } else {
+        updatedDateOfWorkouts = [
+            {
+                date: dateOfWorkout,
+                workoutsCompleted: workouts,
+            },
+        ];
+    }
+    
 
     const updatedUser = await Users.findOneAndUpdate(
       { email },
       {
         $set: {
           userProgress: {
-            dateOfWorkouts: updatedDateOfWorkouts,
+            completedWorkouts: updatedDateOfWorkouts,
           },
         },
       },
@@ -48,7 +73,6 @@ export const saveWorkoutProgress = async (req, res) => {
     });
   }
 };
-
 
 export const getWorkoutProgress = async (req, res) => {
   const email = req.params.email;
