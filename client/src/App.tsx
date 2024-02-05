@@ -11,7 +11,7 @@ import { useEffect } from "react";
 function App() {
 
   useEffect(() => {
-    ReactGA.initialize(import.meta.env.VITE_REACTGA_INITIALIZE);
+    ReactGA.initialize(`${import.meta.env.VITE_REACTGA_INITIALIZE}`);
     // ReactGA.pageview(window.location.pathname + window.location.search)
     ReactGA.send({ hitType: "pageview", page: window.location.pathname});
 
