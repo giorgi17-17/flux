@@ -39,6 +39,8 @@ export async function generateWorkoutPlan(req, res) {
 
   const prompt = `
 Generate a comprehensive ${numberOfWeeks}-week home workout plan formatted as an array of JSON objects. Each object represents one week, which contains an array of daily workout or rest day plans from Monday to Sunday. The plan should incorporate ${days} workout days per week, with the remaining days as rest days, according to the user's profile provided below:
+number of workout days must equal to ${days}
+${currentDayy} must be workout day
 
 User Profile:
 - Fitness Level: ${fitnessLevel}
@@ -107,36 +109,29 @@ Workout Plan Structure:
 `;
 // (model="gpt-4-1106-preview", response_format={ "type": "json_object" })
 
-  const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-  });
-
+ 
   try {
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+
     const chatCompletion = await openai.chat.completions.create({
-      model: "gpt-4-1106-preview",
-      // "response_format": {"type": "json_object"},
+      model: "gpt-3.5-turbo-0125",
+      temperature: 0.2,
       messages: [
         { role: "system", content: "You are a professional fitness assistant." },
         { role: "user", content: prompt },
       ],
-      // functions: [{ name: "set_workout", parameters: schema }],
-      // function_call: { name: "set_workout" },
     });
-    if (
-      !chatCompletion.choices ||
-      chatCompletion.choices.length === 0 ||
-      !chatCompletion.choices[0].message
-    ) {
+
+    if (!chatCompletion.choices || chatCompletion.choices.length === 0 || !chatCompletion.choices[0].message) {
       throw new Error("Invalid response structure from OpenAI API");
     }
 
     const result = chatCompletion.choices[0].message.content;
-
-    console.log(result);
     const planArray = JSON.parse(result);
 
     console.log(planArray);
-    // console.log(chatCompletion.choices[0].message.content);
     res.json({
       message: "Workout plan generated",
       plan: planArray,
