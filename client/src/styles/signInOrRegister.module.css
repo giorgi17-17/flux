@@ -21,7 +21,7 @@
   gap: 20px;
 }
 
-.buttons > button {
+.signIn, .register {
   padding: 10px 20px;
   border: none;
   outline: none;
@@ -32,11 +32,19 @@
 }
 
 .register {
-  background-color: var(--primary);
-  color: var(--black);
+  background-color: var(--red);
+  color: var(--white);
 
   &:hover {
-    background-color: var(--primaryCard-color);
+    background-color: rgb(107, 19, 19);
+
+  }
+}
+
+.signIn {
+
+  &:hover {
+    background-color: rgb(124, 124, 124);
   }
 }
 
@@ -53,8 +61,8 @@
     color: var(--black);
 }
 .signIn {
-  background-color: var(--red);
-  color: var(--white);
+  background-color: var(--white);
+  color: var(--black);
 
  
 }

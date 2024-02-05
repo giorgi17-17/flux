@@ -76,38 +76,62 @@
   width: 100%;
 }
 
-
 .title {
   font-size: 24px;
   color: #333;
   margin-bottom: 10px;
   /* width: 100%; */
-  
 }
 
 .dayContainer {
-  background: #e9ecef;
+  /* background: #e9ecef; */
+  background: var(--cardBg-color);
+
   padding: 10px;
   border-radius: 5px;
   transition: 1s ease-in-out;
   margin-top: 10px;
 }
 
-.dayContainer strong {
+.dayContainer > .day > strong,
+.targeted_body_part,
+.restDay {
   font-weight: 600;
+  font-size: 1.5rem;
+  color: var(--white);
+}
+
+.day {
+  display: flex;
+  gap: 10px;
+}
+
+.dayContainer > .day > strong {
+  color: var(--greenYellow);
 }
 
 .ul {
   list-style-type: none;
   padding: 0;
   margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .li {
-  background: #dee2e6;
+  /* width: 100%; */
+  border: 1px solid var(--lightGreenYellow);
+  border-radius: 5px;
+  background: var(--cardBg-color);
   margin-bottom: 5px;
-  padding: 5px;
-  border-radius: 3px;
+  padding: 15px 20px;
+  /* color: #ffffff; */
+  color: var(--white);
+}
+
+.exerciseName {
+  font-size: 1.3rem;
 }
 
 /* When week is not expanded, you can set a max-width and margin to center it */
@@ -154,7 +178,7 @@
 
 .signInOrRegister {
   max-width: 400px;
-  /* background-color: #007bff; */  
+  /* background-color: #007bff; */
 }
 
 .signInOrRegister > h2 {
@@ -182,5 +206,15 @@
   }
   .planContainer {
     width: 100%;
+  }
+
+  .li {
+    width: 100%;
+    text-align: center;
+  }
+  .dayContainer > .day > strong,
+  .targeted_body_part,
+  .restDay {
+    font-size: 1rem;
   }
 }

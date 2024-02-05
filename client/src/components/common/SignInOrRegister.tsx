@@ -8,16 +8,12 @@ const SignInOrRegister = () => {
         <h1>You need to sign in or register to see a workout plan</h1>
       </div>
       <div className={styles.buttons}>
-        <button className={styles.register}>
-          <Link className={styles.registerLink} to={"/register"}>
-            Register
-          </Link>
-        </button>
-        <button className={styles.signIn}>
-          <Link className={styles.signInLink} to={"/signIn"}>
-            Sign In
-          </Link>
-        </button>
+        <Link className={styles.registerLink} to={"/register"}>
+          <button className={styles.register}>Register</button>
+        </Link>
+        <Link className={styles.signInLink} to={"/signIn"}>
+          <button className={styles.signIn}>Sign In</button>
+        </Link>
       </div>
     </div>
   );

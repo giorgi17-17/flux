@@ -7,6 +7,9 @@
 }
 body {
   background-color: var(--black);
+  /* font-family: 'Raleway', sans-serif; */
+  font-family: 'Lora', serif;
+  
 }
 :root {
   --primary: #f5deb3;
@@ -15,6 +18,7 @@ body {
   --red: #c70039;
   --redHover: #c7003891;
   --greenYellow: #adff2f;
+  --lightGreenYellow: #acff2fa1;
   --beige: #f5deb3;
   --cardBg-color: #1a1a1a;
   --primaryCard-color: #2a9d8f;

@@ -28,6 +28,7 @@ export function AppContextProvider({ children }: { children: ReactNode }) {
   };
 
   localStorage.setItem("myCustomId", generateUniqueId());
+  // localStorage.setItem("planCreated", "false");
   // console.log(generateUniqueId());
 
   return (

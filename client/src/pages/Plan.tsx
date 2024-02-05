@@ -5,7 +5,6 @@ import {
   getWorkoutProgress,
   savePlanToDatabase,
   workoutPlan,
-  
 } from "../services/fetch";
 import styles from "../styles/plan.module.css";
 import { useAuth } from "../context/useAuth";
@@ -82,7 +81,7 @@ const Plan = () => {
     },
   };
   const id = localStorage.getItem("myCustomId") || "";
-  const email = localStorage.getItem('email') || ""
+  const email = localStorage.getItem("email") || "";
   const [user, setUser] = useState<User | null>(null);
   const [plan, setPlan] = useState<WeekPlan[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -101,7 +100,7 @@ const Plan = () => {
   const date = new Date();
   const currentDay = date.toLocaleDateString("en-US", { weekday: "long" });
   const { currentUser } = useAuth();
-const answers = localStorage.getItem("answers")
+  const answers = localStorage.getItem("answers");
 
   const navigate = useNavigate();
 
@@ -112,7 +111,7 @@ const answers = localStorage.getItem("answers")
     // }
     const fetchUser = async () => {
       if (currentUser) {
-        console.log(currentUser)
+        console.log(currentUser);
         try {
           const workoutData = await getWorkoutProgress(email);
           setWorkoutProgress(workoutData);
@@ -120,7 +119,7 @@ const answers = localStorage.getItem("answers")
           const userData = await getUserByEmail(email);
           // const userData = await getUserById(id);
           // console.log("useeerrrrr", userDataa)
-          console.log("useeerrrrr")
+          console.log("useeerrrrr");
 
           setUser(userData);
 
@@ -150,8 +149,8 @@ const answers = localStorage.getItem("answers")
       setIsLoading(false);
     };
 
-      fetchUser();
-  }, [id, currentUser, navigate,isLoading,email]);
+    fetchUser();
+  }, [id, currentUser, navigate, isLoading, email]);
 
   const isDateMatch = (dateString: string) => {
     const workoutDate = new Date(dateString);
@@ -184,7 +183,7 @@ const answers = localStorage.getItem("answers")
   };
 
   const generatePlan = async () => {
-    if(answers === "true"){
+    if (answers === "true") {
       setPlanisGenerateing(true);
       localStorage.setItem("planCreated", "true");
       if (data) {
@@ -192,7 +191,7 @@ const answers = localStorage.getItem("answers")
           .then((receivedPlan) => {
             setPlan(receivedPlan.plan);
             setPlanisGenerateing(false);
-  
+
             savePlanToDatabase(id, receivedPlan, planStartDate);
             return receivedPlan.plan; // Return the received plan for the next promise
           })
@@ -200,10 +199,9 @@ const answers = localStorage.getItem("answers")
             console.error("An error occurred:", error);
           });
       }
-    }else {
-      navigate("/questions")
+    } else {
+      navigate("/questions");
     }
-   
   };
   const calculateCurrentWorkoutDay = (plan: WeekPlan[], startDate: Date) => {
     let workoutDayCount = 0;
@@ -335,23 +333,33 @@ const answers = localStorage.getItem("answers")
                                 : styles.collapsed
                             }`}
                           >
-                            <strong>{day.day}:</strong>{" "}
-                            {day.rest_day ? "Rest Day" : day.targeted_body_part}
+                            <div className={styles.day}>
+                              <strong>{day.day} -</strong>{" "}
+                              {day.rest_day ? (
+                                <div className={styles.restDay}>Rest Day</div>
+                              ) : (
+                                <div className={styles.targeted_body_part}>
+                                  {day.targeted_body_part}
+                                </div>
+                              )}
+                            </div>
                             {day.exercises && (
-                              <ul className={styles.ul}>
+                              <div className={styles.ul}>
                                 {day.exercises.map(
                                   (exercise, exerciseIndex) => (
-                                    <li
+                                    <div
                                       className={styles.li}
                                       key={exerciseIndex}
                                     >
-                                      {exercise.name} - {exercise.sets} sets of{" "}
-                                      {""}
-                                      {exercise.reps} reps
-                                    </li>
+                                      <div className={styles.exerciseName}>{exercise.name}</div>
+                                      <div>
+                                        {exercise.sets} sets of {exercise.reps}{" "}
+                                        reps
+                                      </div>
+                                    </div>
                                   )
                                 )}
-                              </ul>
+                              </div>
                             )}
                           </div>
                         ))}
@@ -378,7 +386,11 @@ const answers = localStorage.getItem("answers")
                 </div>
               )}
             </div>
-          ): (<div><SignInOrRegister /></div>)}
+          ) : (
+            <div>
+              <SignInOrRegister />
+            </div>
+          )}
         </div>
       ) : (
         <div className={styles.loading}>
