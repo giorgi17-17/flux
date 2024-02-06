@@ -6,11 +6,12 @@ import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../context/useAuth";
 import SignInOrRegister from "../common/SignInOrRegister";
+import { CgProfile } from "react-icons/cg";
 
 const HeaderMobileComponent = () => {
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
-  const { currentUser, logOut } = useAuth();
+  const { currentUser } = useAuth();
 
   useEffect(() => {
     setOpen(() => false); // close menu if path changes!
@@ -77,11 +78,13 @@ const HeaderMobileComponent = () => {
             </ul>
           </div>
           {currentUser ? (
-            <div  className={styles.logOut}>
-              <button onClick={logOut} className={styles.signIn}>
-                Log Out
-              </button>
+            <div className={styles.profile}>
+            <div className={styles.icon}>
+              <Link className={styles.iconLink} to={"profile"}>
+                <CgProfile size={"2rem"} />
+              </Link>
             </div>
+          </div>
           ): (<div><SignInOrRegister /></div>)}
         </div>
       )}
