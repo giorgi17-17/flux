@@ -13,56 +13,20 @@ import Loading from "../components/common/Loading";
 const Register = () => {
   const { createUser } = useAuth();
   const navigate = useNavigate();
-  //
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const id = localStorage.getItem("myCustomId");
-  const formData = JSON.parse(localStorage.getItem("formData") || "false");
-
-  // useEffect(() => {
-  //   toast.error("იმეილი ან პაროლი არასწორია", {
-  //     position: "top-right",
-  //     autoClose: 5000,
-  //     hideProgressBar: false,
-  //     closeOnClick: true,
-  //     pauseOnHover: true,
-  //     draggable: true,
-  //     progress: undefined,
-  //     theme: "dark",
-  //   });
-  // },[])
 
   const signInWithGoogle = async () => {
-    if (formData) {
-      try {
-        const data = await signInWithPopup(auth, provider);
-        const googleEmail = data.user.email || "";
-        console.log(googleEmail);
-        localStorage.setItem("email", googleEmail);
-
-        const response = await fetch(`${BACKEND_URL}/api/update`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ _id: id, formData, email: googleEmail }),
-        });
-        console.log(response);
-        navigate("/");
-
-        console.log("user updated");
-      } catch (error) {
-        console.error("An error occurred:", error);
-      }
-    } else {
-      try {
-        const data = await signInWithPopup(auth, provider);
-        const googleEmail = data.user.email || "";
-        console.log(googleEmail);
-        localStorage.setItem("email", googleEmail);
-
+    try {
+      const data = await signInWithPopup(auth, provider);
+      const googleEmail = data.user.email || "";
+      console.log(googleEmail);
+      localStorage.setItem("email", googleEmail);
+      const emailExists = localStorage.getItem("email");
+      if (emailExists) {
         const response = await fetch(`${BACKEND_URL}/api/register`, {
           method: "POST",
           headers: {
@@ -71,13 +35,10 @@ const Register = () => {
           body: JSON.stringify({ _id: id, email: googleEmail }),
         });
         console.log(response);
-        navigate("/");
-        console.log("ok");
-        console.log("user created");
-      } catch (error) {
-        console.error("An error occurred:", error);
       }
-      console.error(id, "id rom register");
+      navigate("/plan");
+    } catch (error) {
+      console.error("An error occurred:", error);
     }
   };
 
@@ -85,122 +46,23 @@ const Register = () => {
     e.preventDefault();
     setIsLoading(true);
     localStorage.setItem("email", email);
-    const localEmail = localStorage.getItem("email") || "rrr";
-
-    console.log(localEmail);
-    if (formData) {
-      try {
-        const response = await fetch(`${BACKEND_URL}/api/update`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ _id: id, formData, email }),
-        });
-        console.log(response);
-        navigate("/");
-        await createUser({ email, password });
-        setIsLoading(false);
-        console.log("user updated");
-      } catch (error) {
-        console.error("An error occurred:", error);
-      }
-    } else {
-      try {
-        await createUser({ email, password });
-        const response = await fetch(`${BACKEND_URL}/api/register`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ _id: id, email }),
-        });
-        console.log(response);
-        navigate("/");
-        console.log("ok");
-        console.log("user created");
-        setIsLoading(false);
-        console.log("loading false");
-      } catch (error) {
-        console.error("An error occurred:", error);
-
-        // Reload the website when the user clicks the close button on the toast
-        // const reloadOnClose = () => {
-        //   window.location.reload();
-        // };
-
-        // Reload the website after a certain time if the close button is not clicked
-        // const reloadAfterTimeout = () => {
-        //   window.location.reload();
-        // };
-
-        const errorMessage = (error as Error).message;
-        console.log(errorMessage);
-        // Firebase: Password should be at least 6 characters (auth/weak-password).
-
-        if (errorMessage === "Firebase: Error (auth/invalid-email).") {
-          toast.error("იმეილი ან პაროლი არასწორია", {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-            onClose: () => setIsLoading(false),
-          });
-        } else if (errorMessage === "Firebase: Error (auth/user-not-found).") {
-          toast.error("მომხმარებელი ვერ მოიძებნა", {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-            onClose: () => setIsLoading(false),
-          });
-        } else if (
-          errorMessage === "Firebase: Error (auth/email-already-in-use)."
-        ) {
-          toast.error("Email is in use", {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-            onClose: () => setIsLoading(false),
-          });
-        } else if (
-          errorMessage ===
-          "Firebase: Password should be at least 6 characters (auth/weak-password)."
-        ) {
-          toast.error("Password should be at least 6 characters", {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-            onClose: () => setIsLoading(false),
-          });
-        }
-        // setTimeout(reloadAfterTimeout, 5000); //
-      }
-
-      console.error(id, "id from register");
-    }
 
     try {
-      // getUserById(id);
+      await createUser({ email, password });
+      const response = await fetch(`${BACKEND_URL}/api/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ _id: id, email }),
+      });
+      console.log(response);
+      navigate("/");
+      console.log("ok");
+      console.log("user created");
+      setIsLoading(false);
     } catch (error) {
+      console.log("loading false");
       const errorMessage = (error as Error).message;
       console.log(errorMessage);
 
@@ -214,6 +76,7 @@ const Register = () => {
           draggable: true,
           progress: undefined,
           theme: "dark",
+          onClose: () => setIsLoading(false),
         });
       } else if (errorMessage === "Firebase: Error (auth/user-not-found).") {
         toast.error("მომხმარებელი ვერ მოიძებნა", {
@@ -225,11 +88,12 @@ const Register = () => {
           draggable: true,
           progress: undefined,
           theme: "dark",
+          onClose: () => setIsLoading(false),
         });
       } else if (
         errorMessage === "Firebase: Error (auth/email-already-in-use)."
       ) {
-        toast.error("Email is in use", {
+        toast.error("ემაილი გამოყენებულია", {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -238,9 +102,24 @@ const Register = () => {
           draggable: true,
           progress: undefined,
           theme: "dark",
+          onClose: () => setIsLoading(false),
+        });
+      } else if (
+        errorMessage ===
+        "Firebase: Password should be at least 6 characters (auth/weak-password)."
+      ) {
+        toast.error("პაროლი უნდა შეიცავდეს 6 სიმბოლოზე მეტს", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          onClose: () => setIsLoading(false),
         });
       }
-      console.error("Failed to sign in", error);
     }
   };
 

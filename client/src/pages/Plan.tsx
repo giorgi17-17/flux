@@ -127,7 +127,7 @@ const Plan = () => {
         console.log(currentUser);
         try {
           const workoutData = await getWorkoutProgress(email);
-          setWorkoutProgress(workoutData.user.completedWorkouts);
+          setWorkoutProgress(workoutData?.user?.completedWorkouts ?? []);
 
           const userData = await getUserByEmail(email);
           setUser(userData);

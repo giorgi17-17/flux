@@ -20,21 +20,22 @@ const SignIn = () => {
 
   const navigate = useNavigate();
   const signInWithGoogle = async () => {
-
     try {
       const data = await signInWithPopup(auth, provider);
       const googleEmail = data.user.email || "";
       console.log(googleEmail);
       localStorage.setItem("email", googleEmail);
-
-      const response = await fetch(`${BACKEND_URL}/api/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ _id: id, email: googleEmail }),
-      });
-      console.log(response);
+      const emailExists = localStorage.getItem("email");
+      if (emailExists) {
+        const response = await fetch(`${BACKEND_URL}/api/register`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ _id: id, email: googleEmail }),
+        });
+        console.log(response);
+      }
       navigate("/plan");
     } catch (error) {
       console.error("An error occurred:", error);
