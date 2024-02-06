@@ -5,7 +5,7 @@ import { useAuth } from "../context/useAuth";
 import { PayloadType, registerUser, updateUser } from "../services/fetch";
 import QuestionCard from "../components/common/QuestionsCard";
 import SignInOrRegister from "../components/common/SignInOrRegister";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 type Question = {
   question: string;
@@ -29,9 +29,22 @@ const questions: Question[] = [
     options: ["Male", "Female"],
   },
   {
+    question: "Height",
+    type: "number",
+  },
+  {
+    question: "Weight",
+    type: "number",
+  },
+  {
     question: "What is your fitness level",
     type: "radio",
     options: ["Beginner", "Intermediate", "Advanced"],
+  },
+  {
+    question: "Where do you orefer to Train",
+    type: "radio",
+    options: ["Home", "Gym"],
   },
   {
     question: "What is your preferred workouts?",
@@ -57,12 +70,8 @@ const questions: Question[] = [
     question: "How many days should the workout plan cover",
     type: "radio",
     options: ["1", "2", "3", "4", "5", "6", "7"],
-  },
-  {
-    question: "Do you have any dietary restrictions?",
-    type: "checkbox",
-    options: ["Vegetarian", "Vegan", "Gluten-free", "None"],
-  },
+  }
+  
 ];
 
 const Questions = () => {
@@ -103,7 +112,6 @@ const Questions = () => {
       [question]: e.target.value,
     });
   };
-
 
   const isInputValid = () => {
     const currentQuestion = questions[currentQuestionIndex];
@@ -170,7 +178,7 @@ const Questions = () => {
   };
 
   const handleDivCheckboxChange = (question: string, option: string) => {
-    const currentValues = formData[question] as string[] || [];
+    const currentValues = (formData[question] as string[]) || [];
     if (currentValues.includes(option)) {
       // Remove the option if it's already selected
       setFormData({
@@ -186,10 +194,9 @@ const Questions = () => {
     }
   };
 
-  if(currentQuestionIndex < questions.length && answers) {
-    navigate("/plan")
+  if (currentQuestionIndex < questions.length && answers) {
+    navigate("/plan");
   }
-  
 
   return (
     <div className={styles.container}>
@@ -207,9 +214,7 @@ const Questions = () => {
       ) : (
         <div className={styles.finished}>
           <div>You have completed all questions!</div>
-          {!currentUser && (
-           <SignInOrRegister />
-          )}
+          {!currentUser && <SignInOrRegister />}
         </div>
       )}
       {!answers && (
@@ -217,7 +222,7 @@ const Questions = () => {
           <button
             type="button"
             onClick={handleBack}
-            className={styles.nextButton}
+            className={styles.backButton}
           >
             Back
           </button>
