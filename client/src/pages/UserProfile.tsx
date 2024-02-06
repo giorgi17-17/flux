@@ -47,7 +47,7 @@ const UserProfile = () => {
     fetchUser();
   }, [currentUser, isLoading, email]);
 
-  const completedWorkouts = workoutProgress?.user.completedWorkouts || [];
+  const completedWorkouts = workoutProgress?.user?.completedWorkouts ?? [];
 
   return (
     <div className={styles.container}>
