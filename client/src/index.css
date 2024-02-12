@@ -8,8 +8,7 @@
 body {
   background-color: var(--black);
   /* font-family: 'Raleway', sans-serif; */
-  font-family: 'Lora', serif;
-  
+  font-family: "Poppins", serif;
 }
 :root {
   --primary: #f5deb3;

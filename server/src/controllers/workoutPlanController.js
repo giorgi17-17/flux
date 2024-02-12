@@ -4,7 +4,6 @@ import Users from "../models/usersModel.js";
 
 export async function generateWorkoutPlan(req, res) {
   const userData = req.body;
-  
   function getCurrentDayName() {
     const daysOfWeek = [
       "Sunday",
@@ -22,20 +21,24 @@ export async function generateWorkoutPlan(req, res) {
 
   const currentDayy = getCurrentDayName();
 
-
-  console.log("Received user data: ", userData);
+  // console.log("Received user data: ", userData);
   const numberOfWeeks = 1;
 
   const age = userData["How old are you?"];
+  const gender = userData["What is your gender"];
+  const height = userData["Height"];
+  const weight = userData["Weight"];
   const name = userData["What is your name?"];
+  const injury = userData["Are any parts of your body injured?"];
   const fitnessLevel = userData["What is Your fitness level"];
   const goal = userData["Choose your goal"];
-  const workouts = userData["What is your preferred workouts?"];
+  const workouts = userData["Which areas would you like to focus on?"];
   const days = userData["How many days should the workout plan cover"];
-  const equipment = userData["What gym equipment do you have access to?"];
+  const equipment = userData["What equipment do you have access to?"];
   const time =
     userData["How much time can you commit to working out each day?"];
 
+    console.log(workouts)
 
   const prompt = `
 Generate a comprehensive ${numberOfWeeks}-week home workout plan formatted as an array of JSON objects. Each object represents one week, which contains an array of daily workout or rest day plans from Monday to Sunday. The plan should incorporate ${days} workout days per week, with the remaining days as rest days, according to the user's profile provided below:
@@ -48,8 +51,10 @@ User Profile:
 - Preferred Workouts: [${workouts.join(", ")}]
 - Daily Time Commitment: ${time}
 - Equipment Available: [${equipment.join(", ")}]
+- Injuries ${injury}
 
-Use only the following workout names for the exercises:
+
+You Must Use only the following workout names for the exercises:
 - Push-Up
 - Plank
 - Jumping Jacks
@@ -75,17 +80,17 @@ Use only the following workout names for the exercises:
 - Walk Out Push-Ups
 - Reverse Plank
 
-Guidelines for the Workout Plan:
+Guidelines for the Workout Plan Which Needs To Be Done Must! :
 
 - Vary the workouts to target different body parts throughout the week and include appropriate rest between sets.
-- Provide a balanced plan that progressively challenges the user over the 
-${numberOfWeeks} weeks to prevent plateaus and encourage consistent improvement.
--  number of exercises for each day must be minimum 15 and maximum 20
-You must return array of ${numberOfWeeks} weeks
-return only array do not write any text 
-dont put array into quotes
-you must return days array where you include workout days and rest days 
-if it is rest day mark it as true
+-  number of exercises for each day must be minimum 15 and maximum 20.
+- You must return array of ${numberOfWeeks} weeks.
+- return only array do not write any text .
+- dont put array into quotes.
+- you must return days array where you include workout days and rest days 
+if it is rest day mark it as true.
+- create workouts based on ${workouts}. 
+- You must not create full body workout in targeted_body_part if it is not included in ${workouts}.  
 
 Workout Plan Structure:
     {
@@ -107,9 +112,8 @@ Workout Plan Structure:
       ]
     },
 `;
-// (model="gpt-4-1106-preview", response_format={ "type": "json_object" })
+  // (model="gpt-4-1106-preview", response_format={ "type": "json_object" })
 
- 
   try {
     const openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
@@ -117,21 +121,28 @@ Workout Plan Structure:
 
     const chatCompletion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo-0125",
-      temperature: 0.2,
+      temperature: 0.8,
       messages: [
-        { role: "system", content: "You are a professional fitness assistant." },
+        {
+          role: "system",
+          content: "You are a professional fitness assistant.",
+        },
         { role: "user", content: prompt },
       ],
     });
 
-    if (!chatCompletion.choices || chatCompletion.choices.length === 0 || !chatCompletion.choices[0].message) {
+    if (
+      !chatCompletion.choices ||
+      chatCompletion.choices.length === 0 ||
+      !chatCompletion.choices[0].message
+    ) {
       throw new Error("Invalid response structure from OpenAI API");
     }
 
     const result = chatCompletion.choices[0].message.content;
     const planArray = JSON.parse(result);
 
-    console.log(planArray);
+    // console.log(planArray);
     res.json({
       message: "Workout plan generated",
       plan: planArray,

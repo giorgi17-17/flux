@@ -16,6 +16,21 @@ type FormDataValue = string | number | boolean | string[];
 
 const questions: Question[] = [
   {
+    question: "Choose your goal",
+    type: "checkbox",
+    options: ["Loose Weight", "Gain musscle", "Get Shredded"],
+  },
+  {
+    question: "Which areas would you like to focus on?",
+    type: "checkbox",
+    options: ["Full Body", "Core", "Shoulders", "Legs", "Chest", "Back"],
+  },
+  {
+    question: "What is your fitness level",
+    type: "radio",
+    options: ["Beginner", "Intermediate", "Advanced"],
+  },
+  {
     question: "What is your name?",
     type: "text",
   },
@@ -36,42 +51,42 @@ const questions: Question[] = [
     question: "Weight",
     type: "number",
   },
+
+  // {
+  //   question: "Where do you orefer to Train",
+  //   type: "radio",
+  //   options: ["Home"],
+  // },
+
   {
-    question: "What is your fitness level",
-    type: "radio",
-    options: ["Beginner", "Intermediate", "Advanced"],
-  },
-  {
-    question: "Where do you orefer to Train",
-    type: "radio",
-    options: ["Home", "Gym"],
-  },
-  {
-    question: "What is your preferred workouts?",
+    question: "Are any parts of your body injured?",
     type: "checkbox",
-    options: ["Cardio", "Strength", "Yoga"],
+    options: ["None","Back", "Knees", "Shoulders", "Neck", "Arms", "Legs"],
   },
-  {
-    question: "Choose your goal",
-    type: "checkbox",
-    options: ["Loose Weight", "Gain musscle", "Get Shredded"],
-  },
+
   {
     question: "How much time can you commit to working out each day?",
     type: "radio",
     options: ["< 30 mins", "30-60 mins", "1-2 hours", "> 2 hours"],
   },
   {
-    question: "What gym equipment do you have access to?",
+    question: "What equipment do you have access to?",
     type: "checkbox",
-    options: ["Dumbbells", "Treadmill", "Cycle", "Barbell", "None"],
+    options: [
+      "None",
+      "Dumbbells",
+      "Treadmill",
+      "Cycle",
+      "Barbell",
+      "Jump rope",
+      "Yoga mat",
+    ],
   },
   {
     question: "How many days should the workout plan cover",
     type: "radio",
     options: ["1", "2", "3", "4", "5", "6", "7"],
-  }
-  
+  },
 ];
 
 const Questions = () => {
@@ -128,7 +143,6 @@ const Questions = () => {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
       handleSubmit();
-      console.log("last");
     }
   };
 
