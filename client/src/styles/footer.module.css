@@ -1,68 +1,29 @@
 .footer {
   width: 100%;
-  background-color: var(--beige); /* Adjust the color to match the design */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: var(--black);
   color: white;
   padding: 20px 0;
-  font-family: Arial, sans-serif;
-  color: black;
+  gap: 40px;
+  margin-top: 100px;
 }
 
-.footerContent {
+.header {
   display: flex;
-  justify-content: space-between;
-  padding: 0 10%;
+  align-items: center;
+  justify-content: center;
   flex-wrap: wrap;
-}
-.branding {
-    margin-right: 50px;
-}
-.branding > h1 {
-  font-size: 1.5em; /* Adjust size as needed */
-
+  gap: 50px;
 }
 
-.donateButton {
-  /* Style your button to match the design */
-  background-color: transparent;
-  border: 2px solid white;
-  padding: 10px 20px;
-  cursor: pointer;
-  margin-top: 50px;
-}
-
-.navSection {
-  width: 100%;
+.socials {
   display: flex;
-  align-items: start;
-  justify-content: space-between;
-  flex-wrap: wrap;
-
+  gap: 15px;
 }
 
-.navColumn > h2 {
-  font-size: 1.2em; /* Adjust size as needed */
-  margin-bottom: 10px;
+.it {
+  color: var(--red);
 }
-
-.navColumn > ul > li {
-  list-style: none;
-  padding: 0;
-  padding: 10px 0px;
-
-  margin-bottom: 5px; 
-}
-
-/* .navColumn > ul > li {
-  padding: 10px;
-
-  margin-bottom: 5px; 
-} */
-
-.footerBottom {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px 10%;
-  font-size: 0.8em;
-}
-
-/* Add responsive styles as needed */

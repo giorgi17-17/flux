@@ -1,5 +1,4 @@
 import styles from "../../styles/body.module.css";
-import Footer from "./Footer";
 // import image from "../../assets/cagin-kargi-Qzp60FT380E-unsplash.jpg";
 import ProgramCards from "../common/ProgramCards";
 // import { IoMdFitness } from "react-icons/io";
@@ -22,8 +21,7 @@ const Body = () => {
           </h1>
           <p className={styles.text}>
             Embark on a personalized home fitness journey with expertly crafted
-            workout and meal plans tailored to your goals. Start transforming
-            today.
+            workout and meal plans tailored to your goals.
           </p>
           <div className={styles.button}>
             <Link to={"/plan"} className={styles.link}>
@@ -40,10 +38,7 @@ const Body = () => {
         </div> */}
       </div>
       <div className={styles.programs}>
-        <div className={styles.programsText}>
-          What you will {""}
-          <span className={styles.achieve}>GET</span>
-        </div>
+        <div className={styles.programsText}>What you will get</div>
         <div className={styles.cards}>
           <ProgramCards
             icon={BiRun}
@@ -68,7 +63,6 @@ const Body = () => {
         </div>
       </div>
       <div className={styles.whyUs}></div>
-      <Footer />
     </div>
   );
 };

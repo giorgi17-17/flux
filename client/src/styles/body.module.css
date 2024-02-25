@@ -2,35 +2,30 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 200vh;
   /* padding: 20px; */
 }
-.beta {
-  background-color: #f5deb3;
-}
+
 .hero {
   width: 100%;
   display: flex;
-  flex-direction: row;
+  /* flex-direction: row; */
   align-items: center;
-  justify-content:center;
-  /* background-color: aliceblue; */
+  justify-content: center;
 }
 
 .main {
-    width: 50%;
-  /* flex: 1; */
-  /* max-width: 50%; */
+  /* width: 70%; */
   padding: 20px;
   display: flex;
+  align-items: center;
+  justify-content: center;
   flex-direction: column;
   gap: 20px;
-  /* height: 100%; */
 }
 .image {
   /* flex: 1; */
-    width: 50%;
-    /* max-width: 50%; */
+  width: 50%;
+  /* max-width: 50%; */
   height: 100%;
   display: flex;
   align-items: center;
@@ -44,14 +39,16 @@
   border-radius: 20px;
 }
 .mainText {
+  width: 60%;
   font-size: 5rem;
   margin-bottom: 10px;
-  color: #f5deb3;
+  color: var(--white);
   text-align: center;
 }
 .text {
-  color: white;
+  color: var(--grey);
   font-size: 20px;
+  width: 50%;
 }
 .start {
   padding: 15px 30px;
@@ -69,31 +66,31 @@
   align-items: center;
   gap: 70px;
   flex-wrap: wrap;
+  padding: 20px;
+
   /* background-color: #f5deb3; */
 }
 .programsText {
   margin-top: 20px;
-  font-size: 40px;
+  font-size: 3rem;
+
   color: var(--white);
+  font-weight: 600;
 }
 
-.achieve {
-  color: #f5deb3;
-}
+
 .cards {
   flex-wrap: wrap;
-  display: flex;  
+  display: flex;
   gap: 100px;
   align-items: center;
   justify-content: center;
-
 }
 
 .link {
   color: white;
   text-decoration: none;
 }
-
 
 /* Image */
 
@@ -110,10 +107,18 @@
   }
 
   .mainText {
-    font-size: 3rem;
+    width: 100%;
+    font-size: 2rem;
+  }
+  .text {
+    width: 100%;
+    font-size: 1rem;
   }
   .image {
     width: 100%;
+  }
+  .programsText {
+    font-size: 2rem;
   }
 
   .image > img {

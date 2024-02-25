@@ -35,7 +35,10 @@ const HeaderMobileComponent = () => {
     <div className={styles.container}>
       <div className={styles.logo}>
         <Link className={styles.link} to={"/"}>
-          Flux
+          <h4>
+            Flux
+            <span className={styles.it}>it</span>
+          </h4>
         </Link>
       </div>
       <div className={styles.hamburger}>{!open && hamburgerIcon}</div>
@@ -79,13 +82,17 @@ const HeaderMobileComponent = () => {
           </div>
           {currentUser ? (
             <div className={styles.profile}>
-            <div className={styles.icon}>
-              <Link className={styles.iconLink} to={"profile"}>
-                <CgProfile size={"2rem"} />
-              </Link>
+              <div className={styles.icon}>
+                <Link className={styles.iconLink} to={"profile"}>
+                  <CgProfile size={"2rem"} />
+                </Link>
+              </div>
             </div>
-          </div>
-          ): (<div><SignInOrRegister /></div>)}
+          ) : (
+            <div>
+              <SignInOrRegister />
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -8,8 +8,8 @@
 .container {
   background-color: #1b1b1b;
   /* border: 1px solid #e0e0e0; */
-  width: 15rem;
-  height: 20rem;
+  width: 20rem;
+  min-height: 20rem;
   border-radius: 8px;
   padding: 20px;
   text-align: left;
@@ -18,17 +18,24 @@
 }
 
 .icon {
-  color: var(--red); 
+  color: var(--red);
 }
 
 .text {
   padding: 20px 0px;
   font-size: 25px;
+  font-weight: 700;
   margin-top: 10px;
   color: var(--white);
 }
 
 .description {
   font-size: 18px;
-  color: rgb(145, 145, 145);
+  color: var(--grey);
+}
+
+@media (max-width: 768px) {
+  .container {
+    width: 100%;
+  }
 }

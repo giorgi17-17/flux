@@ -7,6 +7,7 @@ import { SpeedInsights } from "@vercel/speed-insights/react"
 import { Analytics } from '@vercel/analytics/react';
 import ReactGA from "react-ga4";
 import { useEffect } from "react";
+import Footer from "./components/layout/Footer";
 
 function App() {
 
@@ -28,6 +29,7 @@ function App() {
           <SpeedInsights />
           <Analytics />
         </div>
+        <Footer />
       </AppContextProvider>
     </div>
   );

@@ -94,11 +94,13 @@ const Plan = () => {
   const [currentWeekDay, setCurrentWeekDay] = useState<CurrentWeekDay | null>(
     null
   );
+  const navigate = useNavigate();
+
   const date = new Date();
   const currentDay = date.toLocaleDateString("en-US", { weekday: "long" });
   const { currentUser } = useAuth();
   const answers = localStorage.getItem("answers");
-
+  console.log(currentWeekDay);
   useEffect(() => {
     const today = new Date();
 
@@ -117,14 +119,9 @@ const Plan = () => {
     }
   }, [workoutProgress]);
 
-  console.log(workoutProgress);
-
-  const navigate = useNavigate();
-
   useEffect(() => {
     const fetchUser = async () => {
       if (currentUser) {
-        console.log(currentUser);
         try {
           const workoutData = await getWorkoutProgress(email);
           setWorkoutProgress(workoutData?.user?.completedWorkouts ?? []);
@@ -150,15 +147,11 @@ const Plan = () => {
           console.error("An error occurred:", error);
         }
       }
-      // else {
-      //   console.log(currentUser)
-      //   navigate('/')
-      // }
       setIsLoading(false);
     };
 
     fetchUser();
-  }, [id, currentUser, navigate, isLoading, email]);
+  }, [id, currentUser, isLoading, email]);
 
   const data = user?.formData;
 
@@ -242,7 +235,7 @@ const Plan = () => {
     }
     return null; // No workout plan for today
   };
-  getCurrentDayPlan(plan, date);
+  const currentDayPlan = getCurrentDayPlan(plan, date);
 
   return (
     <div className={styles.loadingContainer}>
@@ -253,11 +246,14 @@ const Plan = () => {
               {plan.length > 0 ? (
                 <div className={styles.planContainer}>
                   <div className={styles.dayInfo}>
-                    {currentWeekDay && plan[currentWeekDay.weekIndex] ? (
+                    <div>
+                      {!currentDayPlan && (
+                        <p className={styles.restDay}>Today is a rest day.</p>
+                      )}
+                    </div>
+                    {/* {currentWeekDay && plan[currentWeekDay.weekIndex] ? (
                       <div>
-                        {plan[currentWeekDay.weekIndex].days[
-                          currentWeekDay.dayIndex
-                        ].rest_day ? (
+                        {currentDayPlan ? (
                           <p>Today is a rest day.</p>
                         ) : (
                           <p>Today is a workout day!</p>
@@ -267,7 +263,7 @@ const Plan = () => {
                       <p>
                         Workout plan is not active for today or is completed.
                       </p>
-                    )}
+                    )} */}
                     <div>
                       {currentWeekIndex !== null && currentWorkoutDay > 0 ? (
                         <p>
@@ -289,7 +285,7 @@ const Plan = () => {
                       <Link className={styles.link} to={"/workout"}>
                         <button
                           className={styles.startWorkout}
-                          disabled={hasWorkedOutToday}
+                          disabled={hasWorkedOutToday || !currentDayPlan}
                         >
                           Start Workout
                         </button>

@@ -36,8 +36,9 @@
 }
 .link {
   text-decoration: none;
-  color: var(--primary);
+  color: var(--white);
   font-size: 40px;
+  font-family: "Poppins", Courier, monospace;
 }
 .buttons {
   display: flex;
@@ -66,6 +67,10 @@
 .register {
   background-color: var(--red);
   color: var(--white);
+}
+
+.it {
+  color: var(--red);
 }
 
 @media (max-width: 768px) {

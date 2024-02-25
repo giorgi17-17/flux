@@ -32,7 +32,10 @@ const Header = () => {
           <div className={styles.container}>
             <div className={styles.logo}>
               <Link className={styles.link} to={"/"}>
-                Flux
+                <h4>
+                  Flux
+                  <span className={styles.it}>it</span>
+                </h4>
               </Link>
             </div>
             <ul className={styles.navbarNav}>
