@@ -118,6 +118,9 @@ const Questions = () => {
     }
   }, []);
 
+ 
+
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     question: string
@@ -159,6 +162,7 @@ const Questions = () => {
   }
   console.log("out ", localAnswers);
 
+  console.log(storedUserId)
   const handleSubmit = async () => {
     localStorage.setItem("formData", JSON.stringify(formData));
     localStorage.setItem("answers", JSON.stringify(true));
@@ -167,7 +171,6 @@ const Questions = () => {
     const updatedLocalAnswers = JSON.parse(
       localStorage.getItem("answers") || "false"
     );
-
     const payload: PayloadType = {
       _id: storedUserId,
       email: localEmail,
@@ -176,10 +179,10 @@ const Questions = () => {
 
     if (parsedEmail && updatedLocalAnswers) {
       console.log("update front");
-      updateUser(payload);
+     await updateUser(payload);
     } else if (updatedLocalAnswers && !parsedEmail) {
       console.log("register front");
-      registerUser(payload);
+     await registerUser(payload);
     }
   };
   const currentQuestion = questions[currentQuestionIndex];
@@ -207,10 +210,14 @@ const Questions = () => {
       });
     }
   };
-
-  if (currentQuestionIndex < questions.length && answers) {
-    navigate("/plan");
-  }
+  useEffect(() => {
+    if (answers) {
+      navigate("/plan");
+    }
+  }, [answers, navigate]);
+  // if (currentQuestionIndex < questions.length && answers) {
+  //   navigate("/plan");
+  // }
 
   return (
     <div className={styles.container}>

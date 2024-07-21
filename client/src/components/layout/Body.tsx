@@ -5,12 +5,16 @@ import ProgramCards from "../common/ProgramCards";
 import { FaBowlFood } from "react-icons/fa6";
 import { BiRun } from "react-icons/bi";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../context/useAuth";
 // import { useAuth } from "../../context/useAuth";
 
 const Body = () => {
   const planCreated = localStorage.getItem("planCreated");
   // const parsed = JSON.parse(planCreated)
   // console.log(typeof parsed);
+
+  const { email } = useAuth();
+  console.log(email);
 
   return (
     <div className={styles.container}>

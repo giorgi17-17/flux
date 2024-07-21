@@ -69,6 +69,7 @@ export const registerController = async (req, res) => {
 
 export const updateController = async (req, res) => {
   const { _id, formData ,email } = req.body;
+  console.log(_id)
   console.log('update back');
   console.log(`Updating user with _id: ${_id}`);
   console.log(email)

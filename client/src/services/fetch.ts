@@ -240,6 +240,7 @@ const registerUser = async (payload: PayloadType) => {
 };
 
 const updateUser = async (payload: PayloadType) => {
+  console.log(payload)
   console.log("update");
   const response = await fetch(`${BACKEND_URL}/api/update`, {
     method: "POST",

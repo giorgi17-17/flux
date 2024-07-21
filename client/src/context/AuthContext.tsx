@@ -10,6 +10,8 @@ import {
 import { auth, provider } from "../firebase/firebase";
 import { UserCredential as FirebaseUserCredential } from "firebase/auth";
 
+import useEmail from "../components/hooks/useEmail";
+
 type SignInWithEmail = {
   email: string;
   password: string;
@@ -23,6 +25,7 @@ export type AuthContextType = {
   currentUser: User | null;
   signInWithGoogle: () => void;
   userValue: string;
+  email: string | null;
   createUser: ({
     email,
     password,
@@ -41,7 +44,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 export function AuthProvider({ children }: AuthProviderProps) {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [userValue, setUserValue] = useState("");
-
+  const email = useEmail();
   const signInWithGoogle = () => {
     signInWithPopup(auth, provider).then((data) => {
       setUserValue(data.user.email || "");
@@ -71,6 +74,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const value = {
     currentUser,
+    email,
     createUser,
     signIn,
     userValue,

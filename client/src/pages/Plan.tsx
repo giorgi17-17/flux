@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   getUserByEmail,
   getWorkoutProgress,
@@ -58,10 +58,10 @@ type WorkoutDay = {
   exercises: Exercise[];
 };
 
-type CurrentWeekDay = {
-  weekIndex: number;
-  dayIndex: number;
-};
+// type CurrentWeekDay = {
+//   weekIndex: number;
+//   dayIndex: number;
+// };
 
 type Workout = {
   date: string;
@@ -73,14 +73,12 @@ export type PlanDay = RestDay | WorkoutDay;
 type Plan = WeekPlan[];
 
 const Plan = () => {
-  // const initialWorkoutProgress: workoutProgress = {
-  //   message: "",
-  //   user: {
-  //     dateOfWorkouts: [],
-  //   },
-  // };
   const id = localStorage.getItem("myCustomId") || "";
-  const email = localStorage.getItem("email") || "";
+  // const email = localStorage.getItem("email") || "";
+  const { currentUser, email } = useAuth();
+  console.log(email);
+  console.log(currentUser)
+
   const [user, setUser] = useState<User | null>(null);
   const [plan, setPlan] = useState<WeekPlan[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -88,154 +86,163 @@ const Plan = () => {
   const [expandedWeek, setExpandedWeek] = useState<number | null>(null);
   const [planStartDate, setPlanStartDate] = useState<Date | null>(null);
   const [hasWorkedOutToday, setHasWorkedOutToday] = useState<boolean>(false);
-  const [currentWorkoutDay, setCurrentWorkoutDay] = useState(0);
-  const [currentWeekIndex, setCurrentWeekIndex] = useState<number | null>(null);
   const [workoutProgress, setWorkoutProgress] = useState([]);
-  const [currentWeekDay, setCurrentWeekDay] = useState<CurrentWeekDay | null>(
-    null
-  );
-  const navigate = useNavigate();
-
   const date = new Date();
   const currentDay = date.toLocaleDateString("en-US", { weekday: "long" });
-  const { currentUser } = useAuth();
   const answers = localStorage.getItem("answers");
-  console.log(currentWeekDay);
+
+  // console.log(user);
+  const navigate = useNavigate();
+  // const userFormData = localStorage.getItem("formData") || "";
+  // const parsed = JSON.parse(userFormData);
+  // console.log(parsed);
+
   useEffect(() => {
     const today = new Date();
-
-    for (const workout of workoutProgress as Workout[]) {
+    workoutProgress.forEach((workout: Workout) => {
       const workoutDate = new Date(workout.date);
-
-      // Check if the workout date is the same as today's date
       if (
         workoutDate.getDate() === today.getDate() &&
         workoutDate.getMonth() === today.getMonth() &&
         workoutDate.getFullYear() === today.getFullYear()
       ) {
         setHasWorkedOutToday(true);
-        return;
       }
-    }
+    });
   }, [workoutProgress]);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      if (currentUser) {
+    if (currentUser && answers === "true") {
+      const fetchUserAndWorkoutData = async () => {
         try {
-          const workoutData = await getWorkoutProgress(email);
+          const userData = await getUserByEmail(email || "");
+          console.log(userData)
+          const workoutData = await getWorkoutProgress(email || "");
+          setUser(userData);
           setWorkoutProgress(workoutData?.user?.completedWorkouts ?? []);
 
-          const userData = await getUserByEmail(email);
-          setUser(userData);
-          if (userData && userData.workoutPlan) {
+          if (userData?.workoutPlan) {
             setPlan(userData.workoutPlan.plan);
-            setPlanStartDate(userData.planStartDate);
-            updateCurrentWeekDay(
-              userData.planStartDate,
-              userData.workoutPlan.plan
-            );
-
-            if (userData.planStartDate) {
-              calculateCurrentWorkoutDay(
-                userData.workoutPlan.plan,
-                new Date(userData.planStartDate)
-              );
-            }
+            setPlanStartDate(new Date(userData.planStartDate));
           }
         } catch (error) {
-          console.error("An error occurred:", error);
+          console.error("An error occurred while fetching user data:", error);
+        } finally {
+          setIsLoading(false);
         }
-      }
-      setIsLoading(false);
-    };
+      };
 
-    fetchUser();
-  }, [id, currentUser, isLoading, email]);
-
-  const data = user?.formData;
+      fetchUserAndWorkoutData();
+    } else if (!currentUser && !email) {
+      navigate("/register");
+    } else if (answers !== "true") {
+      navigate("/questions");
+    }
+  }, [currentUser, email, navigate, answers]);
 
   const toggleWeek = (index: number) => {
     setExpandedWeek(expandedWeek === index ? null : index);
   };
 
-  const generatePlan = async () => {
-    if (answers === "true") {
-      setPlanisGenerateing(true);
-      localStorage.setItem("planCreated", "true");
-      if (data) {
-        await workoutPlan(data)
-          .then((receivedPlan) => {
-            setPlan(receivedPlan.plan);
-            setPlanisGenerateing(false);
+  // const calculateCurrentWorkoutDay = (plan: WeekPlan[], startDate: Date) => {
+  //   let workoutDayCount = 0;
+  //   let totalDays = 0;
+  //   const currentDate = new Date();
 
-            savePlanToDatabase(id, receivedPlan, planStartDate);
-            return receivedPlan.plan; // Return the received plan for the next promise
-          })
-          .catch((error) => {
-            console.error("An error occurred:", error);
-          });
-      }
-    } else {
-      navigate("/questions");
-    }
-  };
-  const calculateCurrentWorkoutDay = (plan: WeekPlan[], startDate: Date) => {
-    let workoutDayCount = 0;
-    let totalDays = 0;
-    const currentDate = new Date();
+  //   for (const week of plan) {
+  //     for (const day of week.days) {
+  //       totalDays++;
+  //       const dayDiff = Math.ceil(
+  //         (currentDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+  //       );
+  //       if (dayDiff < totalDays) {
+  //         setCurrentWorkoutDay(workoutDayCount);
+  //         return;
+  //       }
+  //       if (!day.rest_day) {
+  //         workoutDayCount++;
+  //       }
+  //     }
+  //   }
+  //   setCurrentWorkoutDay(workoutDayCount);
+  // };
 
-    for (const week of plan) {
-      for (const day of week.days) {
-        totalDays++;
-        const dayDiff = Math.ceil(
-          (currentDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
-        );
-        if (dayDiff < totalDays) {
-          setCurrentWorkoutDay(workoutDayCount);
-          return;
-        }
-        if (!day.rest_day) {
-          workoutDayCount++;
-        }
-      }
-    }
-    setCurrentWorkoutDay(workoutDayCount);
-  };
+  // const updateCurrentWeekDay = (startDate: Date, plan: WeekPlan[]) => {
+  //   const today = new Date();
+  //   const diffTime = Math.abs(today.getTime() - new Date(startDate).getTime());
+  //   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  //   const weekIndex = Math.floor(diffDays / 7);
+  //   const dayIndex = diffDays % 7;
 
-  const updateCurrentWeekDay = (startDate: Date, plan: WeekPlan[]) => {
-    const today = new Date();
-    const diffTime = Math.abs(today.getTime() - new Date(startDate).getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    const weekIndex = Math.floor(diffDays / 7);
-    const dayIndex = diffDays % 7;
-
-    if (weekIndex < plan.length) {
-      setCurrentWeekDay({ weekIndex, dayIndex });
-      setCurrentWeekIndex(weekIndex);
-    } else {
-      setCurrentWeekDay(null); // Plan is completed or invalid date range
-      setCurrentWeekIndex(null);
-    }
-  };
+  //   if (weekIndex < plan.length) {
+  //     setCurrentWeekDay({ weekIndex, dayIndex });
+  //     setCurrentWeekIndex(weekIndex);
+  //   } else {
+  //     setCurrentWeekDay(null); // Plan is completed or invalid date range
+  //     setCurrentWeekIndex(null);
+  //   }
+  // };
 
   const getCurrentDayPlan = (
     plans: WeekPlan[],
     currentDate: Date
   ): DayPlan | null => {
+    if (!Array.isArray(plans)) return null; // Add this check
+
     const currentDayName = currentDate.toLocaleDateString("en-US", {
       weekday: "long",
     });
     for (const week of plans) {
       for (const day of week.days) {
         if (day.day === currentDayName && !day.rest_day) {
-          return day; // Found the plan for the current day
+          return day;
         }
       }
     }
-    return null; // No workout plan for today
+    return null;
   };
+
   const currentDayPlan = getCurrentDayPlan(plan, date);
+
+  const generatePlan = useCallback(async () => {
+    const data = user?.formData;
+    console.log(data)
+    if (!answers || !currentUser) {
+      console.log(
+        "Redirecting due to missing answers or user not being logged in."
+      );
+      return; // Early return if prerequisites are not met.
+    }
+    if (answers === "true" && currentUser) {
+      const userFormData = localStorage.getItem("formData") || "";
+      console.log(userFormData);
+      // const parsed = JSON.parse(userFormData);
+      console.log("almost");
+      setPlanisGenerateing(true);
+      if (data) {
+        console.log("plan is genrating");
+        try {
+          const receivedPlan = await workoutPlan(data);
+          await savePlanToDatabase(id, receivedPlan, planStartDate);
+          setPlan(receivedPlan.plan);
+          localStorage.setItem("planCreated", "true");
+        } catch (error) {
+          console.error("An error occurred:", error);
+        } finally {
+          setPlanisGenerateing(false);
+        }
+      } else {
+        console.log("No data available for generating plan.");
+      }
+    }
+  }, [answers, currentUser, id, planStartDate, user?.formData]);
+
+  useEffect(() => {
+    const planAlreadyGenerated = localStorage.getItem("planCreated");
+    if (!planAlreadyGenerated && currentUser && answers) {
+      generatePlan();
+    }
+  }, [generatePlan, currentUser, answers]);
 
   return (
     <div className={styles.loadingContainer}>
@@ -264,7 +271,7 @@ const Plan = () => {
                         Workout plan is not active for today or is completed.
                       </p>
                     )} */}
-                    <div>
+                    {/* <div>
                       {currentWeekIndex !== null && currentWorkoutDay > 0 ? (
                         <p>
                           Tt is your DAY {currentWorkoutDay} of week{" "}
@@ -273,7 +280,7 @@ const Plan = () => {
                       ) : (
                         <div></div>
                       )}
-                    </div>
+                    </div> */}
                   </div>
                   {hasWorkedOutToday ? (
                     <div className={styles.hasWorkedOut}>
@@ -285,7 +292,7 @@ const Plan = () => {
                       <Link className={styles.link} to={"/workout"}>
                         <button
                           className={styles.startWorkout}
-                          disabled={hasWorkedOutToday || !currentDayPlan}
+                          disabled={hasWorkedOutToday}
                         >
                           Start Workout
                         </button>
@@ -360,19 +367,9 @@ const Plan = () => {
                 </div>
               ) : (
                 <div>
-                  {planisGenerateing ? (
+                  {planisGenerateing && (
                     <div className={styles.planisGenerateing}>
                       It needs around 1 minute to generate a plan.
-                    </div>
-                  ) : (
-                    <div>
-                      <div className={styles.title}>Workout Plan</div>
-                      <button
-                        className={styles.generateButton}
-                        onClick={generatePlan}
-                      >
-                        Generate Plan
-                      </button>
                     </div>
                   )}
                 </div>

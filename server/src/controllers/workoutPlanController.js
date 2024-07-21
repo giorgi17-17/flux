@@ -38,12 +38,13 @@ export async function generateWorkoutPlan(req, res) {
   const time =
     userData["How much time can you commit to working out each day?"];
 
-    console.log(workouts)
+  console.log(workouts);
 
   const prompt = `
 Generate a comprehensive ${numberOfWeeks}-week home workout plan formatted as an array of JSON objects. Each object represents one week, which contains an array of daily workout or rest day plans from Monday to Sunday. The plan should incorporate ${days} workout days per week, with the remaining days as rest days, according to the user's profile provided below:
 number of workout days must equal to ${days}
 ${currentDayy} must be workout day
+workout needs to have only reps or duration not both
 
 User Profile:
 - Fitness Level: ${fitnessLevel}
@@ -91,6 +92,7 @@ Guidelines for the Workout Plan Which Needs To Be Done Must! :
 if it is rest day mark it as true.
 - create workouts based on ${workouts}. 
 - You must not create full body workout in targeted_body_part if it is not included in ${workouts}.  
+- reps and duration corelation if reps has number make duration null and if duration has number in seconds make reps null but both of them needs to be in the object
 
 Workout Plan Structure:
     {
@@ -102,9 +104,10 @@ Workout Plan Structure:
           "targeted_body_part": "Chest",
           "exercises": [
             {
-              "name": "Push-Up",
-              "sets": "3",
-              "reps": "10",
+              "name": "name of the workout",
+              "sets": "number of sets",
+              "reps": "number of reps",
+              "duration" : "number of seconds for a workout"// if reps is ,
               "rest": "60"
             },
           ]
@@ -112,6 +115,8 @@ Workout Plan Structure:
       ]
     },
 `;
+
+
   // (model="gpt-4-1106-preview", response_format={ "type": "json_object" })
 
   try {
