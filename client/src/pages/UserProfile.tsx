@@ -24,17 +24,20 @@ interface WorkoutProgress {
 }
 
 const UserProfile = () => {
-  const { currentUser, logOut } = useAuth();
-  const email = localStorage.getItem("email") || "";
+  const { currentUser, logOut,email } = useAuth();
+  // const email = localStorage.getItem("email") || "";
   const [workoutProgress, setWorkoutProgress] =
     useState<WorkoutProgress | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+
+
+  
   useEffect(() => {
     const fetchUser = async () => {
       if (currentUser) {
         try {
-          const workoutData = await getWorkoutProgress(email);
+          const workoutData = await getWorkoutProgress(email || "");
           setWorkoutProgress(workoutData || null);
         } catch (error) {
           console.error("An error occurred:", error);

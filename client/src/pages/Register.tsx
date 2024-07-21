@@ -24,7 +24,7 @@ const Register = () => {
       const data = await signInWithPopup(auth, provider);
       const googleEmail = data.user.email || "";
       console.log(googleEmail);
-      localStorage.setItem("email", googleEmail);
+      // localStorage.setItem("email", googleEmail);
       const emailExists = localStorage.getItem("email");
       if (emailExists) {
         const response = await fetch(`${BACKEND_URL}/api/register`, {
@@ -45,7 +45,7 @@ const Register = () => {
   const handleRegister = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setIsLoading(true);
-    localStorage.setItem("email", email);
+    // localStorage.setItem("email", email);
 
     try {
       await createUser({ email, password });

@@ -3,6 +3,7 @@ import styles from "../../styles/workoutComponent.module.css";
 import { DayPlan, Exercise } from "../../pages/Workout";
 import { getWorkoutByName, saveWorkoutProgress } from "../../services/fetch";
 import image from "../../assets/cagin-kargi-Qzp60FT380E-unsplash.jpg";
+import { useAuth } from "../../context/useAuth";
 type ExerciseComponentProps = {
   plan: DayPlan;
 };
@@ -42,7 +43,10 @@ export const WorkoutComponent: React.FC<ExerciseComponentProps> = ({
   const exercise: Exercise = plan.exercises[currentExerciseIndex];
   const setsToNumber = Number(exercise.sets);
   const date = new Date();
-  const email = localStorage.getItem("email") || "";
+  // const email = localStorage.getItem("email") || "";
+
+  const {  email } = useAuth();
+
 
   useEffect(() => {
     getWorkoutByName(exercise.name)
@@ -77,7 +81,7 @@ export const WorkoutComponent: React.FC<ExerciseComponentProps> = ({
       setCurrentExerciseIndex(nextIndex);
       setSetsCompleted(0);
     } else {
-      saveWorkoutProgress(email, date, plan.exercises);
+      saveWorkoutProgress(email || "", date, plan.exercises);
       console.log("save func");
       // All exercises completed, you may want to handle the end of the workout here
       setIsWorkoutComplete(true); // Set workout to completed when all exercises are done

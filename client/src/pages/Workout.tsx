@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { WorkoutComponent } from "../components/common/WorkoutComponent";
 import { getUserByEmail } from "../services/fetch";
 import styles from "../styles/workout.module.css";
+import { useAuth } from "../context/useAuth";
 type WeekPlan = {
   week: string;
   days: DayPlan[];
@@ -23,7 +24,9 @@ export type DayPlan = {
 
 const Workout = () => {
   const [currentPlan, setCurrentPlan] = useState<DayPlan | null>(null);
-  const email = localStorage.getItem('email') || ""
+  // const email = localStorage.getItem('email') || ""
+
+  const { email } = useAuth();
 
   // This function will find the current day's plan.
   const getCurrentDayPlan = (
@@ -46,7 +49,7 @@ const Workout = () => {
   useEffect(() => {
     const fetchUserAndPlan = async () => {
       try {
-        const userData = await getUserByEmail(email);
+        const userData = await getUserByEmail(email || "");
         // Get current day plan right after setting the plan
         const todayPlan = getCurrentDayPlan(
           userData.workoutPlan.plan,

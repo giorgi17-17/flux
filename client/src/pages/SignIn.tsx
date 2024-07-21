@@ -12,11 +12,12 @@ import { BACKEND_URL } from "../services/helper";
 import Loading from "../components/common/Loading";
 
 const SignIn = () => {
-  const { signIn } = useAuth();
+  const { signIn, email: authEmail } = useAuth();
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [password, setPassword] = useState("");
   const id = localStorage.getItem("myCustomId");
+
 
   const navigate = useNavigate();
   const signInWithGoogle = async () => {
@@ -24,9 +25,9 @@ const SignIn = () => {
       const data = await signInWithPopup(auth, provider);
       const googleEmail = data.user.email || "";
       console.log(googleEmail);
-      localStorage.setItem("email", googleEmail);
-      const emailExists = localStorage.getItem("email");
-      if (emailExists) {
+      // localStorage.setItem("email", googleEmail);
+      // const emailExists = localStorage.getItem("email");
+      if (authEmail) {
         const response = await fetch(`${BACKEND_URL}/api/register`, {
           method: "POST",
           headers: {
@@ -48,7 +49,6 @@ const SignIn = () => {
     try {
       await signIn({ email, password });
       setIsLoading(false);
-      localStorage.setItem("email", email);
 
       navigate("/");
     } catch (error) {

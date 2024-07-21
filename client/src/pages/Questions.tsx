@@ -97,19 +97,21 @@ const Questions = () => {
   const [answers, setAnswers] = useState(
     JSON.parse(localStorage.getItem("answers") || "false")
   );
-  const localAnswers = JSON.parse(localStorage.getItem("answers") || "false");
+  // const localAnswers = JSON.parse(localStorage.getItem("answers") || "false");
   const navigate = useNavigate();
 
-  const localEmail = localStorage.getItem("email") || "false";
-  localStorage.setItem("email", localEmail || "false");
-  console.log("localEmail", localEmail);
+  // const email = localStorage.getItem("email") || "false";
+  const { email } = useAuth();
+
+  // localStorage.setItem("email", email || "false");
+  console.log("email", email);
 
   let parsedEmail: boolean | string;
 
-  if (localEmail === "false") {
-    parsedEmail = JSON.parse(localEmail);
+  if (email === "false") {
+    parsedEmail = JSON.parse(email);
   } else {
-    parsedEmail = localEmail;
+    parsedEmail = email || "";
   }
 
   useEffect(() => {
@@ -155,14 +157,8 @@ const Questions = () => {
     }
   };
 
-  if (localEmail && localAnswers) {
-    console.log("update front test ");
-  } else if (localAnswers && !localEmail) {
-    console.log("register front test");
-  }
-  console.log("out ", localAnswers);
+  
 
-  console.log(storedUserId)
   const handleSubmit = async () => {
     localStorage.setItem("formData", JSON.stringify(formData));
     localStorage.setItem("answers", JSON.stringify(true));
@@ -173,7 +169,7 @@ const Questions = () => {
     );
     const payload: PayloadType = {
       _id: storedUserId,
-      email: localEmail,
+      email: email || "",
       formData,
     };
 
