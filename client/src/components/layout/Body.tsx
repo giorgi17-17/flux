@@ -1,18 +1,17 @@
 import styles from "../../styles/body.module.css";
-// import image from "../../assets/cagin-kargi-Qzp60FT380E-unsplash.jpg";
+import image1 from "../../assets/image1.jpg";
+import image2 from "../../assets/image2.jpg";
+import image3 from "../../assets/image3.jpg";
 import ProgramCards from "../common/ProgramCards";
 // import { IoMdFitness } from "react-icons/io";
 import { FaBowlFood } from "react-icons/fa6";
 import { BiRun } from "react-icons/bi";
 import { Link } from "react-router-dom";
+import Faq from "./Faq";
 // import { useAuth } from "../../context/useAuth";
 
 const Body = () => {
   const planCreated = localStorage.getItem("planCreated");
-
-
-
-  
 
   return (
     <div className={styles.container}>
@@ -44,26 +43,32 @@ const Body = () => {
         <div className={styles.cards}>
           <ProgramCards
             icon={BiRun}
-            text="Workout plan based on you"
-            description=" Achieve your fitness goals with our effective fat loss workout programs. Get in shape, burn calories, and lose weight."
+            image={image1}
+            buttonText="Create Your Plan"
+            text="Personalized Workout Plans"
+            description="Receive customized workout plans tailored to your fitness goals. Start your fitness journey with routines that fit your lifestyle and preferences."
           />
           <ProgramCards
+            image={image2}
+            buttonText="Explore Diets"
             icon={FaBowlFood}
             text="Diet Plans"
-            description="Discover healthy eating habits and balanced diet plans to support your fitness journey."
+            description="Access convenient meal prep services from our trusted partners. Find the right meal plan to complement your workout regime and nutritional needs."
           />
-          {/* <ProgramCards
-            icon={IoMdFitness}
-            text="Muscle Building"
-            description="Build and sculpt your muscles with our muscle-building workouts. Whether you're a beginner or an experienced athlete."
-          /> */}
-          {/* <ProgramCards
-            icon={IoMdFitness}
-            text="You can use it for free while it is on BETA version"
-            description="Try our program and see if you can achieve your goals by our help"
-          /> */}
+          <ProgramCards
+            image={image3}
+            buttonText="Join Now"
+            icon={FaBowlFood}
+            text="Community and Support"
+            description="Join a supportive community of fitness enthusiasts. Get advice, motivation, and connect with others on the same journey."
+          />
+         
         </div>
       </div>
+      <div className={styles.faq}>
+        <Faq />
+      </div>
+
       <div className={styles.whyUs}></div>
     </div>
   );

@@ -23,10 +23,10 @@
   color: #dee2e6;
 }
 .startWorkout {
-  padding: 10px 15px;
-  background-color: var(--blue);
-  border: none;
-  border-radius: 5px;
+  padding: 16px 40px;
+  background-color: transparent;
+  border: 1px solid white;
+  border-radius: 8px;
   color: white;
   /* font-weight: bold; */
   cursor: pointer;
@@ -86,10 +86,10 @@
 
 .dayContainer {
   /* background: #e9ecef; */
-  background: var(--cardBg-color);
+  /* background: var(--cardBg-color); */
 
-  padding: 10px;
-  border-radius: 5px;
+  padding: 20px;
+  border-radius: 8px;
   transition: 1s ease-in-out;
   margin-top: 10px;
 }
@@ -99,7 +99,7 @@
 .restDay {
   font-weight: 600;
   font-size: 1.5rem;
-  color: var(--white);
+  color: var(--white);  
 }
 .restDay {
   color: var(--blue);
@@ -107,10 +107,11 @@
 .day {
   display: flex;
   gap: 10px;
+  padding: 20px;
 }
 
 .dayContainer > .day > strong {
-  color: var(--blue);
+  color: var(--white);
 }
 
 .ul {
@@ -125,8 +126,8 @@
 .li {
   /* width: 100%; */
   border: 1px solid var(--white);
-  border-radius: 5px;
-  background: var(--cardBg-color);
+  border-radius: 8px;
+  background: transparent;
   margin-bottom: 5px;
   padding: 15px 20px;
   /* color: #ffffff; */
@@ -135,6 +136,8 @@
 
 .exerciseName {
   font-size: 1.3rem;
+  text-transform: capitalize;
+
 }
 
 /* When week is not expanded, you can set a max-width and margin to center it */
@@ -172,7 +175,13 @@
 }
 
 .currentDay {
-  background-color: hsl(146, 28%, 10%) !important;
+  /* background-color:#2c2c2c57 ; */
+  /* border: 1px solid var(--red); */
+  background: rgb(199,0,57);
+background: -moz-linear-gradient(71deg, rgba(199,0,57,0.3757878151260504) 0%, rgba(0,0,0,1) 100%);
+background: -webkit-linear-gradient(71deg, rgba(199,0,57,0.3757878151260504) 0%, rgba(0,0,0,1) 100%);
+background: linear-gradient(71deg, rgba(199,0,57,0.3757878151260504) 0%, rgba(0,0,0,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#c70039",endColorstr="#000000",GradientType=1);
 }
 
 .startWorkout:disabled {
@@ -190,7 +199,7 @@
 }
 
 .planisGenerateing {
-  max-width: 200px;
+  max-width: 500px;
   background-color: var(--cardBg-color);
   padding: 20px;
   font-size: 27px;
@@ -224,6 +233,6 @@
   .dayContainer > .day > strong,
   .targeted_body_part,
   .restDay {
-    font-size: 1rem;
+    font-size: 1.3rem;
   }
 }
