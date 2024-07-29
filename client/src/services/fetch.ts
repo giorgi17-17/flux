@@ -252,6 +252,34 @@ const updateUser = async (payload: PayloadType) => {
   return response.json();
 };
 
+
+
+
+const getWorkoutFromApi = async (name : string) => {
+
+  const options = {
+    method: 'GET',
+    url: `https://exercisedb.p.rapidapi.com/exercises/name/${name}`,
+    params: {
+      offset: '0',
+      limit: '10'
+    },
+    headers: {
+      'x-rapidapi-key': '2d13b889damshf6e2ba4bfb79cd1p152825jsnffd57f325e74',
+      'x-rapidapi-host': 'exercisedb.p.rapidapi.com'
+    }
+  };
+  
+  try {
+    const response = await axios.request(options);
+    return response.data[0]; 
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+
+
 export {
   getAllExercises,
   // getUserById,
@@ -263,5 +291,6 @@ export {
   getWorkout,
   saveWorkoutProgress,
   getWorkoutProgress,
-  getWorkoutByName
+  getWorkoutByName,
+  getWorkoutFromApi
 };

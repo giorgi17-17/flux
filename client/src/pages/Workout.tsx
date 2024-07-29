@@ -12,7 +12,9 @@ export type Exercise = {
   name: string;
   sets: number;
   reps: string;
+  duration: string;
   rest: number;
+  calories: number;
 };
 
 export type DayPlan = {

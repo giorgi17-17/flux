@@ -56,30 +56,53 @@ User Profile:
 
 
 You Must Use only the following workout names for the exercises:
-- Push-Up
-- Plank
-- Jumping Jacks
-- Squats
-- Mountain Climbers
-- High Knees
-- Burpees
-- Jumping Lunges
-- Russian Twists
-- Leg Raises
-- Lunges
-- Tricep Dips
-- Diamond Push-Up
-- Leg Lift
-- Alt. Plank Crunch
-- Leg Hold
-- Flutter Kicks
-- Heel Touches
-- Extended Plank Walk
-- Extended Plank
-- Hollow Body Hold
-- Bulgarian Split Squat
-- Walk Out Push-Ups
-- Reverse Plank
+- archer push up
+-3/4 sit-up
+-45° side bend
+-air bike
+-alternate heel touchers
+-archer pull up
+-back and forth step
+-back lever
+-bench dip (knees bent)
+-bench dip on floor
+-biceps leg concentration curl
+-biceps narrow pull-ups
+-biceps pull-up
+-body-up
+-bodyweight squatting row
+-bodyweight standing calf raise
+-bodyweight standing close-grip one arm row
+-bottoms-up
+-box jump down with one leg stabilization
+-bridge - mountain climber (cross body)
+-burpee
+-butt-ups
+-chest dip
+-chest dip on straight bar
+-chin-up
+-clock push-up
+-close grip chin-up
+-close-grip push-up (on knees)
+-cocoons
+-crab twist toe touch
+-cross body crunch
+-crunch (hands overhead)
+-crunch floor
+-dead bug
+-decline crunch
+-decline push-up
+-decline sit-up
+-diamond push-up
+-drop push up
+-elbow dips
+-elbow lift - reverse push-up
+-elevator
+-flag
+-flutter kicks
+-forward jump
+-frog crunch
+
 
 Guidelines for the Workout Plan Which Needs To Be Done Must! :
 
@@ -108,7 +131,8 @@ Workout Plan Structure:
               "sets": "number of sets",
               "reps": "number of reps",
               "duration" : "number of seconds for a workout"// if reps is ,
-              "rest": "60"
+              "rest": "60",
+              "calories": "number of calories burned based on the reps and sets and based on workout",
             },
           ]
         },
@@ -147,7 +171,7 @@ Workout Plan Structure:
     const result = chatCompletion.choices[0].message.content;
     const planArray = JSON.parse(result);
 
-    // console.log(planArray);
+    console.log(planArray);
     res.json({
       message: "Workout plan generated",
       plan: planArray,

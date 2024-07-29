@@ -20,6 +20,7 @@ type Exercise = {
   name: string;
   sets: number;
   reps: string;
+  duration: number;
   rest?: number;
 };
 
@@ -77,7 +78,7 @@ const Plan = () => {
   // const email = localStorage.getItem("email") || "";
   const { currentUser, email } = useAuth();
   console.log(email);
-  console.log(currentUser)
+  console.log(currentUser);
 
   const [user, setUser] = useState<User | null>(null);
   const [plan, setPlan] = useState<WeekPlan[]>([]);
@@ -96,6 +97,7 @@ const Plan = () => {
   // const userFormData = localStorage.getItem("formData") || "";
   // const parsed = JSON.parse(userFormData);
   // console.log(parsed);
+  // console.log(plan)
 
   useEffect(() => {
     const today = new Date();
@@ -116,7 +118,7 @@ const Plan = () => {
       const fetchUserAndWorkoutData = async () => {
         try {
           const userData = await getUserByEmail(email || "");
-          console.log(userData)
+          console.log(userData);
           const workoutData = await getWorkoutProgress(email || "");
           setUser(userData);
           setWorkoutProgress(workoutData?.user?.completedWorkouts ?? []);
@@ -206,7 +208,7 @@ const Plan = () => {
 
   const generatePlan = useCallback(async () => {
     const data = user?.formData;
-    console.log(data)
+    console.log(data);
     if (!answers || !currentUser) {
       console.log(
         "Redirecting due to missing answers or user not being logged in."
@@ -352,8 +354,17 @@ const Plan = () => {
                                         {exercise.name}
                                       </div>
                                       <div>
-                                        {exercise.sets} sets of {exercise.reps}{" "}
-                                        reps
+                                        {exercise.reps === null ? (
+                                          <div>
+                                            {exercise.sets} sets of{" "}
+                                            {exercise.duration} seconds
+                                          </div>
+                                        ) : (
+                                          <div>
+                                            {exercise.sets} sets of{" "}
+                                            {exercise.reps} reps
+                                          </div>
+                                        )}
                                       </div>
                                     </div>
                                   )
