@@ -24,9 +24,9 @@ const Header = () => {
 
   return (
     <header className={styles.header}>
-      <div className={styles.beta}>
+      {/* <div className={styles.beta}>
         You can use this webiste for free while it is on BETA version
-      </div>
+      </div> */}
       {windowSize.width > 800 ? (
         <div>
           <div className={styles.container}>
@@ -46,7 +46,7 @@ const Header = () => {
               </li> */}
               <li className={styles.navItem}>
                 <Link className={styles.navlink} to={"/meals"}>
-                  Meals
+                  კვება
                 </Link>
               </li>
               {/* <li className={styles.navItem}>
@@ -61,12 +61,12 @@ const Header = () => {
               </li> */}
               <li className={styles.navItem}>
                 <Link className={styles.navlink} to={"/plan"}>
-                  Plan
+                  რუტინა
                 </Link>
               </li>
               <li className={styles.navItem}>
                 <Link className={styles.navlink} to={"/pricing"}>
-                  Pricing
+                  ფასი
                 </Link>
               </li>
               {/* Add more navigation links as needed */}

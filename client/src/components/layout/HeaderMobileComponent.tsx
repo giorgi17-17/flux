@@ -54,7 +54,7 @@ const HeaderMobileComponent = () => {
               </li> */}
               <li className={styles.navItem}>
                 <Link className={styles.navlink} to={"/meals"}>
-                  Meals
+                  კვება
                 </Link>
               </li>
               {/* <li className={styles.navItem}>
@@ -69,12 +69,12 @@ const HeaderMobileComponent = () => {
               </li> */}
               <li className={styles.navItem}>
                 <Link className={styles.navlink} to={"/plan"}>
-                  Plan
+                  რუტინა
                 </Link>
               </li>
               <li className={styles.navItem}>
                 <Link className={styles.navlink} to={"/pricing"}>
-                  Pricing
+                  ფასი
                 </Link>
               </li>
               {/* Add more navigation links as needed */}

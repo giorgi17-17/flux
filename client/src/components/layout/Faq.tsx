@@ -12,9 +12,22 @@ const Faq: React.FC = () => {
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
 
   const cards: Card[] = [
-    { id: 1, question: "How Does FLUXIT Work?", answer: "FLUXIT works by using a sophisticated algorithm to..." },
-    { id: 2, question: "Are the workout plans suitable for beginners?", answer: "Our return policy is..." },
-    { id: 3, question: "What equipment do I need for the workout plans?", answer: "You can contact support via..." },
+    {
+      id: 1,
+      question: "როგორ მუშაობს FLUXIT ?",
+      answer:
+        "ვებსაიტის გამოყენება მარტივია. 1) რეგისტრირდები 2) გასცემ კითხვებს პასუხს რადგან შევძლოთ ვარჯიშები შენზე იყოს მორგებული. 3) იწყებ ვარჯიშს იმავე დღეს",
+    },
+    {
+      id: 2,
+      question: "არის ვარჯიშის რუტინები დამწყებთათვის მორგებული?",
+      answer: "ჩვენი მთავარი მიზანია დავეხმაოთ იმ ადამიანებს ვინებმაც არ იციან როგორ ივარჯიშონ სწორად",
+    },
+    {
+      id: 3,
+      question: "რა მჭირდება ვარჯიშის დასაწყებად",
+      answer: "მხოლოდ მობილური და ვარჯიშის სურვილი",
+    },
   ];
 
   const handleCardClick = (cardId: number) => {
@@ -23,12 +36,14 @@ const Faq: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.heading}>Frequently Asked Questions</div>
+      <div className={styles.heading}>ხშირად დასმული კითხვები</div>
       <div className={styles.questions}>
-        {cards.map(card => (
+        {cards.map((card) => (
           <div className={styles.card} key={card.id}>
             <div
-              className={`${styles.question} ${expandedCard === card.id ? styles.expanded : ""}`}
+              className={`${styles.question} ${
+                expandedCard === card.id ? styles.expanded : ""
+              }`}
               onClick={() => handleCardClick(card.id)}
             >
               <div className={styles.text}>{card.question}</div>
@@ -37,9 +52,7 @@ const Faq: React.FC = () => {
               </div>
             </div>
             {expandedCard === card.id && (
-              <div className={styles.answer}>
-                {card.answer}
-              </div>
+              <div className={styles.answer}>{card.answer}</div>
             )}
           </div>
         ))}

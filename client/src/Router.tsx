@@ -9,6 +9,7 @@ import Register from "./pages/Register";
 import AdminDashboard from "./pages/AdminDashboard";
 import Workout from "./pages/Workout";
 import UserProfile from "./pages/UserProfile";
+import Pricing from "./pages/Pricing";
 
 const Router = () => {
   return (
@@ -23,6 +24,7 @@ const Router = () => {
       <Route path="/adminDashboard" element={<AdminDashboard />} />
       <Route path="/workout" element={<Workout />} />
       <Route path="/profile" element={<UserProfile />} />
+      <Route path="/pricing" element={<Pricing />} />
     </Routes>
   );
 };

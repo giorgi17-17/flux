@@ -55,6 +55,7 @@
 
 .profile {
   display: flex;
+  margin-left: 50px;
 }
 .iconLink {
   color: var(--white);

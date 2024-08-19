@@ -16,39 +16,39 @@ type FormDataValue = string | number | boolean | string[];
 
 const questions: Question[] = [
   {
-    question: "Choose your goal",
+    question: "რა არის შენი მიზანი?",
     type: "checkbox",
-    options: ["Loose Weight", "Gain musscle", "Get Shredded"],
+    options: ["წონის კლება", "კუნთის ზრდა", "Get Shredded"],
   },
   {
     question: "Which areas would you like to focus on?",
     type: "checkbox",
-    options: ["Full Body", "Core", "Shoulders", "Legs", "Chest", "Back"],
+    options: ["მთლიანი სხეული", "მუცელი", "მხრები", "ფეხები", "მკერდი", "ზურგი"],
   },
   {
-    question: "What is your fitness level",
+    question: "რა არის შენი ფიტნეს დონე",
     type: "radio",
-    options: ["Beginner", "Intermediate", "Advanced"],
+    options: ["დამწყები", "საშუალო", "პროფესიონალი"],
   },
   {
-    question: "What is your name?",
+    question: "სახელი",
     type: "text",
   },
   {
-    question: "How old are you?",
+    question: "ასაკი",
     type: "number",
   },
   {
-    question: "What is your gender",
+    question: "სქესი",
     type: "radio",
     options: ["Male", "Female"],
   },
   {
-    question: "Height",
+    question: "სიმაღლე",
     type: "number",
   },
   {
-    question: "Weight",
+    question: "წონა",
     type: "number",
   },
 
@@ -59,31 +59,30 @@ const questions: Question[] = [
   // },
 
   {
-    question: "Are any parts of your body injured?",
+    question: "სხეულის დაზიანება",
     type: "checkbox",
-    options: ["None","Back", "Knees", "Shoulders", "Neck", "Arms", "Legs"],
+    options: ["არცერთი","ზურგი", "მუხლი", "მხარი", "კისერი", "ფეხი"],
   },
 
   {
-    question: "How much time can you commit to working out each day?",
+    question: "რა დროის დათმობას აპირებ ვარჯიშისთვის",
     type: "radio",
-    options: ["< 30 mins", "30-60 mins", "1-2 hours", "> 2 hours"],
+    options: ["< 30 წუთი", "30-60 წუთი", "1-2 საათი", "> 2 საათი"],
   },
   {
-    question: "What equipment do you have access to?",
+    question: "გაქვს რაიმე აღჭურვილობა?",
     type: "checkbox",
     options: [
-      "None",
-      "Dumbbells",
-      "Treadmill",
-      "Cycle",
-      "Barbell",
-      "Jump rope",
-      "Yoga mat",
+      "არცერთი",
+      "ჰანტელები",
+      "სარბენი ბილიკი",
+      "შტანგა",
+      "ლახტი",
+      "ხალიჩა",
     ],
   },
   {
-    question: "How many days should the workout plan cover",
+    question: "რამდენ დღიანი რუტინა გინდა?",
     type: "radio",
     options: ["1", "2", "3", "4", "5", "6", "7"],
   },

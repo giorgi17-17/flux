@@ -18,18 +18,17 @@ const Body = () => {
       <div className={styles.hero}>
         <div className={styles.main}>
           <h1 className={styles.mainText}>
-            Achieve Your Fitness Goals at Home
+            ივარჯიშე დამოუკიდებლად
           </h1>
           <p className={styles.text}>
-            Embark on a personalized home fitness journey with expertly crafted
-            workout and meal plans tailored to your goals.
+            თუ დამწყები ხარ და არ იცი როგორ ივარჯიშო სწორად, მაშინ სწორ ადგილას ხარ. შექმენი შენზე მორგებული ვარჯიშის რუტინა.
           </p>
           <div className={styles.button}>
             <Link to={"/plan"} className={styles.link}>
               <button className={styles.start}>
                 {planCreated === "false" || planCreated === null
-                  ? "Create Your Plan"
-                  : "View Your Plan"}
+                  ? "შექმენი რუტინა"
+                  : "რუტინის ნახვა"}
               </button>
             </Link>
           </div>
@@ -39,28 +38,29 @@ const Body = () => {
         </div> */}
       </div>
       <div className={styles.programs}>
-        <div className={styles.programsText}>What you will get</div>
+        <div className={styles.programsText}>რას მიიღებ</div>
         <div className={styles.cards}>
           <ProgramCards
             icon={BiRun}
             image={image1}
-            buttonText="Create Your Plan"
-            text="Personalized Workout Plans"
-            description="Receive customized workout plans tailored to your fitness goals. Start your fitness journey with routines that fit your lifestyle and preferences."
+            buttonText="შექმენი რუტინა"
+            text="პერსონალიზირებული ვარჯიშები"
+            description="მიიღე შენზე მორგებული ვარჯიშის რუტინა და მიაღწიე შენს მიზნებს დამოუკიებლად"
           />
+          {/* დღეიდან შეგიძლია შეუკვეთო მთელი კვირის მზა საჭმელი რომელსაც ყოველ დილით მოგიტანთ. აღარ მოგიწევს იმაზე ფიქრი თუ როგორ იკვებო სწორად.  */}
           <ProgramCards
             image={image2}
-            buttonText="Explore Diets"
+            buttonText="აღმოაჩინე დიეტები"
             icon={FaBowlFood}
-            text="Diet Plans"
-            description="Access convenient meal prep services from our trusted partners. Find the right meal plan to complement your workout regime and nutritional needs."
+            text="სწორი კვება"
+            description="დღეიდან შეგიძლია შეუკვეთო მთელი კვირის მზა საჭმელი რომელსაც ყოველ დილით მოგიტანთ. აღარ მოგიწევს იმაზე ფიქრი თუ როგორ იკვებო სწორად."
           />
           <ProgramCards
             image={image3}
-            buttonText="Join Now"
+            buttonText="შემოგვიერთდი"
             icon={FaBowlFood}
-            text="Community and Support"
-            description="Join a supportive community of fitness enthusiasts. Get advice, motivation, and connect with others on the same journey."
+            text="ჯგუფი"
+            description="შემოგვიერთდი ჯგუფში სადაც შეძლებ გაიცნო ახალი ადამიანები და ერთად გადალახოთ დარბაზში მარტო სიარულის შიში."
           />
          
         </div>

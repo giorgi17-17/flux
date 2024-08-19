@@ -206,6 +206,8 @@ const Plan = () => {
 
   const currentDayPlan = getCurrentDayPlan(plan, date);
 
+  console.log("dataaaaaaaaaaaa" ,user?.formData);
+
   const generatePlan = useCallback(async () => {
     const data = user?.formData;
     console.log(data);
@@ -257,7 +259,7 @@ const Plan = () => {
                   <div className={styles.dayInfo}>
                     <div>
                       {!currentDayPlan && (
-                        <p className={styles.restDay}>Today is a rest day.</p>
+                        <p className={styles.restDay}>დღეს ისვენებ</p>
                       )}
                     </div>
                     {/* {currentWeekDay && plan[currentWeekDay.weekIndex] ? (
@@ -286,8 +288,8 @@ const Plan = () => {
                   </div>
                   {hasWorkedOutToday ? (
                     <div className={styles.hasWorkedOut}>
-                      <h2>You can rest now</h2>
-                      <p>Check Your progress from profile page</p>
+                      <h2></h2>
+                      <p>შეამოწმე შენი პროგრესი პროფილზე გადასვლით</p>
                     </div>
                   ) : (
                     <div>
@@ -296,13 +298,13 @@ const Plan = () => {
                           className={styles.startWorkout}
                           disabled={hasWorkedOutToday}
                         >
-                          Start Workout
+                          დაიწყე ვარჯიში
                         </button>
                       </Link>
                     </div>
                   )}
 
-                  <h2>Your Custom Plan</h2>
+                  <h2>რუტინა</h2>
                   {plan.map((week, index) => (
                     <div
                       key={index}
@@ -318,7 +320,7 @@ const Plan = () => {
                             : styles.centered
                         }`}
                       >
-                        {week.week}
+                        მთლიანი კვირა
                       </h3>
                       {expandedWeek === index &&
                         week.days.map((day, dayIndex) => (
@@ -335,7 +337,7 @@ const Plan = () => {
                             <div className={styles.day}>
                               <strong>{day.day} -</strong>{" "}
                               {day.rest_day ? (
-                                <div className={styles.restDay}>Rest Day</div>
+                                <div className={styles.restDay}>დასვენების დღე</div>
                               ) : (
                                 <div className={styles.targeted_body_part}>
                                   {day.targeted_body_part}
@@ -356,13 +358,13 @@ const Plan = () => {
                                       <div>
                                         {exercise.reps === null ? (
                                           <div>
-                                            {exercise.sets} sets of{" "}
-                                            {exercise.duration} seconds
+                                            {exercise.sets} სეტი {" "}
+                                            {exercise.duration} წამი
                                           </div>
                                         ) : (
                                           <div>
-                                            {exercise.sets} sets of{" "}
-                                            {exercise.reps} reps
+                                            {exercise.sets} სეტი {" "}
+                                            {exercise.reps} გამეორება
                                           </div>
                                         )}
                                       </div>
@@ -380,7 +382,7 @@ const Plan = () => {
                 <div>
                   {planisGenerateing && (
                     <div className={styles.planisGenerateing}>
-                      It needs around 1 minute to generate a plan.
+                      ერთ წუთში შენი რუტინა მზად იქნება.
                     </div>
                   )}
                 </div>

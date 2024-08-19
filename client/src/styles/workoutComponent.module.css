@@ -143,15 +143,17 @@
 
 .exerciseActions {
   display: flex;
+  width: 100%;
 }
 
 .exerciseActions > button {
+  width: 100%;
   padding: 0.5rem 1rem;
   font-size: 1.4rem;
   color: #fff;
   background-color: #007bff;
   border: none;
-  border-radius: 5px;
+  border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
   font-weight: 700;
@@ -188,6 +190,7 @@
   .name {
     font-size: 1rem;
     font-weight: normal;
+    text-transform: capitalize;
   }
   
   .reps {
