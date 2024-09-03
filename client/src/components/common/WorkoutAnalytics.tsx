@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../context/useAuth";
-import styles from "../../styles/WorkoutAnalytics.module.css";
+import styles from "../../styles/workoutAnalytics.module.css";
 import { getUserByEmail } from "../../services/fetch";
 
 interface Exercise {
