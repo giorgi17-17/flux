@@ -19,14 +19,14 @@ const HeaderMobileComponent = () => {
   const hamburgerIcon = (
     <RxHamburgerMenu
       className={styles.icon}
-      size={"2rem"}
+      size={"1.3rem"}
       onClick={() => setOpen(!open)}
     />
   );
   const closeIcon = (
     <VscClose
       className={styles.icon}
-      size={"2.4rem"}
+      size={"1.7rem"}
       onClick={() => setOpen(!open)}
     />
   );

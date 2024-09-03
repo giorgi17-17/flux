@@ -57,7 +57,6 @@ User Profile:
 
 You Must Use only the following workout names for the exercises:
 - archer push up
--3/4 sit-up
 -45° side bend
 -air bike
 -alternate heel touchers
@@ -139,7 +138,6 @@ Workout Plan Structure:
       ]
     },
 `;
-
 
   // (model="gpt-4-1106-preview", response_format={ "type": "json_object" })
 

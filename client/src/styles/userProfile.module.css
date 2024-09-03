@@ -4,7 +4,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
 }
 
 .cont {
@@ -15,7 +14,7 @@
   width: 100%;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  padding: 10px;
   margin-top: 20px;
   color: white;
 }
@@ -54,8 +53,67 @@
   width: 100%;
 }
 
+.bmi {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;  
+}
+
 .weekProgress {
   margin-top: 20px;
 }
 
-/* Dark mode styles */
+/* Responsive design for tablets and below */
+@media (max-width: 768px) {
+  .cont {
+    padding: 8px;
+    margin-top: 15px;
+  }
+
+  .user {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .settingsIcon {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
+  .logOut {
+    font-size: 13px;
+    padding: 7px 14px;
+  }
+
+  .workoutProgress {
+    margin-top: 15px;
+  }
+}
+
+/* Responsive design for mobile devices */
+@media (max-width: 480px) {
+  .cont {
+    padding: 6px;
+    margin-top: 10px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.08);
+  }
+
+  .user {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .logOut {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  .workoutProgress {
+    margin-top: 10px;
+  }
+}
+  

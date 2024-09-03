@@ -194,26 +194,36 @@ export const WorkoutComponent: React.FC<ExerciseComponentProps> = ({
               {/* <p className={styles.name}>
                 Equipment: {currentWorkout.equipment}
               </p> */}
-              <div className={styles.exerciseActions}>
+              {/* <div className={styles.done}>
                 <button
                   onClick={handleCompleteSet}
                   disabled={setsCompleted >= setsToNumber}
                 >
                   DONE
                 </button>
-              </div>
+              </div> */}
+
+              {timerId === null && setsCompleted >= setsToNumber ? (
+                <div className={styles.nextExercise}>
+                  {!isWorkoutComplete && (
+                    <button onClick={onExerciseComplete}>Next Exercise</button>
+                  )}
+                </div>
+              ) : (
+                <div className={styles.done}>
+                  <button
+                    onClick={handleCompleteSet}
+                    disabled={setsCompleted >= setsToNumber}
+                  >
+                    DONE
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         )}
       </div>
 
-      {timerId === null && setsCompleted >= setsToNumber && (
-        <div className={styles.nextExercise}>
-          {!isWorkoutComplete && (
-              <button onClick={onExerciseComplete}>Next Exercise</button>
-          )}
-        </div>
-      )}
       {isWorkoutComplete && <div>Finished</div>}
     </div>
   );

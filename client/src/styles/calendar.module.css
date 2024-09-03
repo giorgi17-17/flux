@@ -1,0 +1,169 @@
+/* Container for the entire calendar */
+.calendarContainer {
+    display: flex;
+    flex-direction: column;
+    background-color: #1e1e1e; /* Dark background */
+    color: #f5f5f5; /* Light text color */
+    padding: 1rem;
+    border-radius: 8px;
+    max-width: 100%;
+    margin: 0 auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Header section with navigation */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0 0.5rem;
+  }
+  
+  /* Navigation buttons */
+  .navButton {
+    background: #333; /* Dark button background */
+    color: #f5f5f5; /* Light button text color */
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  .navButton:hover {
+    background-color: #444;
+  }
+  
+  /* Month and Year Display */
+  .monthYear {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  /* Grid container for the days */
+  .daysContainer {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 7 columns for days of the week */
+    gap: 1px;
+    width: 100%;
+  }
+  
+  /* Empty cells before the first day of the month */
+  .emptyDay {
+    height: 70px; /* Consistent height with day cells */
+    background-color: transparent;
+  }
+  
+  /* Day cells */
+  .day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 70px; /* Set height for each cell */
+    background-color: #2a2a2a; /* Dark cell background */
+    color: #ccc; /* Light text color */
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .day:hover {
+    background-color: #444;
+  }
+  
+  /* Day number */
+  .dayNumber {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+  
+  /* Calories display */
+  .calories {
+    font-size: 0.8rem;
+    margin-top: 0.3rem;
+  }
+  
+  /* Today’s cell highlight */
+  .today {
+    background-color: #ff6f61; /* Highlight color for today */
+    color: #fff;
+  }
+  
+  /* Workout day highlight */
+  .scheduled {
+    background-color: #4caf50; /* Green highlight for workout days */
+    color: #fff;
+  }
+  
+  /* Completed workout day highlight */
+  .completed {
+    background-color: #ffeb3b; /* Yellow highlight for completed workouts */
+    color: #000;
+    border-radius: 50px;
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .calendarContainer {
+      padding: 0.5rem;
+    }
+  
+    .header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .monthYear {
+      font-size: 1.2rem; /* Adjust header font size */
+      margin-bottom: 0.5rem;
+    }
+  
+    .daysContainer {
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2px; /* Increase gap between cells for better spacing */
+    }
+  
+    .day {
+      height: 60px; /* Adjust height for smaller screens */
+      font-size: 0.9rem; /* Adjust font size */
+    }
+  
+    .navButton {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.9rem; /* Adjust button font size */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .calendarContainer {
+      padding: 0.3rem;
+    }
+  
+    .header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .monthYear {
+      font-size: 1rem; /* Smaller header font size */
+      margin-bottom: 0.5rem;
+    }
+  
+    .daysContainer {
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2px;
+    }
+  
+    .day {
+      height: 50px; /* Smaller cell height */
+      font-size: 0.8rem; /* Smaller font size */
+    }
+  
+    .navButton {
+      padding: 0.3rem 0.6rem;
+      font-size: 0.8rem; /* Smaller button font size */
+    }
+  }
+  

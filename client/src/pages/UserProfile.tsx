@@ -5,12 +5,15 @@ import styles from "../styles/userProfile.module.css";
 import { IoSettingsOutline } from "react-icons/io5";
 import { getWorkoutProgress } from "../services/fetch";
 import WorkoutAnalytics from "../components/common/WorkoutAnalytics";
+import Bmi from "../components/common/Bmi";
+import Calendar from "../components/common/Calendar";
 
 interface Exercise {
   name: string;
   sets: string;
   reps: string;
-  // Add other properties as needed
+  duration: number;
+  calories: number;
 }
 
 interface WorkoutProgress {
@@ -24,15 +27,11 @@ interface WorkoutProgress {
 }
 
 const UserProfile = () => {
-  const { currentUser, logOut,email } = useAuth();
-  // const email = localStorage.getItem("email") || "";
+  const { currentUser, logOut, email } = useAuth();
   const [workoutProgress, setWorkoutProgress] =
     useState<WorkoutProgress | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
 
-
-
-  
   useEffect(() => {
     const fetchUser = async () => {
       if (currentUser) {
@@ -44,11 +43,11 @@ const UserProfile = () => {
           setWorkoutProgress(null);
         }
       }
-      setIsLoading(false);
+      // setIsLoading(false);
     };
 
     fetchUser();
-  }, [currentUser, isLoading, email]);
+  }, [currentUser, email]);
 
   const completedWorkouts = workoutProgress?.user?.completedWorkouts ?? [];
 
@@ -69,17 +68,16 @@ const UserProfile = () => {
               </button>
             </div>
           </div>
+          <div className={styles.bmi}>
+            <Bmi />
+          </div>
           <div className={styles.workoutProgress}>
-            <div className={styles.analytics}>
-              <WorkoutAnalytics
-                workoutData={completedWorkouts.flatMap(
-                  (entry) => entry.workoutsCompleted
-                )}
-              />
-            </div>
-            <div>Calendar</div>
-            <div>weight</div>
-            <div className={styles.weekProgress}>week month</div>
+            <WorkoutAnalytics
+              completedWorkouts={completedWorkouts || []} // Ensure it's an array
+            />
+            <div className={styles.bmi}><Calendar /></div>
+            <div>Weight</div>
+            <div className={styles.weekProgress}>Week Month</div>
           </div>
         </div>
       ) : (

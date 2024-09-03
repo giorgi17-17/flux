@@ -1,75 +1,99 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { BACKEND_URL } from "../../services/helper";
+import { useAuth } from "../../context/useAuth";
+import styles from "../../styles/WorkoutAnalytics.module.css";
+import { getUserByEmail } from "../../services/fetch";
 
-type Exercise = {
+interface Exercise {
   name: string;
   sets: string;
   reps: string;
-};
+  duration: number | null;
+  calories: number;
+}
+
+interface WorkoutDay {
+  date: string;
+  workoutsCompleted: Exercise[];
+}
+
+interface UserData {
+  email: string;
+  formData: {
+    Weight: string;
+  };
+  userProgress: {
+    completedWorkouts: WorkoutDay[];
+  };
+}
 
 type Props = {
-  workoutData?: Exercise[] | undefined;
+  completedWorkouts: WorkoutDay[];
 };
 
-
-const getCaloriesBurned = async (exerciseName: string): Promise<number> => {
-    try {
-      const response = await axios.get(`${BACKEND_URL}/api/workouts/${exerciseName}`);
-      const exerciseDetails = response.data;
-  
-      // Convert caloriesBurnt to a number
-      const caloriesBurned = parseInt(exerciseDetails.caloriesBurnt, 10) || 0;
-  
-      return caloriesBurned;
-    } catch (error) {
-      console.error("Error fetching exercise details:", error);
-      throw error;
-    }
-  };
-  
-
-const WorkoutAnalytics: React.FC<Props> = ({ workoutData }) => {
-  const [totalCaloriesBurned, setTotalCaloriesBurned] = useState<number>(0);
+const WorkoutAnalytics: React.FC<Props> = ({ completedWorkouts = [] }) => {
+  const { email } = useAuth();
+  const [userWeight, setUserWeight] = useState<number | null>(null);
 
   useEffect(() => {
-    const calculateTotalCaloriesBurned = async () => {
-      if (workoutData) {
-        const total = await Promise.all(
-          workoutData.map(async (exercise) => {
-            const caloriesBurned = await getCaloriesBurned(exercise.name);
-            return caloriesBurned;
-          })
-        );
-
-        setTotalCaloriesBurned(total.reduce((sum, calories) => sum + calories, 0));
+    const fetchUserWeight = async () => {
+      try {
+        if (email) {
+          const userData: UserData = await getUserByEmail(email);
+          const weight = parseInt(userData.formData.Weight, 10);
+          setUserWeight(weight || null);
+        }
+      } catch (error) {
+        console.error("Failed to fetch user data:", error);
       }
     };
 
-    calculateTotalCaloriesBurned();
-  }, [workoutData]);
+    fetchUserWeight();
+  }, [email]);
 
-  if (!workoutData) {
-    return <div>No workout data available.</div>;
-  }
+  const calculateDailyStats = () => {
+    return completedWorkouts.map((workoutDay) => {
+      const dailyStats = workoutDay.workoutsCompleted.reduce(
+        (totals, exercise) => {
+          const sets = Number(exercise.sets) || 0;
+          const reps = Number(exercise.reps) || 0;
+          const calories = Number(exercise.calories) || 0;
 
-  // Calculate total sets and total reps
-  const totalSets = workoutData.reduce((sum, exercise) => {
-    const sets = parseInt(exercise.sets);
-    return isNaN(sets) ? sum : sum + sets;
-  }, 0);
+          return {
+            totalSets: totals.totalSets + sets,
+            totalReps: totals.totalReps + reps,
+            totalCalories: totals.totalCalories + calories,
+            totalWorkouts: totals.totalWorkouts + 1, // Count number of workouts
+          };
+        },
+        { totalSets: 0, totalReps: 0, totalCalories: 0, totalWorkouts: 0 }
+      );
 
-  const totalReps = workoutData.reduce((sum, exercise) => {
-    const reps = parseInt(exercise.reps);
-    return isNaN(reps) ? sum : sum + reps;
-  }, 0);
+      return {
+        date: workoutDay.date,
+        ...dailyStats,
+      };
+    });
+  };
+
+  const dailyStats = calculateDailyStats();
 
   return (
-    <div>
+    <div className={styles.container}>
       <h2>Workout Analytics</h2>
-      <p>Total Sets: {totalSets}</p>
-      <p>Total Reps: {totalReps}</p>
-      <p>Total Calories Burned: {totalCaloriesBurned}</p>
+      {userWeight && <p className={styles.weight}>User Weight: {userWeight} kg</p>}
+      {dailyStats.length > 0 ? (
+        dailyStats.map((entry) => (
+          <div key={entry.date} className={styles.dateBox}>
+            <p className={styles.date}>Date: {new Date(entry.date).toLocaleDateString()}</p>
+            <p className={styles.totalSets}>Total Sets: {entry.totalSets}</p>
+            <p className={styles.totalReps}>Total Reps: {entry.totalReps}</p>
+            <p className={styles.totalCalories}>Total Calories Burned: {entry.totalCalories}</p>
+            <p className={styles.totalWorkouts}>Number of Workouts: {entry.totalWorkouts}</p>
+          </div>
+        ))
+      ) : (
+        <p>No workout data available.</p>
+      )}
     </div>
   );
 };
