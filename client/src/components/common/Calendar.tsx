@@ -1,87 +1,199 @@
-import  { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "../../styles/calendar.module.css";
 
 interface WorkoutDay {
   date: string;
-  completed: boolean;
+  status: "completed" | "upcoming" | "missed";
   caloriesBurned: number;
 }
 
-const Calendar = () => {
-  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
-  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+const Calendar: React.FC = () => {
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [workoutDays, setWorkoutDays] = useState<WorkoutDay[]>([]);
+  const [isExpanded, setIsExpanded] = useState(false);
 
-  // Static data for demonstration
-  const workoutDays: WorkoutDay[] = [
-    { date: "2024-09-01", completed: true, caloriesBurned: 500 },
-    { date: "2024-09-03", completed: false, caloriesBurned: 0 },
-    { date: "2024-09-05", completed: true, caloriesBurned: 400 },
-    // Add more static data as needed
-  ];
+  useEffect(() => {
+    // Generate dummy data for the current month
+    const dummyData = generateDummyData(
+      currentDate.getFullYear(),
+      currentDate.getMonth()
+    );
+    setWorkoutDays(dummyData);
+  }, [currentDate]);
 
-  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-  const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+  const generateDummyData = (year: number, month: number): WorkoutDay[] => {
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const data: WorkoutDay[] = [];
+    const today = new Date();
 
-  const handleMonthChange = (direction: "prev" | "next") => {
-    if (direction === "prev") {
-      setCurrentMonth((prev) => (prev === 0 ? 11 : prev - 1));
-      if (currentMonth === 0) setCurrentYear((prev) => prev - 1);
-    } else {
-      setCurrentMonth((prev) => (prev === 11 ? 0 : prev + 1));
-      if (currentMonth === 11) setCurrentYear((prev) => prev + 1);
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(year, month, day);
+      const dateString = date.toISOString().split("T")[0];
+
+      if (Math.random() > 0.5) {
+        let status: WorkoutDay["status"];
+        let caloriesBurned = 0;
+
+        if (date < today) {
+          status = Math.random() > 0.2 ? "completed" : "missed";
+          caloriesBurned =
+            status === "completed" ? Math.floor(Math.random() * 500) + 200 : 0;
+        } else {
+          status = "upcoming";
+        }
+
+        data.push({ date: dateString, status, caloriesBurned });
+      }
     }
+
+    return data;
+  };
+
+  const handleNavigation = (direction: "prev" | "next") => {
+    setCurrentDate((prevDate) => {
+      const newDate = new Date(prevDate);
+      if (isExpanded) {
+        // Change month when expanded
+        newDate.setMonth(prevDate.getMonth() + (direction === "prev" ? -1 : 1));
+      } else {
+        // Change week when collapsed
+        newDate.setDate(prevDate.getDate() + (direction === "prev" ? -7 : 7));
+      }
+      return newDate;
+    });
+  };
+
+  const getWeekDates = (date: Date): Date[] => {
+    const week = [];
+    const startOfWeek = new Date(date);
+    startOfWeek.setDate(date.getDate() - date.getDay());
+
+    for (let i = 0; i < 7; i++) {
+      const day = new Date(startOfWeek);
+      day.setDate(startOfWeek.getDate() + i);
+      week.push(day);
+    }
+
+    return week;
   };
 
   const renderDays = () => {
     const days = [];
-    
-    // Fill the first row with empty cells if the month doesn't start on Sunday
-    for (let i = 0; i < firstDayOfMonth; i++) {
-      days.push(<div key={`empty-${i}`} className={styles.emptyDay}></div>);
-    }
-    
-    for (let day = 1; day <= daysInMonth; day++) {
-      const dateString = `${currentYear}-${(currentMonth + 1)
-        .toString()
-        .padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
+    const daysToRender = isExpanded
+      ? Array.from(
+          {
+            length: new Date(
+              currentDate.getFullYear(),
+              currentDate.getMonth() + 1,
+              0
+            ).getDate(),
+          },
+          (_, i) =>
+            new Date(currentDate.getFullYear(), currentDate.getMonth(), i + 1)
+        )
+      : getWeekDates(currentDate);
+
+    daysToRender.forEach((day) => {
+      const dateString = day.toISOString().split("T")[0];
       const workoutDay = workoutDays.find((d) => d.date === dateString);
+      const isToday = day.toDateString() === new Date().toDateString();
 
       days.push(
         <div
           key={dateString}
-          className={`${styles.day} ${
-            workoutDay
-              ? workoutDay.completed
-                ? styles.completed
-                : styles.scheduled
-              : ""
+          className={`${styles.day} ${isToday ? styles.today : ""} ${
+            workoutDay ? styles[workoutDay.status] : ""
           }`}
         >
-          <span className={styles.dayNumber}>{day}</span>
+          <span className={styles.dayNumber}>{day.getDate()}</span>
           {workoutDay && (
-            <>
-              <span className={styles.calories}>{workoutDay.caloriesBurned} cal</span>
-            </>
+            <div className={styles.workoutInfo}>
+              <span className={styles.status}>{workoutDay.status}</span>
+              {workoutDay.caloriesBurned > 0 && (
+                <span className={styles.calories}>
+                  {workoutDay.caloriesBurned} cal
+                </span>
+              )}
+            </div>
           )}
         </div>
       );
+    });
+
+    if (isExpanded) {
+      // Add empty cells for days before the start of the month
+      const firstDayOfMonth = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        1
+      ).getDay();
+      for (let i = 0; i < firstDayOfMonth; i++) {
+        days.unshift(
+          <div key={`empty-${i}`} className={styles.emptyDay}></div>
+        );
+      }
     }
+
     return days;
   };
 
+  const getHeaderText = () => {
+    if (isExpanded) {
+      return currentDate.toLocaleString("default", {
+        month: "long",
+        year: "numeric",
+      });
+    } else {
+      const weekStart = getWeekDates(currentDate)[0];
+      const weekEnd = getWeekDates(currentDate)[6];
+      return `${weekStart.toLocaleDateString("default", {
+        month: "short",
+        day: "numeric",
+      })} - ${weekEnd.toLocaleDateString("default", {
+        month: "short",
+        day: "numeric",
+        // year: 'numeric'
+      })}`;
+    }
+  };
+
   return (
-    <div className={styles.calendarContainer}>
+    <div
+      className={`${styles.calendarContainer} ${
+        isExpanded ? styles.expanded : styles.collapsed
+      }`}
+    >
       <div className={styles.header}>
-        <button className={styles.navButton} onClick={() => handleMonthChange("prev")}>Prev</button>
-        <span className={styles.monthYear}>
-          {new Date(currentYear, currentMonth).toLocaleString("default", {
-            month: "long",
-            year: "numeric",
-          })}
-        </span>
-        <button className={styles.navButton} onClick={() => handleMonthChange("next")}>Next</button>
+        <button
+          className={styles.navButton}
+          onClick={() => handleNavigation("prev")}
+        >
+          {isExpanded ? "Prev" : "Prev"}
+        </button>
+        <span className={styles.monthYear}>{getHeaderText()}</span>
+        <button
+          className={styles.navButton}
+          onClick={() => handleNavigation("next")}
+        >
+          {isExpanded ? "Next" : "Next"}
+        </button>
       </div>
+      {isExpanded && (
+        <div className={styles.weekdays}>
+          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+            <div key={day} className={styles.weekday}>
+              {day}
+            </div>
+          ))}
+        </div>
+      )}
       <div className={styles.daysContainer}>{renderDays()}</div>
+      <button
+        className={styles.expandButton}
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
+        {isExpanded ? "Show Week" : "Show Month"}
+      </button>
     </div>
   );
 };

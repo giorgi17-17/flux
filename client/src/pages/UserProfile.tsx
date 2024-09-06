@@ -55,6 +55,17 @@ const UserProfile = () => {
     <div className={styles.container}>
       {currentUser ? (
         <div className={styles.cont}>
+          <div className={styles.bmi}>
+            <Calendar />
+          </div>
+          <div className={styles.workoutProgress}>
+            <WorkoutAnalytics
+              completedWorkouts={completedWorkouts || []} // Ensure it's an array
+            />
+            <div className={styles.bmi}>
+              <Bmi />
+            </div>
+          </div>
           <div className={styles.user}>
             <div>
               <h2>Name</h2>
@@ -67,17 +78,6 @@ const UserProfile = () => {
                 Log Out
               </button>
             </div>
-          </div>
-          <div className={styles.bmi}>
-            <Bmi />
-          </div>
-          <div className={styles.workoutProgress}>
-            <WorkoutAnalytics
-              completedWorkouts={completedWorkouts || []} // Ensure it's an array
-            />
-            <div className={styles.bmi}><Calendar /></div>
-            <div>Weight</div>
-            <div className={styles.weekProgress}>Week Month</div>
           </div>
         </div>
       ) : (
