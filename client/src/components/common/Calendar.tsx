@@ -12,8 +12,9 @@ const Calendar: React.FC = () => {
   const [workoutDays, setWorkoutDays] = useState<WorkoutDay[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
 
+  
+
   useEffect(() => {
-    // Generate dummy data for the current month
     const dummyData = generateDummyData(
       currentDate.getFullYear(),
       currentDate.getMonth()
@@ -53,10 +54,8 @@ const Calendar: React.FC = () => {
     setCurrentDate((prevDate) => {
       const newDate = new Date(prevDate);
       if (isExpanded) {
-        // Change month when expanded
         newDate.setMonth(prevDate.getMonth() + (direction === "prev" ? -1 : 1));
       } else {
-        // Change week when collapsed
         newDate.setDate(prevDate.getDate() + (direction === "prev" ? -7 : 7));
       }
       return newDate;
@@ -81,15 +80,8 @@ const Calendar: React.FC = () => {
     const days = [];
     const daysToRender = isExpanded
       ? Array.from(
-          {
-            length: new Date(
-              currentDate.getFullYear(),
-              currentDate.getMonth() + 1,
-              0
-            ).getDate(),
-          },
-          (_, i) =>
-            new Date(currentDate.getFullYear(), currentDate.getMonth(), i + 1)
+          { length: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate() },
+          (_, i) => new Date(currentDate.getFullYear(), currentDate.getMonth(), i + 1)
         )
       : getWeekDates(currentDate);
 
@@ -106,22 +98,22 @@ const Calendar: React.FC = () => {
           }`}
         >
           <span className={styles.dayNumber}>{day.getDate()}</span>
-          {workoutDay && (
-            <div className={styles.workoutInfo}>
-              <span className={styles.status}>{workoutDay.status}</span>
-              {workoutDay.caloriesBurned > 0 && (
-                <span className={styles.calories}>
-                  {workoutDay.caloriesBurned} cal
-                </span>
-              )}
-            </div>
-          )}
+          <div className={styles.workoutInfo}>
+            {workoutDay && (
+              <>
+                {workoutDay.caloriesBurned > 0 && (
+                  <span className={styles.calories}>
+                    {workoutDay.caloriesBurned} cal
+                  </span>
+                )}
+              </>
+            )}
+          </div>
         </div>
       );
     });
 
     if (isExpanded) {
-      // Add empty cells for days before the start of the month
       const firstDayOfMonth = new Date(
         currentDate.getFullYear(),
         currentDate.getMonth(),
@@ -129,13 +121,14 @@ const Calendar: React.FC = () => {
       ).getDay();
       for (let i = 0; i < firstDayOfMonth; i++) {
         days.unshift(
-          <div key={`empty-${i}`} className={styles.emptyDay}></div>
+          <div key={`empty-${i}`} className={`${styles.day} ${styles.emptyDay}`}></div>
         );
       }
     }
 
     return days;
   };
+
 
   const getHeaderText = () => {
     if (isExpanded) {
@@ -152,7 +145,6 @@ const Calendar: React.FC = () => {
       })} - ${weekEnd.toLocaleDateString("default", {
         month: "short",
         day: "numeric",
-        // year: 'numeric'
       })}`;
     }
   };
@@ -178,7 +170,7 @@ const Calendar: React.FC = () => {
           {isExpanded ? "Next" : "Next"}
         </button>
       </div>
-      {isExpanded && (
+      {/* {isExpanded && ( */}
         <div className={styles.weekdays}>
           {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
             <div key={day} className={styles.weekday}>
@@ -186,7 +178,7 @@ const Calendar: React.FC = () => {
             </div>
           ))}
         </div>
-      )}
+      {/* )} */}
       <div className={styles.daysContainer}>{renderDays()}</div>
       <button
         className={styles.expandButton}
