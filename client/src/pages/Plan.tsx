@@ -75,138 +75,119 @@
 
   const Plan = () => {
     const id = localStorage.getItem("myCustomId") || "";
-    // const email = localStorage.getItem("email") || "";
-    const { currentUser, email } = useAuth();
-    console.log(email);
-    console.log(currentUser);
+  const { currentUser, email } = useAuth();
+  const [plan, setPlan] = useState<WeekPlan[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [planIsGenerating, setPlanIsGenerating] = useState(false);
+  const [expandedWeek, setExpandedWeek] = useState<number | null>(null);
+  const [planStartDate, setPlanStartDate] = useState<Date | null>(null);
+  const [hasWorkedOutToday, setHasWorkedOutToday] = useState<boolean>(false);
+  const [workoutProgress, setWorkoutProgress] = useState([]);
+  const date = new Date();
+  const currentDay = date.toLocaleDateString("en-US", { weekday: "long" });
+  const answers = localStorage.getItem("answers");
 
-    const [user, setUser] = useState<User | null>(null);
-    const [plan, setPlan] = useState<WeekPlan[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [planisGenerateing, setPlanisGenerateing] = useState(false);
-    const [expandedWeek, setExpandedWeek] = useState<number | null>(null);
-    const [planStartDate, setPlanStartDate] = useState<Date | null>(null);
-    const [hasWorkedOutToday, setHasWorkedOutToday] = useState<boolean>(false);
-    const [workoutProgress, setWorkoutProgress] = useState([]);
-    const date = new Date();
-    const currentDay = date.toLocaleDateString("en-US", { weekday: "long" });
-    const answers = localStorage.getItem("answers");
+  const navigate = useNavigate();
+  useEffect(() => {
+    const today = new Date();
+    workoutProgress.forEach((workout: Workout) => {
+      const workoutDate = new Date(workout.date);
+      if (
+        workoutDate.getDate() === today.getDate() &&
+        workoutDate.getMonth() === today.getMonth() &&
+        workoutDate.getFullYear() === today.getFullYear()
+      ) {
+        setHasWorkedOutToday(true);
+      }
+    });
+  }, [workoutProgress]);
 
-    const navigate = useNavigate();
+  const generatePlan = useCallback(async () => {
+    if (!answers || !currentUser) {
+      console.log("Redirecting due to missing answers or user not being logged in.");
+      return;
+    }
 
-    useEffect(() => {
-      const today = new Date();
-      workoutProgress.forEach((workout: Workout) => {
-        const workoutDate = new Date(workout.date);
-        if (
-          workoutDate.getDate() === today.getDate() &&
-          workoutDate.getMonth() === today.getMonth() &&
-          workoutDate.getFullYear() === today.getFullYear()
-        ) {
-          setHasWorkedOutToday(true);
-        }
-      });
-    }, [workoutProgress]);
+    const userFormData = localStorage.getItem("formData");
+    if (!userFormData) {
+      console.log("No form data available in localStorage.");
+      return;
+    }
 
-    useEffect(() => {
+    setPlanIsGenerating(true);
+    try {
+      const parsedFormData = JSON.parse(userFormData);
+      console.log("Generating plan with data:", parsedFormData);
+      const receivedPlan = await workoutPlan(parsedFormData);
+      await savePlanToDatabase(id, receivedPlan, planStartDate);
+      setPlan(receivedPlan.plan);
+      localStorage.setItem("planCreated", "true");
+    } catch (error) {
+      console.error("An error occurred while generating the plan:", error);
+    } finally {
+      setPlanIsGenerating(false);
+    }
+  }, [answers, currentUser, id, planStartDate]);
+
+  useEffect(() => {
+    if (currentUser && answers === "true") {
       const fetchUserAndWorkoutData = async () => {
         try {
-          setIsLoading(true);  // Set loading to true while fetching data
           const userData = await getUserByEmail(email || "");
-          console.log(userData);
-          const workoutData = await getWorkoutProgress(email || "");
-          setUser(userData);
-          setWorkoutProgress(workoutData?.user?.completedWorkouts ?? []);
-    
+          console.log("Fetched user data:", userData);
+
           if (userData?.workoutPlan) {
             setPlan(userData.workoutPlan.plan);
             setPlanStartDate(new Date(userData.planStartDate));
+          } else {
+            const planAlreadyGenerated = localStorage.getItem("planCreated");
+            if (!planAlreadyGenerated) {
+              generatePlan();
+            }
           }
+
+          const workoutData = await getWorkoutProgress(email || "");
+          setWorkoutProgress(workoutData?.user?.completedWorkouts ?? []);
         } catch (error) {
           console.error("An error occurred while fetching user data:", error);
         } finally {
-          setIsLoading(false);  // Set loading to false after fetching data
+          setIsLoading(false);
         }
       };
-    
-      if (currentUser && answers === "true") {
-        fetchUserAndWorkoutData();
-      } else if (!currentUser && !email) {
-        navigate("/register");
-      } else if (answers !== "true") {
-        navigate("/questions");
-      }
-    }, [currentUser, email, navigate, answers]);
 
-    const toggleWeek = (index: number) => {
-      setExpandedWeek(expandedWeek === index ? null : index);
-    };
+      fetchUserAndWorkoutData();
+    } else if (!currentUser && !email) {
+      navigate("/register");
+    } else if (answers !== "true") {
+      navigate("/questions");
+    }
+  }, [currentUser, email, navigate, answers, generatePlan]);
 
-  
-    const getCurrentDayPlan = (
-      plans: WeekPlan[],
-      currentDate: Date
-    ): DayPlan | null => {
-      if (!Array.isArray(plans)) return null; // Add this check
+  const toggleWeek = (index: number) => {
+    setExpandedWeek(expandedWeek === index ? null : index);
+  };
 
-      const currentDayName = currentDate.toLocaleDateString("en-US", {
-        weekday: "long",
-      });
-      for (const week of plans) {
-        for (const day of week.days) {
-          if (day.day === currentDayName && !day.rest_day) {
-            return day;
-          }
+  const getCurrentDayPlan = (
+    plans: WeekPlan[],
+    currentDate: Date
+  ): DayPlan | null => {
+    if (!Array.isArray(plans)) return null;
+
+    const currentDayName = currentDate.toLocaleDateString("en-US", {
+      weekday: "long",
+    });
+    for (const week of plans) {
+      for (const day of week.days) {
+        if (day.day === currentDayName && !day.rest_day) {
+          return day;
         }
       }
-      return null;
-    };
+    }
+    return null;
+  };
 
-    const currentDayPlan = getCurrentDayPlan(plan, date);
+  const currentDayPlan = getCurrentDayPlan(plan, date);
 
-    console.log("dataaaaaaaaaaaa" ,user?.formData);
-
-    const generatePlan = useCallback(async () => {
-      const data = user?.formData;
-      console.log(data);
-      if (!answers || !currentUser) {
-        console.log(
-          "Redirecting due to missing answers or user not being logged in."
-        );
-        return; // Early return if prerequisites are not met.
-      }
-      if (answers === "true" && currentUser) {
-        const userFormData = localStorage.getItem("formData") || "";
-        console.log(userFormData);
-        // const parsed = JSON.parse(userFormData);
-        console.log("almost");
-        setPlanisGenerateing(true);
-        if (data) {
-          console.log("plan is genrating");
-          try {
-            const receivedPlan = await workoutPlan(data);
-            await savePlanToDatabase(id, receivedPlan, planStartDate);
-            setPlan(receivedPlan.plan);
-            localStorage.setItem("planCreated", "true");
-          } catch (error) {
-            console.error("An error occurred:", error);
-          } finally {
-            setPlanisGenerateing(false);
-          }
-        } else {
-          console.log("No data available for generating plan.");
-        }
-      }
-    }, [answers, currentUser, id, planStartDate, user?.formData]);
-
-    useEffect(() => {
-      const planAlreadyGenerated = localStorage.getItem("planCreated");
-    
-      // Only generate the plan after user data has been loaded
-      if (!planAlreadyGenerated && currentUser && answers && user?.formData) {
-        generatePlan();
-      }
-    }, [generatePlan, currentUser, answers, user?.formData]); 
 
     return (
       <div className={styles.loadingContainer}>
@@ -318,7 +299,7 @@
                   </div>
                 ) : (
                   <div>
-                    {planisGenerateing && (
+                    {planIsGenerating && (
                       <div className={styles.planisGenerateing}>
                         ერთ წუთში შენი რუტინა მზად იქნება.
                       </div>

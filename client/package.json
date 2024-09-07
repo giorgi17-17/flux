@@ -9,7 +9,7 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
-  "homepage": "https://vexter.ge",
+  "homepage": ".",
   "dependencies": {
     "@types/react-calendar": "^4.1.0",
     "axios": "^1.5.1",
